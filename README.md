@@ -2,7 +2,7 @@
 
 a game developer live in tokyo/Japan.
 
-- 🌱 I’m currently learning react & vue
+- 🌱 I’m currently learning aws、terraform & k8s
 - 💬 Ask me about
   anything [here](https://chat.getloli.com/room/@:houko?title=%E5%B0%8F%E8%8E%AB%E7%9A%84github%E7%95%99%E8%A8%80%E6%9D%BF)
 
