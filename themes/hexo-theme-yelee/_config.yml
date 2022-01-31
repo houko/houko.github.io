@@ -277,19 +277,19 @@ progressBar:
   color: green
 
 CDN:
-  jquery: https://cdn.bootcdn.net/ajax/libs/jquery/2.2.4/jquery.min.js
-  require: https://cdn.bootcdn.net/ajax/libs/require.js/2.2.0/require.min.js
-  fontawesome: https://cdn.bootcdn.net/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css
-  fancybox_js: https://cdn.bootcdn.net/ajax/libs/fancybox/2.1.5/jquery.fancybox.js
-  fancybox_css: https://cdn.bootcdn.net/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css
-  animate_css: https://cdn.bootcdn.net/ajax/libs/animate.css/3.5.1/animate.min.css
-  animate: https://cdn.bootcdn.net/ajax/libs/animate.css/3.5.0/animate.min.css
-  jquery_ui_js: https://cdn.bootcdn.net/ajax/libs/jqueryui/1.10.4/jquery.ui.core.min.js
-  jquery_ui_css: //cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css
-  pace_js: https://cdn.bootcdn.net/ajax/libs/pace/1.0.2/pace.min.js
-  clipboard: https://cdn.bootcdn.net/ajax/libs/clipboard.js/1.5.10/clipboard.min.js
-  mathjax: https://cdn.bootcdn.net/ajax/libs/mathjax/2.6.1/MathJax.js
-  scrollreveal: https://cdn.bootcdn.net/ajax/libs/scrollReveal.js/3.1.4/scrollreveal.min.js
+  jquery: https://image.xiaomo.info/blog/assets/js/jquery.min.js
+  require: https://image.xiaomo.info/blog/assets/js/require.min.js
+  fontawesome: https://image.xiaomo.info/blog/assets/css/font-awesome.min.css
+  fancybox_js: https://image.xiaomo.info/blog/assets/js/jquery.fancybox.min.js
+  fancybox_css: https://image.xiaomo.info/blog/assets/css/jquery.fancybox.min.css
+  animate_css: https://image.xiaomo.info/blog/assets/css/animate.min.css
+  animate: https://image.xiaomo.info/blog/assets/css/animate.min.css
+  jquery_ui_js: https://image.xiaomo.info/blog/assets/js/jquery-ui.min.js
+  jquery_ui_css: https://image.xiaomo.info/blog/assets/css/jquery-ui.min.css
+  pace_js: https://image.xiaomo.info/blog/assets/js/pace.min.js
+  clipboard: https://image.xiaomo.info/blog/assets/js/clipboard.min.js
+  mathjax: https://image.xiaomo.info/blog/assets/js/mathjax.core.min.js
+  scrollreveal: https://image.xiaomo.info/blog/assets/js/scrollreveal.min.js
 
 
 psot_asset_folder: true
