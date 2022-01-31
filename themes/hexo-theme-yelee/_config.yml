@@ -289,7 +289,7 @@ CDN:
   pace_js: https://image.xiaomo.info/blog/assets/js/pace.min.js
   clipboard: https://image.xiaomo.info/blog/assets/js/clipboard.min.js
   mathjax: https://image.xiaomo.info/blog/assets/js/mathjax.core.min.js
-  scrollreveal: https://image.xiaomo.info/blog/assets/js/scrollreveal.min.js
+  scrollreveal: https://cdnjs.cloudflare.com/ajax/libs/scrollReveal.js/3.1.4/scrollreveal.min.js
 
 
 psot_asset_folder: true
