@@ -42,14 +42,6 @@ a game developer live in tokyo/Japan.
 [![](https://img.shields.io/badge/-gradle-white?style=flat-square&logo=gradle&logoColor=green)](https://gradle.org/)
 
 
-[![chat room](https://chat.getloli.com/room/@:xiaomo1992/svg?width=600&height=280&limit=20&theme=light&fontSize=13&title=xiaomo1992@github:%20~)](https://chat.getloli.com/room/@:xiaomo1992?title=%E5%B0%8F%E8%8E%AB%E7%9A%84github%E7%95%99%E8%A8%80%E6%9D%BF)
-
-
-
-<a href="https://github.com/anuraghazra/github-readme-stats">
-  <img align="center" src="https://github-readme-stats.anuraghazra1.vercel.app/api?username=xiamo1992&show_icons=true&include_all_commits=true&theme=radical" alt="xiaomo1992's github stats" />
-</a>
-
 ## github data(click to show new data)
 
 [![graph](https://image.xiaomo.info/blog/github.png)](https://profile-summary-for-github.com/user/xiaomo1992)
