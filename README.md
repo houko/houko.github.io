@@ -1,4 +1,4 @@
-### Hi there, I'm [houko!](https://blog.xiaomo.info) 👋
+### Hi there, I'm [xiamo!](https://blog.xiaomo.info) 👋
 
 a game developer live in tokyo/Japan.
 
@@ -9,7 +9,7 @@ a game developer live in tokyo/Japan.
 **concat**   
 [![](https://img.shields.io/badge/-twitter-white?style=flat-square&logo=twitter&logoColor=1DA1F2)](https://twitter.com/xiaomoinfo)
 [![](https://img.shields.io/badge/-blog-white?style=flat-square&logo=hexo&logoColor=21759B)](https://blog.xiaomo.info)
-[![](https://img.shields.io/badge/-github-white?style=flat-square&logo=github&logoColor=black)](https://github.com/houko)
+[![](https://img.shields.io/badge/-github-white?style=flat-square&logo=github&logoColor=black)](https://github.com/xiaomo1992)
 [![](https://img.shields.io/badge/-gmail-white?style=flat-square&logo=gmail&logoColor=red)](https://xiaomo.info)
 [![](https://img.shields.io/badge/-bilibili-white?style=flat-square&logo=bilibili&logoColor=1DA1F2)](https://space.bilibili.com/6721344)
 
@@ -42,14 +42,14 @@ a game developer live in tokyo/Japan.
 [![](https://img.shields.io/badge/-gradle-white?style=flat-square&logo=gradle&logoColor=green)](https://gradle.org/)
 
 
-[![chat room](https://chat.getloli.com/room/@:houko/svg?width=600&height=280&limit=20&theme=light&fontSize=13&title=houko@github:%20~)](https://chat.getloli.com/room/@:houko?title=%E5%B0%8F%E8%8E%AB%E7%9A%84github%E7%95%99%E8%A8%80%E6%9D%BF)
+[![chat room](https://chat.getloli.com/room/@:xiaomo1992/svg?width=600&height=280&limit=20&theme=light&fontSize=13&title=xiaomo1992@github:%20~)](https://chat.getloli.com/room/@:xiaomo1992?title=%E5%B0%8F%E8%8E%AB%E7%9A%84github%E7%95%99%E8%A8%80%E6%9D%BF)
 
 
 
 <a href="https://github.com/anuraghazra/github-readme-stats">
-  <img align="center" src="https://github-readme-stats.anuraghazra1.vercel.app/api?username=houko&show_icons=true&include_all_commits=true&theme=radical" alt="houko's github stats" />
+  <img align="center" src="https://github-readme-stats.anuraghazra1.vercel.app/api?username=xiamo1992&show_icons=true&include_all_commits=true&theme=radical" alt="xiaomo1992's github stats" />
 </a>
 
 ## github data(click to show new data)
 
-[![graph](https://image.xiaomo.info/blog/github.png)](https://profile-summary-for-github.com/user/houko)
+[![graph](https://image.xiaomo.info/blog/github.png)](https://profile-summary-for-github.com/user/xiaomo1992)
