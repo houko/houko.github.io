@@ -42,6 +42,9 @@ jobs:
       - name: Hugo-Encrypt
         run: cd themes/hugo-theme-luna && node ./hugo-encrypt.js
 
+      - name: Setup CNAME
+        run: echo "https://blog.xiaomo.info" > CNAME
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
