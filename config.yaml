@@ -206,15 +206,15 @@ params:
     enabled: true
     provider: "giscus" # custom | giscus
     giscus: &giscus
-      repo: "Ice-Hazymoon/hugo-theme-luna"
+      repo: "houko/houko.github.io"
       repoID: "R_kgDOHQOwYw"
-      category: "Comments"
-      categoryID: "DIC_kwDOHQOwY84CP0Sy"
-      mapping: "title"
+      category: "General"
+      categoryID: "DIC_kwDOBFPK-M4CSvHc"
+      mapping: "url"
       reactionsEnabled: 1
       emitMetadata: 0
       lazy: false
-      lang: "en"
+      lang: "zh-CN"
 
   # Rss 配置
   # RSS configuration
