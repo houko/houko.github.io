@@ -50,7 +50,6 @@
             }
             var backgroundnum = <%= theme.cover_image %>;
             var randomIndex = Math.ceil(Math.random() * backgroundnum);
-            var result = randomIndex + "?version=" + (new Date() / 1000);
             var backgroundimg = "https://image.xiaomo.info/cover/bg-number.jpg".replace(/number/gi, randomIndex);
             var key = "#" + id;
             $(key).attr("src", backgroundimg);

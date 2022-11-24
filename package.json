@@ -8,6 +8,7 @@
     "build": "hexo clean && hexo generate",
     "dev": "hexo generate && http-server",
     "pull": "git pull && hexo g",
+    "deploy": "hexo clean && hexo deploy",
     "test": "http-server --port=PORT",
     "start": "hexo clean && hexo generate && hexo server"
   },
