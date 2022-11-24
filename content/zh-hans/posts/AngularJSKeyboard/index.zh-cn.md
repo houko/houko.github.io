@@ -1,12 +1,16 @@
 ---
+author: 小莫
 date: 2016-05-11
-title: "angularjs键盘事件"
-featured_image: cover.jpg
-slug: angularjs_keyboard
-refs:
-- link: https://unsplash.com/
-
+title: angularjs复选框
+tags: 
+  - angular
+  - javascript
+categories: 
+  - angularjs
+slug: NgCheckbox
 ---
+
+<!--more-->
 
 ### 一、绑定键盘事件
 

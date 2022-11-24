@@ -313,7 +313,7 @@ params:
   i18nlist: true
 
   # GitHub 页面设置
-  # github page
+  # GitHub page
   github:
     id: "houko" # GitHub user id
     minStars: 5 # 最小 star 项目 / min stars
@@ -427,7 +427,7 @@ params:
   opengraph:
     twitter: # see https://developer.twitter.com/en/docs/twitter-for-websites/cards/guides/getting-started
       cardType: summary_large_image # summary | summary_large_image
-      site: "@xiaomo"
+      site: "@xiaomoinfo"
     image: "featured.png" # in assets folder | false
 
   author: xiaomo
