@@ -29,7 +29,7 @@ keywords: 小莫的博客,
 description: 专注于技术研究的博客，具有开源精神;乐于将自己折腾的项目放在github上和大家共同学习，共同进步。
 author: 小莫
 language: zh-CN
-timezone:
+timezone: Asia/Tokyo
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
@@ -46,8 +46,6 @@ baidusitemap:
 douban:
     user: xiaomo1992
 
-psot_asset_folder: true
-
 # Directory
 source_dir: source
 public_dir: public
@@ -62,7 +60,7 @@ skip_render:
 new_post_name: :title.md # File name of new post
 default_layout: post
 titlecase: false # Transform title into titlecase
-external_link: true # Open external links in new tab
+#external_link: true # Open external links in new tab
 filename_case: 0
 render_drafts: false
 post_asset_folder: false
@@ -107,42 +105,42 @@ archive_generator:
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repository: https://github.com/houko/blog.git
-  branch: master
+  repository: https://github.com/houko/houko.github.io
+  branch: gh-pages
 
-pwa:
-  manifest:
-    path: /manifest.json
-    body:
-      name: xiaomo's blog
-      short_name: xiaomo
-      icons:
-        - src: /img/avatar.png
-          sizes: 192x192
-          type: image/png
-        - src: /img/avatar.png
-          sizes: 512x512
-          type: image/png
-      start_url: /index.html
-      theme_color: '#ffffff'
-      background_color: '#ffffff'
-      display: standalone
-  serviceWorker:
-    path: /sw.js
-    preload:
-      urls:
-        - /
-      posts: 5
-    opts:
-      networkTimeoutSeconds: 5
-    routes:
-      - pattern: !!js/regexp /hm.baidu.com/
-        strategy: networkOnly
-      - pattern: !!js/regexp /.*\.(js|css|jpg|jpeg|png|gif)$/
-        strategy: cacheFirst
-      - pattern: !!js/regexp /\//
-        strategy: networkFirst
-  priority: 5
+#pwa:
+#  manifest:
+#    path: /manifest.json
+#    body:
+#      name: xiaomo's blog
+#      short_name: xiaomo
+#      icons:
+#        - src: /img/avatar.png
+#          sizes: 192x192
+#          type: image/png
+#        - src: /img/avatar.png
+#          sizes: 512x512
+#          type: image/png
+#      start_url: /index.html
+#      theme_color: '#ffffff'
+#      background_color: '#ffffff'
+#      display: standalone
+#  serviceWorker:
+#    path: /sw.js
+#    preload:
+#      urls:
+#        - /
+#      posts: 5
+#    opts:
+#      networkTimeoutSeconds: 5
+#    routes:
+#      - pattern: !!js/regexp /hm.baidu.com/
+#        strategy: networkOnly
+#      - pattern: !!js/regexp /.*\.(js|css|jpg|jpeg|png|gif)$/
+#        strategy: cacheFirst
+#      - pattern: !!js/regexp /\//
+#        strategy: networkFirst
+#  priority: 5
 
 encrypt:
   enable: true
