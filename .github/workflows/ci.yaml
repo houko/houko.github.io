@@ -47,7 +47,7 @@ jobs:
         with:
           personal_token: ${{ secrets.TOKEN }}
           external_repository: "houko/houko.github.io"
-          publish_branch: master
+          publish_branch: gh-pages
           publish_dir: ./public
           force_orphan: true
           user_name: houko
