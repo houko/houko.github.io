@@ -1,12 +1,12 @@
-baseURL: https://hugo-theme-luna.imiku.me/
-languageCode: en-us
-defaultContentLanguage: en-us
-title: "Hugo Theme Luna"
+baseURL: https://blog.xiaomo.info
+languageCode: zh-cn
+defaultContentLanguage: zh-cn
+title: "小莫的博客-fighting(技术分享、生活随笔)"
 enableRobotsTXT: true
 enableEmoji: true
 theme: hugo-theme-luna
 timeout: 60000
-timeZone: Asia/Shanghai
+timeZone: Asia/Tokyo
 
 # 可根据 Git 中的提交生成最近更新记录。
 # use git commit log to generate lastmod record
@@ -21,7 +21,7 @@ hasCJKLanguage: true
 paginate: 10
 
 # 启用谷歌统计
-# google analytics tracking code
+# Google Analytics tracking code
 # googleAnalytics: UA-98634098-1
 
 # 版权信息，默认为 author.name ↓
@@ -35,7 +35,7 @@ permalinks:
   pages: /:slug.html # about.html
 
 author:
-  name: Ice-Hazymoon
+  name: xiaomo
 
 frontmatter:
   lastmod:
@@ -221,14 +221,14 @@ params:
   rss:
     # 如果为 false，你必须设置 Output Formats，请查看：https://gohugo.io/templates/output-formats#customizing-output-formats
     # If false, you must set Output Formats, see: https://gohugo.io/templates/output-formats#customizing-output-formats
-    enabled: true
+    enabled: false
     # 是否输出全文
     # Output full text
     fullText: true
 
   # 如果为 false，你必须设置 Output Formats，请查看：https://gohugo.io/templates/output-formats#customizing-output-formats
   # If false, you must set Output Formats, see: https://gohugo.io/templates/output-formats#customizing-output-formats
-  sitemap: true
+  sitemap: false
 
   # 网站主题颜色
   # Site theme colors
@@ -253,7 +253,7 @@ params:
 
   # 固定导航栏
   # Fixed navigation bar
-  fixedNav: false
+  fixedNav: true
 
   # 网站字体
   # Site font
@@ -272,7 +272,7 @@ params:
     enabled: true
     # 网站创建时间
     # Site creation time
-    creatTime: 2016/12/12
+    creatTime: 2016/06/30
   
   #  网站创建年份
   # Site creation year
@@ -293,8 +293,8 @@ params:
   # 文章分享功能
   share:
     twitter: true
-    facebook: true
-    weibo: true
+    facebook: false
+    weibo: false
     copyLinkText: true
     qrcode: true
   
@@ -315,7 +315,7 @@ params:
   # GitHub 页面设置
   # github page
   github:
-    id: "torvalds" # github user id
+    id: "houko" # GitHub user id
     minStars: 5 # 最小 star 项目 / min stars
 
   # Twitter 页面设置
@@ -323,7 +323,7 @@ params:
   twitter:
     enabled: true
     rsshub: "https://rsshub.rssforever.com" # rsshub url, see https://github.com/DIYgod/RSSHub
-    id: "GenshinImpact" # Twitter ID
+    id: "xiaomoinfo" # Twitter ID
     # 如果为 true，Hugo 将下载图片和视频并进行优化，如果你在中国大陆地区，请谨慎启用这个选项
     # If enabled, Hugo will download videos and images from the Tweet and optimize them
     imageProcessing: true
@@ -427,10 +427,10 @@ params:
   opengraph:
     twitter: # see https://developer.twitter.com/en/docs/twitter-for-websites/cards/guides/getting-started
       cardType: summary_large_image # summary | summary_large_image
-      site: "@Ice_Hazymoon"
+      site: "@xiaomo"
     image: "featured.png" # in assets folder | false
 
-  author: Ice-Hazymoon
+  author: xiaomo
   keywords:
     - Hugo
     - Hugo Theme
@@ -449,10 +449,10 @@ languages:
       font: "Times New Roman,Times,Heti Song,serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol"
       twitter: 
         rsshub: "https://rsshub.rssforever.com"
-        id: "Ice_Hazymoon"
+        id: "xiaomoinfo"
         imageProcessing: true
       github:
-        id: "Ice-Hazymoon"
+        id: "houko"
         minStars: 10
       license:
         enabled: true
