@@ -210,7 +210,7 @@ params:
       repoID: "MDEwOlJlcG9zaXRvcnk3MjYwMDMxMg=="
       category: "General"
       categoryID: "DIC_kwDOBFPK-M4CSvHc"
-      mapping: "url"
+      mapping: "title"
       reactionsEnabled: 1
       emitMetadata: 0
       lazy: false
