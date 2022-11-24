@@ -1,4 +1,4 @@
-baseURL: https://blog.xiaomo.info/
+baseURL: https://hugo-theme-luna.imiku.me/
 languageCode: en-us
 defaultContentLanguage: en-us
 title: "Hugo Theme Luna"
@@ -6,7 +6,7 @@ enableRobotsTXT: true
 enableEmoji: true
 theme: hugo-theme-luna
 timeout: 60000
-timeZone: Asia/Tokyo
+timeZone: Asia/Shanghai
 
 # 可根据 Git 中的提交生成最近更新记录。
 # use git commit log to generate lastmod record
@@ -377,7 +377,7 @@ params:
     enabled: true
     # 超过这个字数后将显示目录
     # When the article word count is greater than this value, the TOC will be displayed
-    wordCount: 400
+    wordCount: 400 
 
   # 加密功能
   # encryption articles
@@ -447,7 +447,7 @@ languages:
     params:
       languageIcon: "images/i18n/zh-cn.svg" # in assets folder
       font: "Times New Roman,Times,Heti Song,serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol"
-      twitter:
+      twitter: 
         rsshub: "https://rsshub.rssforever.com"
         id: "Ice_Hazymoon"
         imageProcessing: true
@@ -490,6 +490,6 @@ languages:
           lang: "ja"
     menu:
       main:
-        - *mainMenuHome
-        - *mainMenuArchives
-        - *mainMenuSearch
+      - *mainMenuHome
+      - *mainMenuArchives
+      - *mainMenuSearch
