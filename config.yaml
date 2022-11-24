@@ -207,7 +207,7 @@ params:
     provider: "giscus" # custom | giscus
     giscus: &giscus
       repo: "houko/houko.github.io"
-      repoID: "R_kgDOHQOwYw"
+      repoID: "MDEwOlJlcG9zaXRvcnk3MjYwMDMxMg=="
       category: "General"
       categoryID: "DIC_kwDOBFPK-M4CSvHc"
       mapping: "url"
