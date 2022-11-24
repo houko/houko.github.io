@@ -18,15 +18,15 @@ hasCJKLanguage: true
 
 # 每页显示文章数量
 # pagination size
-paginate: 10
+paginate: 20
 
 # 启用谷歌统计
 # Google Analytics tracking code
-# googleAnalytics: UA-98634098-1
+googleAnalytics: UA-80824007-1
 
 # 版权信息，默认为 author.name ↓
 # default: author.name ↓
-# copyright: "" 
+copyright: "@Copyright 2022"
 
 permalinks:
   # 文章链接的格式
@@ -195,7 +195,7 @@ params:
   topTitle: false
 
   # 在首页顶部创建一个通知部分
-  # Create a Announcement section at the top of the home page
+  # Create an Announcement section at the top of the home page
   announcement:
     enabled: true
     file: "README.md" # assets/README.md
@@ -249,7 +249,7 @@ params:
 
   # 标题计数器
   # Title counter
-  headlineCounter: false
+  headlineCounter: true
 
   # 固定导航栏
   # Fixed navigation bar
@@ -343,13 +343,13 @@ params:
     enabled: true
     autoBionic: false # 自动启用 Bionic Reading / auto enable Bionic Reading
     skipLinks: false # 跳过链接 / skip links
-    excludeWords: [] # 忽略的单词 / ignored words
-    excludeNodeNames: [] # 忽略的节点名称 / ignored node names
-    excludeClasses: ['github'] # 忽略的类名 / ignored classes
+    excludeWords: [ ] # 忽略的单词 / ignored words
+    excludeNodeNames: [ ] # 忽略的节点名称 / ignored node names
+    excludeClasses: [ 'github' ] # 忽略的类名 / ignored classes
 
   # 启用谷歌翻译插件
   # enable google translate in footer
-  googleTranslate: true
+  googleTranslate: false
 
   # 优化中文排版，请参考：https://github.com/vinta/pangu.js
   # Optimize Chinese typography, see: https://github.com/vinta/pangu.js
@@ -377,7 +377,7 @@ params:
     enabled: true
     # 超过这个字数后将显示目录
     # When the article word count is greater than this value, the TOC will be displayed
-    wordCount: 400 
+    wordCount: 400
 
   # 加密功能
   # encryption articles
@@ -447,7 +447,7 @@ languages:
     params:
       languageIcon: "images/i18n/zh-cn.svg" # in assets folder
       font: "Times New Roman,Times,Heti Song,serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol"
-      twitter: 
+      twitter:
         rsshub: "https://rsshub.rssforever.com"
         id: "xiaomoinfo"
         imageProcessing: true

@@ -1,7 +1,7 @@
 {
   "name": "xiaomo-blog",
   "version": "1.0.0",
-  "description": "",
+  "description": "xiaomo's blog",
   "main": "index.js",
   "scripts": {
     "dev": "hugo server"
@@ -10,15 +10,16 @@
     "type": "git",
     "url": "git+https://github.com/houko/xiaomo-blog.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "blog"
+  ],
+  "author": "xiaomo<suzukaze.hazuki2020@gmail.com>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/houko/xiaomo-blog/issues"
   },
   "homepage": "https://github.com/houko/xiaomo-blog#readme",
   "dependencies": {
-    "hugo": "^0.0.3",
-    "postcss-cli": "^10.0.0"
+    "hugo": "^0.0.3"
   }
 }
