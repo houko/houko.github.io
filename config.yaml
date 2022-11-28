@@ -369,7 +369,7 @@ params:
 
   # 显示文章字数
   # show word count
-  wordCount: false
+  wordCount: true
 
   # 开启文章内目录，可以在页面内单独设置
   # Show table of contents, You can enable it separately in the page
@@ -411,7 +411,7 @@ params:
 
   # 默认文章封面图片，不会显示在内容页面
   # Default post card featured image, not displayed on content pages
-  defaultFeaturedImage: false # false | featured.png in assets folder | https://unsplash.it/1920/1080/?random={{timestamp}}
+  defaultFeaturedImage: true # false | featured.png in assets folder | https://unsplash.it/1920/1080/?random={{timestamp}}
 
   # 自动调整图片大小并兼容 Webp 格式
   # Optimize your images and SEO
