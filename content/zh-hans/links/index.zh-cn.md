@@ -6,10 +6,5 @@ layout: "links"
 
 #### 常用网站
 
-{{< link url="https://github.com/" image="github.png" title="GitHub" desc="some desc text..." >}}
-{{< link url="https://douban.com/" image="douban.png" title="Douban" desc="some desc text..." >}}
-{{< link url="https://youtube.com/" image="youtube.png" title="YouTube" desc="some desc text..." >}}
-{{< link url="https://sspai.com/" image="sspai.png" title="Sspai" desc="some desc text..." >}}
-{{< link url="https://translate.google.com" image="translate.png" title="Translate" desc="some desc text..." >}}
-{{< link url="https://tieba.com/" image="tieba.png" title="Tieba" desc="some desc text..." >}}
-{{< link url="https://zhihu.com/" image="zhihu.png" title="Zhihu" desc="some desc text..." >}}
+{{< link url="https://github.com/houko" image="github.png" title="GitHub" desc="github..." >}}
+{{< link url="https://space.bilibili.com/6721344" image="bilibili.png" title="bilibili" desc="bilibili..." >}}
