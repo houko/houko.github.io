@@ -232,7 +232,7 @@ params:
 
   # 网站主题颜色
   # Site theme colors
-  themeColor: "#6C63FF"
+  themeColor: "#00B0FF"
 
   # 设置网站为黑白模式，通常用于哀悼活动
   # Set website to black and white, usually for mourning events
