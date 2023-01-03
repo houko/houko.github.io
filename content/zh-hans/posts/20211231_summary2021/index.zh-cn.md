@@ -5,7 +5,7 @@ tags:
   - summary
 categories: 
   - summary
-slug: mySummary2021
+slug: summary2021
 featured_image: cover.png
 ---
 
