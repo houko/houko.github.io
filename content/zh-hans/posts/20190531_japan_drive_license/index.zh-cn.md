@@ -1,6 +1,7 @@
 ---
 date: 2019-05-31
 title: 小莫的日本换驾照攻略
+featured_image: cover.png
 tags: 
   - japan
 categories: 
