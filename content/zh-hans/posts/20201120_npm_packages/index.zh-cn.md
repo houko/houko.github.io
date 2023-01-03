@@ -1,7 +1,7 @@
 ---
-
 date: 2020-12-08
 title: npm优秀库使用收集整理(长期向)
+featured_image: cover.png
 tags:
   - npm
 categories: 

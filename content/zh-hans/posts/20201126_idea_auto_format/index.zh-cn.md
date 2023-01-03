@@ -1,5 +1,4 @@
 ---
-
 date: 2020-11-26
 title: 使用IDEA保存时自动格式化代码配置
 featured_image: cover.png
