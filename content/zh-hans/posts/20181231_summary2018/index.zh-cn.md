@@ -1,7 +1,7 @@
 ---
-
 date: 2018-12-31
 title: 2018年终总结（从杭州到日本工作的心路历程）
+featured_image: cover.png
 tags: 
   - japan
   - summary
