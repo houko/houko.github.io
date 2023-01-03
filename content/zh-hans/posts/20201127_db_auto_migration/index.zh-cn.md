@@ -1,7 +1,7 @@
 ---
-
 date: 2020-11-27
 title: 使用flyway版本控制工具维护数据库表
+featured_image: cover.png
 tags:
   - mysql
 categories: 
