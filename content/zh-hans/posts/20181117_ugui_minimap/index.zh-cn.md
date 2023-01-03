@@ -1,7 +1,7 @@
 ---
-
 date: 2018-11-20
 title: unity3d小地图
+featured_image: cover.png
 tags: 
   - ugui
 categories:

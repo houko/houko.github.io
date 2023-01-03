@@ -1,6 +1,7 @@
 ---
 date: 2018-06-22
 title: docker应用
+featured_image: cover.png
 tags: 
   - 容器
 categories: 

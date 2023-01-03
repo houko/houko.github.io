@@ -1,7 +1,7 @@
 ---
-
 date: 2018-11-17
 title: 使用UGUI制作滚动列表-选服列表
+featured_image: cover.png
 tags: 
   - ugui
 categories: 

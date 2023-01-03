@@ -1,6 +1,7 @@
 ---
 date: 2018-11-18
 title: 使用UGUI中的层级问题——以背包为例
+featured_image: cover.png
 tags: 
   - ugui
 categories: 

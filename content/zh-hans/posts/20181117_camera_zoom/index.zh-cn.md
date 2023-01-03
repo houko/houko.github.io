@@ -1,6 +1,7 @@
 ---
 date: 2018-12-07
 title: 镜头拉远拉近
+featured_image: cover.png
 tags: 
   - function
 categories: 
