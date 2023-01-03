@@ -1,6 +1,7 @@
 ---
 date: 2021-06-28
 title: 日本医疗制度之限度額適用認定証
+featured_image: cover.png
 tags:
   - japan
 categories:
