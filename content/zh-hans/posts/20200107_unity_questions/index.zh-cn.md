@@ -1,6 +1,7 @@
 ---
 date: 2020-01-07
 title: unity常见面试题
+featured_image: cover.png
 tags:
   - game
 categories:
