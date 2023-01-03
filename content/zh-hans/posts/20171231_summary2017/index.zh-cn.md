@@ -7,7 +7,7 @@ categories:
 tags: 
   - life
   - summary
-slug: summary2017
+slug: summary
 ---
 最近忙的真的有点晕头转向的,觉得自己的脑袋不够用了。
 <!-- more -->
