@@ -1,7 +1,7 @@
 ---
-
 date: 2018-06-11
 title: jdk源码系列-Java中ArrayList、LinkedList和Vector的联系与区别
+featured_image: cover.png
 tags: 
   - 源码系列
   - JDK源码系列

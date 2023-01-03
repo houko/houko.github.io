@@ -1,7 +1,7 @@
 ---
-
 date: 2018-06-01
 title: jdk源码系列-Object
+featured_image: cover.png
 tags: 
   - 源码系列
   - JDK源码系列
