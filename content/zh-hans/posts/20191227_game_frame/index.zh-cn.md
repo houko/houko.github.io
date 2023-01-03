@@ -1,6 +1,7 @@
 ---
 date: 2019-12-07
 title: 经历了几场面试后的全球同服架构思考
+featured_image: cover.png
 tags:
   - game
 categories:
