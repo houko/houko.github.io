@@ -1,7 +1,7 @@
 ---
-
 date: 2020-11-30
 title: spring cloud集成spring security
+featured_image: cover.png
 tags:
   - java
 categories: 

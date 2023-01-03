@@ -1,6 +1,7 @@
 ---
 date: 2020-12-08
 title: js/ts常用公有方法收集整理(长期向)
+featured_image: cover.png
 tags:
   - web
 categories: 
