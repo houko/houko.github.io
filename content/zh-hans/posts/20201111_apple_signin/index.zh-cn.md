@@ -1,7 +1,7 @@
 ---
-
 date: 2020-11-08
 title: web端接入apple Sign in流程
+featured_image: cover.png
 tags:
   - web
 categories: 
