@@ -1,6 +1,7 @@
 ---
 date: 2022-12-31
 title: 2022年年终总结(而立之年的蜕变)
+featured_image: cover.png
 tags:
   - summary
 categories:
