@@ -1,6 +1,7 @@
 ---
 date: 2020-10-28
 title: vue框架状态管理之vuex
+featured_image: cover.png
 tags:
   - vue
 categories: 

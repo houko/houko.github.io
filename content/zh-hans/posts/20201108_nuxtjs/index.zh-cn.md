@@ -1,6 +1,7 @@
 ---
 date: 2020-11-08
 title: nuxt.js使用介绍
+featured_image: cover.png
 tags:
   - nuxt
 categories: 
