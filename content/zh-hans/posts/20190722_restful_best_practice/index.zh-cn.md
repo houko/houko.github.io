@@ -1,7 +1,7 @@
 ---
-
 date: 2019-07-22
 title: restful最佳实践
+featured_image: cover.png
 tags: 
   - java
 categories: 
