@@ -1,7 +1,9 @@
 ---
-
 date: 2016-12-31
 title: 2016年终总结(进入游戏行业)
+featured_image: cover.png
+categories:
+  - summary
 tags: 
   - summary
 slug: StartMy2017

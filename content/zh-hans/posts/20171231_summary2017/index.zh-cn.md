@@ -1,7 +1,9 @@
 ---
-
 date: 2017-12-31
 title: 2017年终总结(作为主程的这一年)
+featured_image: cover.png
+categories:
+  - summary
 tags: 
   - life
   - summary

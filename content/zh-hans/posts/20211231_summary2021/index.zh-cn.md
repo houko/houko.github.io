@@ -4,7 +4,7 @@ title: 2021年年终总结(又是跨界的一年)
 tags:
   - summary
 categories: 
-  - Japan
+  - summary
 slug: mySummary2021
 featured_image: cover.png
 ---

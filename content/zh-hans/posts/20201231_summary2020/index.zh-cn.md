@@ -3,6 +3,8 @@
 date: 2020-12-31
 title: 2020年年终总结和第二个长期学习计划
 featured_image: cover.png
+categories:
+  - summary
 tags:
   - japan
   - summary
