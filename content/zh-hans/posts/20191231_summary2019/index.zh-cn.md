@@ -1,7 +1,7 @@
 ---
-
 date: 2019-12-31
 title: 2019年年终总结（作为前端开发这一年）
+featured_image: cover.png
 tags:
   - japan
   - summary
