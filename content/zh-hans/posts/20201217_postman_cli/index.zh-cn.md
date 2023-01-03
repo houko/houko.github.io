@@ -1,7 +1,7 @@
 ---
-
 date: 2020-12-17
 title: postman和commandline tools（newman）用法介绍
+featured_image: cover.png
 tags:
   - postman
 categories: 

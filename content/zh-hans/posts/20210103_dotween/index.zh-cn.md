@@ -1,6 +1,7 @@
 ---
 date: 2021-01-04
-title: (转)doTween插件使用介绍
+title: doTween插件使用介绍
+featured_image: cover.png
 tags:
   - doTween
 categories: 
