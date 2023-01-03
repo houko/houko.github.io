@@ -31,8 +31,8 @@ copyright: "@Copyright 2023"
 permalinks:
   # 文章链接的格式
   # Format of posts links
-  posts: /:year/:month/:day/:slug.html # 2019/01/01/hello-world.html
-  pages: /:slug.html # about.html
+  posts: /:year/:month/:day/:slug # 2019/01/01/hello-world.html
+  pages: /:slug # about.html
 
 author:
   name: xiaomo
