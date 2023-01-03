@@ -1,6 +1,7 @@
 ---
 date: 2020-11-08
 title: node项目监控工具之pm2
+featured_image: cover.png
 tags:
   - pm2
 categories: 
