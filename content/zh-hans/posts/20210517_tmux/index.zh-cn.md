@@ -1,6 +1,7 @@
 ---
 date: 2021-05-17
 title: 我的tmux之旅（tmux使用详解）
+featured_image: cover.png
 tags:
   - 工具
 categories:
