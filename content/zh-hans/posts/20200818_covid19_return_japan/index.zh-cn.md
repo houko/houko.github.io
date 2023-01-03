@@ -1,6 +1,7 @@
 ---
 date: 2020-08-18
 title: 疫情下的回日坎坷路
+featured_image: cover.png
 tags:
   - japan
 categories:
