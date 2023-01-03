@@ -1,7 +1,7 @@
 ---
-
 date: 2019-08-05
 title: jdk源码系列-Java到底是值传递还是引用传递？
+featured_image: cover.png
 tags:
   - 源码系列
   - JDK源码系列
