@@ -8,7 +8,7 @@ categories:
 tags:
   - japan
   - summary
-slug: mySecondFiveYearsLifePlan
+slug: summary2020
 ---
 
 2021年了，离制定[第一个5年计划](https://blog.xiaomo.info/2016/2016StudyPlan/)己经过去了将近5年， 回头再看这些内容发现有些现在己经被更好用的工具替代了, 或者被吞并了， 不禁感叹技术的发展让人眼花缭乱， gulp被webpack取代， atom被vscode收购，github被巨硬重金买下， angular2都特么混到V11了， 当时觉得牛逼的jquery纷纷被各大厂抛弃。 国民老公被记在小本本上， 国民老婆从林志玲也变成了黑泽志玲。 时间真是把杀猪刀， 被生活无情的按在地上摩擦了5年， 从一个刚入社会的小萌新变成一个大叔。 我秃了但我感觉我也变强了， 感觉是时候制定一个新的5年计划了， 合计合计下一个五年继续折磨我的头发的会是哪些东西。 最后敢问各位道友， 日本植发哪家强？
