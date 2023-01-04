@@ -13,7 +13,7 @@ slug: summary
  <!-- more -->
 ## 2022年大事件
 ### 2022年3月-转职
-从[CTW](https://ctw.inc/)离职，4月加入[U-NEXT](https://github.com/u-next)的CoreTeam开始了`Full Remote`的工作，主要技术栈是 `golang`、`python`、`nodejs`、`grpc`、`GraphQL`和`k8s`。也都是大多没有接触过的东西所以在边学习边做Task的状态下工作着，遇到了非常好的前辈在工作的时候给我很多帮助。目前后端用的技术如下：
+从[CTW](https://ctw.inc/)离职，4月加入[U-NEXT](https://github.com/u-next)的CoreTeam开始了`Full Remote`的工作，主要技术栈是 `golang`、`python`、`nodejs`、`grpc`、`GraphQL`和`k8s`。也都是大多没有接触过的东西。所以在边学习边做Task的状态下工作着，遇到了非常好的前辈在工作的时候给我很多帮助。目前后端用的技术如下：
 ![backend](backend.png)
 ![工作台](work.png)
 
@@ -69,7 +69,7 @@ slug: summary
 
 ## 2022年主要成果
 ### 考取的云计算证书
-如果说2022年取得最大的成果的话，那应该是考取的云计算方面的证书了吧，涉及到Linux、IaC、AWS、Kubernetes共7个[证书](https://www.credly.com/users/xiaomoinfo/badges)，且大部分是在零基础的情况下学习并获得。上半年的重点是学习各种基础，下半年的重点是针对考点进行练习，所以取得证书的时间多集中在下半年。
+如果说2022年取得最大的成果的话，那应该是考取的云计算方面的证书了吧，涉及到`Linux`、`IaC`、`AWS`、`Kubernetes`共7个[证书](https://www.credly.com/users/xiaomoinfo/badges)，且大部分是在零基础的情况下学习并获得。上半年的重点是学习各种基础，下半年的重点是针对考点进行练习，所以取得证书的时间多集中在下半年。
 <img src="badge.png" alt="certificate" style="zoom: 10%;" />
 
 ### Notion笔记展示
@@ -98,8 +98,8 @@ slug: summary
 ![cks](cks.png)
 
 ### 坚持开源项目
-从2015年注册github开始，一直坚持参与与各种开源项目。
-[![github](github.png)](https://github.com/houko)
+从2015年注册[github](https://github.com/houko)开始，一直坚持参与与各种开源项目。
+![github](github.png)
 
 ## 2022年遇到的机遇和挑战
 ### 机遇
