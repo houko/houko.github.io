@@ -97,6 +97,10 @@ slug: summary
 目前在udemy上更新了[CKAD](https://www.udemy.com/course/kubernetes-ckad)和[CKS](https://www.udemy.com/course/kubernetes-cks/?couponCode=4089B1C0F52EE279CBB3)的课程，有需要的小伙伴可以点击链接购买，如果优惠过期了可以联系小莫要优惠码。之后还会推出更多的课程，希望小伙伴们能够多支持。
 ![cks](cks.png)
 
+### 坚持开源项目
+从2015年注册github开始，一直坚持参与与各种开源项目。
+[![github](github.png)](https://github.com/houko)
+
 ## 2022年遇到的机遇和挑战
 ### 机遇
 塞翁失马，焉知非福。因为一些原因从CTW离职了，但是找到了现在的工作，感觉非常开心。如果有注意到，能够发现我的关键时间点是从3月份开始的，因为我也正是在3月份离职的。在CTW是没有自己的生活，一切的时间都被繁琐的工作填满，换了工作之后整个人的生活状态都有了翻天覆地的变化，选择真的非常重要。
