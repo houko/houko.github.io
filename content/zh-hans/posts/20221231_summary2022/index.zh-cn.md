@@ -40,6 +40,7 @@ slug: summary
 <img src="tall.png" alt="tall" style="zoom: 20%;" />
 <img src="ice.png" alt="ice" style="zoom: 20%;" />
 <img src="selfphoto.png" alt="selfphoto" style="zoom:20%;" />
+<img src="self.png" alt="selfphoto" style="zoom:20%;" />
 
 ### 2022年8月-自学吉他
 开始自学`吉他`，坚持了大概2个月左右，录了几首弹唱。但是意识到如果不抓紧时间的话2022年的考证计划应该就没办法完成了，所以算是鸽了，2023年会重新拾起来的。
@@ -56,7 +57,7 @@ slug: summary
 
 
 ### 2022年11月-买车
-考虑了很久最终还是买了车，从杭州到日本之后过了几年把`思域`卖了一直是我的一块心病，所以还是在日本买了车。理智上来说买车的时机不是很好，但是能够极大的提升生活的幸福指数，人活着不就是为了能够开心一点么？
+考虑了很久最终还是买了车，从杭州到日本之后把思域卖了一直是我的一块心病，所以还是在日本买了车。理智上来说买车的时机不是很好，但是能够极大的提升生活的幸福指数，人活着不就是为了能够开心一点么？
 <img src="handle.png" alt="handle" style="zoom:10%;" />
 <img src="car.png" alt="car" style="zoom:10%;" />
 
@@ -81,7 +82,7 @@ slug: summary
 ![考证计划](exam.png)
 
 ### B站Up主成果
-前几年对游戏开发相关的技术比较感兴趣，于是搬运了`Unity3D`、`UE4`的一些视频到[B站](https://space.bilibili.com/6721344)。从2021年开始录制了一些关于`AWS`、`Linux`、`K8S`的一些视频，获得了很多好的反馈，现在粉丝数也有近2万人了。
+前几年对游戏开发相关的技术比较感兴趣，于是搬运了`Unity3D`、`UE4`的一些视频到[B站](https://space.bilibili.com/6721344)。从2021年开始录制了一些关于`AWS`、`Linux`、`K8S`的一些视频，获得了很多好的反馈，现在总播放量破百万粉丝数也有近2万人了。
 ![bilibili](bilibili.png)
 
 ### 开源了wechatgpt
@@ -148,3 +149,38 @@ slug: summary
 ### 视频剪辑
 课程的录制难免需要进行后期处理，视频剪辑也是一个不可缺少的能力，因为主要用mac系统，所以打算系统学学`FCP`。
 ![视频剪辑](video.png)
+
+
+## 一此碎碎念
+2022年也真是不平凡的一年，全世界发生了很多不可思议的事情。照之前的认知都是无法想象的事情，但是大家的接受能力也是惊人的，能够在极短的时间里了解、接受、并苦中作乐。 而这一年：
+### 我终于去看了错过了几年的樱花
+![樱花](sakura1.png)
+![樱花](sakura2.png)
+![樱花](sakura3.png)
+![樱花](sakura4.png)
+![樱花](sakura5.png)
+![樱花](sakura6.png)
+![樱花](sakura7.png)
+![樱花](sakura8.png)
+
+### 近距离看了东京塔、晴空塔和摩天轮
+![东京塔](tower1.png)
+![天空树](tower2.png)
+![摩天轮](wheel.png)
+
+### 认识了许多志同道合的小伙伴
+朋友小心翼翼保护了一路生怕会碰到的完美蛋糕
+![cake](cake.png)
+
+### 去海边看了夕阳
+![夕阳](sun1.png)
+
+### 去感受了圣诞的梦幻
+![圣诞树](light1.png)
+![圣诞树](light2.png)
+
+### 收到了新年的礼物
+![gift](gift.png)
+
+### 看了心目中理想的房子
+![house](house.png)
