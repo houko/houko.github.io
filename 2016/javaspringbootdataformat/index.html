@@ -1,0 +1,224 @@
+<!doctype html><html lang=zh-cn class=lang-zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=keywords content="spring,java,Hugo,Hugo Theme,Luna,"><meta name=description content="最近在用spring boot 做数据接口时难免遇到时间这类的问题，接口原则：能服务端处理的别留给客户端。客户端的职责就是把服务端的数据完美的展现出来"><meta itemprop=description content="最近在用spring boot 做数据接口时难免遇到时间这类的问题，接口原则：能服务端处理的别留给客户端。客户端的职责就是把服务端的数据完美的展现出来"><meta http-equiv=x-ua-compatible content="ie=edge"><meta itemprop=name content="spring boot做前后分离时间格式化 - 小莫的博客-fighting(技术分享、生活随笔)"><link href=https://blog.xiaomo.info/index.xml title="spring boot做前后分离时间格式化 - 小莫的博客-fighting(技术分享、生活随笔)" type=application/rss+xml rel=alternate><title>spring boot做前后分离时间格式化 - 小莫的博客-fighting(技术分享、生活随笔)</title><link rel=stylesheet href="/main.86108ed4a3b93e077dcb401e0c40f8748d2fd7bc4de45cdcf25879e6a284dcb6.css" integrity="sha256-hhCO1KO5Pgd9y0AeDED4dI0v17xN5Fzc8lh55qKE3LY="><meta property="og:site_name" content="spring boot做前后分离时间格式化 - 小莫的博客-fighting(技术分享、生活随笔)"><meta property="og:type" content="article"><meta property="og:title" content="spring boot做前后分离时间格式化"><meta property="og:description" content="最近在用spring boot 做数据接口时难免遇到时间这类的问题，接口原则：能服务端处理的别留给客户端。客户端的职责就是把服务端的数据完美的展现出来"><meta property="og:url" content="https://blog.xiaomo.info/2016/javaspringbootdataformat/"><meta property="og:image" content="https://blog.xiaomo.info/featured.png"><meta property="og:image:width" content="1366"><meta property="og:image:height" content="768"><meta property="article:publisher" content="https://blog.xiaomo.info/2016/javaspringbootdataformat/"><meta property="article:published_time" content="2016-11-02T00:00:00+09:00"><meta property="article:modified_time" content="2023-01-06T13:06:22+09:00"><meta name=theme-color content="#00B0FF"><meta name=mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-title content="spring boot做前后分离时间格式化 - 小莫的博客-fighting(技术分享、生活随笔)"><meta name=apple-mobile-web-app-status-bar-style content="white"><meta name=twitter:card content="summary_large_image"><meta name=twitter:site content="@xiaomoinfo"><meta name=twitter:creator content="@xiaomoinfo"><meta name=twitter:title content="spring boot做前后分离时间格式化 - 小莫的博客-fighting(技术分享、生活随笔)"><meta name=twitter:description content="最近在用spring boot 做数据接口时难免遇到时间这类的问题，接口原则：能服务端处理的别留给客户端。客户端的职责就是把服务端的数据完美的展现出来"><meta name=twitter:url content="https://blog.xiaomo.info/2016/javaspringbootdataformat/"><meta name=twitter:image content="https://blog.xiaomo.info/featured.png"><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=manifest href=/manifest.json><link href=/icon.png rel="shortcut icon"><link href=/icon.png rel=bookmark><link rel=apple-touch-icon href=/icon.png><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"spring boot做前后分离时间格式化","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.xiaomo.info\/2016\/javaspringbootdataformat\/"},"genre":"posts","keywords":"spring","wordcount":530,"url":"https:\/\/blog.xiaomo.info\/2016\/javaspringbootdataformat\/","datePublished":"2016-11-02T00:00:00\u002b09:00","dateModified":"2023-01-06T13:06:22\u002b09:00","license":"@Copyright 2023","author":{"@type":"Person","name":"xiaomo"},"description":""}</script><script async src=https://cdn.splitbee.io/sb.js></script></head><body class="dark:bg-darkBg dark:text-darkText"><div class="relative mx-auto shadow-lg md:max-w-4xl xl:max-w-4xl 2xl:max-w-4xl"><div class="main flex flex-col justify-between bg-white dark:bg-darkFg"><header class="fixed z-10 backdrop-blur-md bg-white/80 dark:bg-darkFg mx-auto w-full md:max-w-4xl xl:max-w-4xl 2xl:max-w-4xl"><nav id=nav class="navbar top-0 z-10 flex items-center border-b px-5 py-6 dark:border-darkBorder md:px-10"><div class="route-items flex w-full items-center justify-around"><a title=首页 data-active-link=/ href=/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-home flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">首页</span>
+</a><a title=关于我 data-active-link=/about/ href=/about/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-heart flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">关于我</span>
+</a><a title=朋友们 data-active-link=/links/ href=/links/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-people flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">朋友们</span>
+</a><a title=归档 data-active-link=/archives/ href=/archives/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-bar-chart flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">归档</span>
+</a><a title=推特 data-active-link=/twitter/ href=/twitter/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-twitter flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">推特</span>
+</a><a title=GitHub data-active-link=/github/ href=/github/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-github flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">GitHub</span>
+</a><a title=搜索 data-active-link=/search/ href=/search/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-search flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">搜索</span></a></div></nav><div class="dark-mode-switch absolute right-0 top-0 z-10 cursor-pointer pr-2 pt-2 text-xl leading-none"><i class="eva eva-moon opacity-20 dark:opacity-70"></i></div></header><main class="relative flex flex-grow mt-28 md:mt-20" id=swup><style>:root{--font:Times New Roman,Times,Heti Song,serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol}</style><div class="type-posts layout- w-full"><div class="relative h-full"><div class="relative h-full"><div class="page-view-article flex h-full flex-col bg-white dark:bg-darkFg"><div class=relative><div><div class="-mb-2 w-full p-6 pb-0 text-3xl md:px-10">spring boot做前后分离时间格式化</div></div></div><div class="article-info border-b p-6 pb-3 text-sm dark:border-darkBorder md:px-10"><div><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-clock-outline mr-1"></i>
+<span><time title="发布于 2016年11月2日 00:00:00" datetime=2016-11-02T00:00:00+09:00>2016年11月2日</time></span></div><span class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-edit-2-outline mr-1"></i>
+<span><time title="最后修改于：2023年1月6日 13:06:22" datetime=2023-01-06T13:06:22+09:00>2023年1月6日</time></span></span><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-flag-outline mr-1"></i>
+<span>2 分钟</span></div><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-bar-chart-outline mr-1"></i>
+<span>530 字</span></div></div><div class="mb-3 flex items-center"><i class="eva eva-pricetags-outline mr-1"></i>
+<span class=mr-3>标签</span><a href=/tags/spring title=spring class="group mr-2 flex items-center text-sm">
+<i class="mr-1 text-gray-400 group-hover:text-theme">#</i>
+<span class="text-gray-400 group-hover:text-theme">spring</span></a></div><div class="mb-3 flex items-center"><i class="eva eva-folder-outline mr-1"></i>
+<span class=mr-3>分类</span><a href=/categories/java title=java class="group flex items-center text-sm">
+<span class="text-gray-400 group-hover:text-theme">java</span>
+<span class="mx-0.5 group-last:hidden">,</span></a></div></div><aside class="toc border-b border-gray-300 px-5 py-5 dark:border-darkBorder md:px-10 2xl:fixed 2xl:top-10 2xl:m-0 2xl:-ml-72 2xl:w-72 2xl:border-none 2xl:p-0 2xl:py-4 2xl:pr-4"><header><h1 class="mb-3 text-2xl font-bold 2xl:mb-4">文章目录</h1></header><nav id=TableOfContents><ul><li><ul><li><a href=#一写一个serializer>一、写一个<code>Serializer</code></a></li><li><a href=#二-使用>二、 使用</a></li></ul></li></ul></nav></aside><section class="article-content typo relative flex-grow px-6 py-5 md:px-10"><i title=更快的阅读 id=bionicReading class="absolute right-0 top-0 cursor-pointer p-3"><svg class="w-4 h-4 fill-current text-gray-400" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" p-id="10811"><path d="M480 192c-19.2.0-32-12.8-32-32V32c0-19.2 12.8-32 32-32s32 12.8 32 32v128c0 19.2-12.8 32-32 32zM160 1024c-6.4.0-19.2.0-25.6-6.4l-128-128c0-6.4-6.4-19.2-6.4-25.6s6.4-19.2 6.4-25.6l512-512c12.8-6.4 38.4-6.4 51.2.0l128 128c0 6.4 6.4 19.2 6.4 25.6s-6.4 19.2-6.4 25.6l-512 512c-6.4 6.4-19.2 6.4-25.6 6.4zM76.8 864l83.2 83.2L627.2 480 544 396.8 76.8 864zM992 576H864c-19.2.0-32-12.8-32-32s12.8-32 32-32h128c19.2.0 32 12.8 32 32s-12.8 32-32 32zM768 288c-6.4.0-19.2.0-25.6-6.4-12.8-12.8-12.8-32 0-44.8l96-96c12.8-12.8 32-12.8 44.8.0s12.8 32 0 44.8l-96 96c0 6.4-12.8 6.4-19.2 6.4zm-512 0c-6.4.0-19.2.0-25.6-6.4l-96-96c-6.4-12.8-6.4-38.4.0-51.2s32-12.8 44.8.0l96 96c12.8 12.8 12.8 32 0 44.8.0 12.8-12.8 12.8-19.2 12.8zM864 896c-6.4.0-19.2.0-25.6-6.4l-96-96c-12.8-12.8-12.8-32 0-44.8s32-12.8 44.8.0l96 96c12.8 12.8 12.8 32 0 44.8.0 6.4-12.8 6.4-19.2 6.4z" p-id="10812"/><path d="M544 640c-6.4.0-19.2.0-25.6-6.4l-128-128c-6.4-12.8-6.4-38.4.0-51.2s32-12.8 44.8.0l128 128c12.8 12.8 12.8 38.4 6.4 51.2-6.4 6.4-19.2 6.4-25.6 6.4z" p-id="10813"/></svg></i><p>最近在用spring boot 做数据接口时难免遇到时间这类的问题，接口原则：能服务端处理的别留给客户端。客户端的职责就是把服务端的数据完美的展现出来就好了。所以在返回时间的时候最好先进行一下格式化处理，不要返回时间戳格式。</p><h3 class=group id=一写一个serializer>一、写一个<code>Serializer</code><a href=#%e4%b8%80%e5%86%99%e4%b8%80%e4%b8%aaserializer><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h3><p>然后做一个时间格式化的处理</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#ff79c6>package</span> info.xiaomo.core.filter;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> com.fasterxml.jackson.core.JsonGenerator;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> com.fasterxml.jackson.databind.JsonSerializer;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> com.fasterxml.jackson.databind.SerializerProvider;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> java.io.IOException;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> java.text.SimpleDateFormat;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> java.util.Date;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>public class CustomDateSerializer extends JsonSerializer&lt;Date&gt; {
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    @Override
+</span></span><span style=display:flex><span>    public void <span style=color:#50fa7b>serialize</span>(Date value, JsonGenerator jsonGenerator, SerializerProvider provider) throws IOException {
+</span></span><span style=display:flex><span>        SimpleDateFormat sdf = new <span style=color:#50fa7b>SimpleDateFormat</span>(<span style=color:#f1fa8c>&#34;yyyy-MM-dd HH:mm:ss&#34;</span>);
+</span></span><span style=display:flex><span>        jsonGenerator.<span style=color:#50fa7b>writeString</span>(sdf.<span style=color:#50fa7b>format</span>(value));
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h3 class=group id=二-使用>二、 使用<a href=#%e4%ba%8c-%e4%bd%bf%e7%94%a8><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h3><p>在需要转换的时间的Model中加上这个类,仔细观察下面代码中类型为<code>Date</code>的属性</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">59
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">60
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">61
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">62
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">63
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">64
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">65
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">66
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">67
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">68
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">69
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">70
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">71
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">72
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">73
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">74
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">75
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#ff79c6>package</span> info.xiaomo.core.model.base;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> com.fasterxml.jackson.databind.annotation.JsonSerialize;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> info.xiaomo.core.filter.CustomDateSerializer;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> javax.persistence.<span style=color:#ff79c6>*</span>;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> java.util.Date;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6272a4>/**
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * 把今天最好的表现当作明天最新的起点．．～
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * いま 最高の表現 として 明日最新の始発．．～
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * Today the best performance  as tomorrow newest starter!
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * Created by IntelliJ IDEA.
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> *
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * @author: xiaomo
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * @github: https://github.com/houko
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * @email: hupengbest@163.com
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * @QQ_NO: 83387856
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * @Date: 2016/4/1 20:37
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * @Description: model基类
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * @Copyright(©) 2015 by xiaomo.
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> **/</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>@MappedSuperclass
+</span></span><span style=display:flex><span>public abstract class BaseModel {
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    @Id
+</span></span><span style=display:flex><span>    @<span style=color:#50fa7b>GeneratedValue</span>(strategy = GenerationType.AUTO)
+</span></span><span style=display:flex><span>    @<span style=color:#50fa7b>Column</span>(name = <span style=color:#f1fa8c>&#34;Id&#34;</span>)
+</span></span><span style=display:flex><span>    private long id;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    @Version
+</span></span><span style=display:flex><span>    @<span style=color:#50fa7b>Column</span>(name = <span style=color:#f1fa8c>&#34;Version&#34;</span>)
+</span></span><span style=display:flex><span>    private long version;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    @<span style=color:#50fa7b>JsonSerialize</span>(using = CustomDateSerializer.class)
+</span></span><span style=display:flex><span>    @<span style=color:#50fa7b>Column</span>(name = <span style=color:#f1fa8c>&#34;CreateTime&#34;</span>)
+</span></span><span style=display:flex><span>    private Date createTime;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    @<span style=color:#50fa7b>JsonSerialize</span>(using = CustomDateSerializer.class)
+</span></span><span style=display:flex><span>    @<span style=color:#50fa7b>Column</span>(name = <span style=color:#f1fa8c>&#34;UpdateTime&#34;</span>)
+</span></span><span style=display:flex><span>    private Date updateTime;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    public Date <span style=color:#50fa7b>getUpdateTime</span>() {
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>return</span> updateTime;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    public void <span style=color:#50fa7b>setUpdateTime</span>(Date updateTime) {
+</span></span><span style=display:flex><span>        this.updateTime = updateTime;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    public long <span style=color:#50fa7b>getId</span>() {
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>return</span> id;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    public void <span style=color:#50fa7b>setId</span>(long id) {
+</span></span><span style=display:flex><span>        this.id = id;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    public long <span style=color:#50fa7b>getVersion</span>() {
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>return</span> version;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    public void <span style=color:#50fa7b>setVersion</span>(long version) {
+</span></span><span style=display:flex><span>        this.version = version;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    public Date <span style=color:#50fa7b>getCreateTime</span>() {
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>return</span> createTime;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    public void <span style=color:#50fa7b>setCreateTime</span>(Date createTime) {
+</span></span><span style=display:flex><span>        this.createTime = createTime;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div></section><div class="px-6 pb-5 pt-4 text-center text-xl text-gray-500 md:px-10 md:pb-10 md:pt-14 flex items-center justify-center"><a class="mr-4 inline-flex h-5 w-5 items-center" title="分享到 Twitter" href="https://twitter.com/share?&text=%e6%9c%80%e8%bf%91%e5%9c%a8%e7%94%a8spring%20boot%20%e5%81%9a%e6%95%b0%e6%8d%ae%e6%8e%a5%e5%8f%a3%e6%97%b6%e9%9a%be%e5%85%8d%e9%81%87%e5%88%b0%e6%97%b6%e9%97%b4%e8%bf%99%e7%b1%bb%e7%9a%84%e9%97%ae%e9%a2%98%ef%bc%8c%e6%8e%a5%e5%8f%a3%e5%8e%9f%e5%88%99%ef%bc%9a%e8%83%bd%e6%9c%8d%e5%8a%a1%e7%ab%af%e5%a4%84%e7%90%86%e7%9a%84%e5%88%ab%e7%95%99%e7%bb%99%e5%ae%a2%e6%88%b7%e7%ab%af%e3%80%82%e5%ae%a2%e6%88%b7%e7%ab%af%e7%9a%84%e8%81%8c%e8%b4%a3%e5%b0%b1%e6%98%af%e6%8a%8a%e6%9c%8d%e5%8a%a1%e7%ab%af%e7%9a%84%e6%95%b0%e6%8d%ae%e5%ae%8c%e7%be%8e%e7%9a%84%e5%b1%95%e7%8e%b0%e5%87%ba%e6%9d%a5&url=https://blog.xiaomo.info/2016/javaspringbootdataformat/" target=_blank rel="noopener noreferrer"><i class="eva eva-twitter hover:text-theme"></i></a><i class="eva eva-copy mr-4 cursor-pointer hover:text-theme" title=复制链接 data-clipboard-text=https://blog.xiaomo.info/2016/javaspringbootdataformat/></i><div class="group h-5 w-5 relative hidden cursor-pointer sm:inline-block"><i title=二维码 class="eva show-qrcode eva-smartphone hover:text-theme"></i><div class="qrcode-wrapper p-2 pointer-events-none absolute left-2/4 bottom-10 h-32 w-32 -translate-x-1/2 overflow-hidden rounded border border-gray-300 bg-white opacity-0 transition duration-300 ease-[ease] group-hover:opacity-100"><img class="h-full w-full" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://blog.xiaomo.info/2016/javaspringbootdataformat/" alt=二维码></div></div></div><div class="border-b dark:border-darkBorder"></div><div class="flex justify-between px-2 py-4 text-xl md:px-6 md:text-2xl"><div><a href=/2016/javaspringbootcors/ title="spring boot做前后分离的跨域问题" class="invisible flex cursor-pointer items-center text-gray-500 transition duration-300 ease-[ease] hover:text-theme dark:text-darkTextPlaceholder dark:hover:text-darkText" style=visibility:visible><span class="flex items-center text-5xl opacity-70 dark:bg-opacity-100"><i class="eva eva-chevron-left-outline"></i></span>
+<span>上一篇</span></a></div><div class="hidden items-center text-xs xl:flex">除特殊声明外，本博客一律使用以下协议进行授权 「
+<a href=https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh target=_blank rel="noopener noreferrer" class=text-theme>署名 - 非商业性使用 - 禁止演绎 4.0</a>
+」</div><div class="flex items-center text-sm xl:hidden"><a href=https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh target=_blank rel="noopener noreferrer" class=text-theme><img src=/Cc-by-nc-nd.svg alt="署名 - 非商业性使用 - 禁止演绎 4.0" title="署名 - 非商业性使用 - 禁止演绎 4.0" class=w-24></a></div><a href=/2016/javalombok/ title=lombok简化java代码注解的使用 class="invisible flex cursor-pointer items-center text-gray-500 transition duration-300 ease-[ease] hover:text-theme dark:text-darkTextPlaceholder dark:hover:text-darkText" style=visibility:visible><span>下一篇</span>
+<span class="flex items-center text-5xl opacity-70 dark:bg-opacity-100"><i class="eva eva-chevron-right-outline"></i></span></a></div><div class="border-t py-6 px-6 md:px-8 dark:border-darkBorder"><script src=https://giscus.app/client.js data-repo=houko/houko.github.io data-repo-id="MDEwOlJlcG9zaXRvcnk3MjYwMDMxMg==" data-category=General data-category-id=DIC_kwDOBFPK-M4CSvHc data-mapping=title data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=light data-lang=zh-CN data-loading=false crossorigin=anonymous data-swup-reload-script async></script><script data-swup-reload-script>(function(){addEventListener("message",t=>{if(event.origin!=="https://giscus.app")return;e()}),window.addEventListener("onThemeChange",e);function e(){setGiscusTheme(document.documentElement.dataset.scheme==="light"?"light":"dark")}})();function setGiscusTheme(e){let t=document.querySelector("iframe.giscus-frame");t&&t.contentWindow.postMessage({giscus:{setConfig:{theme:e}}},"https://giscus.app")}</script></div></div></div></div></div></main><footer><div class="com-footer flex flex-col items-center border-t py-4 px-4 text-sm leading-none text-gray-600 dark:border-darkBorder dark:text-darkTextPlaceholder md:flex-row md:justify-between"><div class="mb-2 flex items-center justify-between text-center md:mb-0"><span>© 2016 - 2023</span>
+<span class="mx-1.5 opacity-50">| </span>由 <a data-no-swup class="mx-1 font-bold hover:text-theme" href=https://gohugo.io/ target=_blank rel="noopener noreferrer">Hugo</a> <span class="text-xs opacity-70">❤</span> <a data-no-swup class="mx-1 font-bold hover:text-theme" href=https://github.com/Ice-Hazymoon/hugo-theme-luna target=_blank rel="noopener noreferrer">Luna</a> 驱动</div><div class="flex items-center"></div><div id=run-time class="mt-2 flex-grow text-right md:mt-0"><span>运行时间： </span><b id=run-time-d>0</b>
+<span class=text-xs>天</span>
+<b id=run-time-h>0</b>
+<span class=text-xs>小时</span>
+<b id=run-time-m>0</b>
+<span class=text-xs>分钟</span>
+<b id=run-time-s>0</b>
+<span class=text-xs>秒</span></div></div><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-80824007-1","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"))</script><script async src=https://www.google-analytics.com/analytics.js></script>
+<script type=text/javascript>window.__theme={cdn:"",pjax:!0,isServer:!1,$version:"27318bae09d55a97ea7da355b574a3210186ba07",lang:"zh-cn",imageZoom:!0,lazyload:!0,bionicReading:{enabled:!0,skipLinks:!1,autoBionic:!1,excludeWords:[],excludeClasses:["github"],excludeNodeNames:[]},katex:!0,search:!0,backtop:!0,pangu:!0,autoDarkMode:!1,googleAnalytics:!0,hugoEncrypt:{wrongPasswordText:"密码错误",userStorage:window.sessionStorage},console:{enabled:!0,leftColor:"#dd6065",rightColor:"#feb462",leftText:"Hugo Theme Luna",rightText:"Powered by Hugo ❤ Luna"},assets:{error_svg:"/images/error.svg",search_svg:"/images/search.svg"},i18n:{copy:{success:"复制成功",failed:"复制失败，请手动复制",copyCode:"复制代码"},search:{untitled:"无标题",loadFailure:"初始化搜索引擎失败",input:"请输入内容..."},darkMode:{dark:"切换到夜间模式",light:"切换到日间模式"}},creatTime:"2016/06/30"}</script><script type=text/javascript src=/ts/main.5562dd676e11d79991ff088b5335690420b8a54043d1dd6ced64a624ca63167d.js defer integrity="sha256-VWLdZ24R15mR/wiLUzVpBCC4pUBD0d1s7WSmJMpjFn0="></script><script>"serviceWorker"in navigator&&window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js")})</script>
+<script></script><script data-swup-reload-script></script></footer></div></div><a href=#nav title=返回顶部 id=back-top class="fixed right-6 bottom-9 z-10 translate-y-3 scale-90 cursor-pointer rounded-full bg-white opacity-0 transition duration-300 ease-[ease] dark:bg-darkBgAccent sm:scale-100"><div class=relative><div class="absolute left-0 top-0 flex h-full w-full items-center justify-center text-xl"><i class="eva eva-arrow-upward-outline"></i></div><svg id="svg" width="54" height="54" viewBox="0 0 54 54" preserveAspectRatio="xMinYMin meet"><circle transform="rotate(-90, 27 , 27)" style="stroke-dasharray:157,157;stroke-dashoffset:157" cx="27" cy="27" r="25" fill="none" stroke-width="4" stroke-linecap="round" stroke="var(--theme)"/></svg></div></a><div id=i18nlist></div><noscript><style>.dark-mode-switch,#run-time,#bionicReading,.noscript-hidden,[data-clipboard-text],[data-lazyload]{display:none}#back-top{opacity:1}.noscript-show{display:initial}</style></noscript></body></html>

@@ -1,0 +1,792 @@
+<!doctype html><html lang=zh-cn class=lang-zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=keywords content="web,Hugo,Hugo Theme,Luna,"><meta name=description content="前一段时间接入了google sign in的功能，现在继续接入apple sign in。待apple sign in 正式上线之后，我们的游戏支持 line、Faceboo"><meta itemprop=description content="前一段时间接入了google sign in的功能，现在继续接入apple sign in。待apple sign in 正式上线之后，我们的游戏支持 line、Faceboo"><meta http-equiv=x-ua-compatible content="ie=edge"><meta itemprop=name content="web端接入apple Sign in流程 - 小莫的博客-fighting(技术分享、生活随笔)"><link href=https://blog.xiaomo.info/index.xml title="web端接入apple Sign in流程 - 小莫的博客-fighting(技术分享、生活随笔)" type=application/rss+xml rel=alternate><title>web端接入apple Sign in流程 - 小莫的博客-fighting(技术分享、生活随笔)</title><link rel=stylesheet href="/main.86108ed4a3b93e077dcb401e0c40f8748d2fd7bc4de45cdcf25879e6a284dcb6.css" integrity="sha256-hhCO1KO5Pgd9y0AeDED4dI0v17xN5Fzc8lh55qKE3LY="><meta property="og:site_name" content="web端接入apple Sign in流程 - 小莫的博客-fighting(技术分享、生活随笔)"><meta property="og:type" content="article"><meta property="og:title" content="web端接入apple Sign in流程"><meta property="og:description" content="前一段时间接入了google sign in的功能，现在继续接入apple sign in。待apple sign in 正式上线之后，我们的游戏支持 line、Faceboo"><meta property="og:url" content="https://blog.xiaomo.info/2020/webapplesignin/"><meta property="og:image" content="https://blog.xiaomo.info/2020/webapplesignin/cover.png"><meta property="og:image:width" content="1390"><meta property="og:image:height" content="926"><meta property="article:publisher" content="https://blog.xiaomo.info/2020/webapplesignin/"><meta property="article:published_time" content="2020-11-08T00:00:00+09:00"><meta property="article:modified_time" content="2023-01-06T13:06:22+09:00"><meta name=theme-color content="#00B0FF"><meta name=mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-title content="web端接入apple Sign in流程 - 小莫的博客-fighting(技术分享、生活随笔)"><meta name=apple-mobile-web-app-status-bar-style content="white"><meta name=twitter:card content="summary_large_image"><meta name=twitter:site content="@xiaomoinfo"><meta name=twitter:creator content="@xiaomoinfo"><meta name=twitter:title content="web端接入apple Sign in流程 - 小莫的博客-fighting(技术分享、生活随笔)"><meta name=twitter:description content="前一段时间接入了google sign in的功能，现在继续接入apple sign in。待apple sign in 正式上线之后，我们的游戏支持 line、Faceboo"><meta name=twitter:url content="https://blog.xiaomo.info/2020/webapplesignin/"><meta name=twitter:image content="https://blog.xiaomo.info/2020/webapplesignin/cover.png"><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=manifest href=/manifest.json><link href=/icon.png rel="shortcut icon"><link href=/icon.png rel=bookmark><link rel=apple-touch-icon href=/icon.png><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"web端接入apple Sign in流程","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.xiaomo.info\/2020\/webapplesignin\/"},"genre":"posts","keywords":"web","wordcount":2046,"url":"https:\/\/blog.xiaomo.info\/2020\/webapplesignin\/","datePublished":"2020-11-08T00:00:00\u002b09:00","dateModified":"2023-01-06T13:06:22\u002b09:00","license":"@Copyright 2023","author":{"@type":"Person","name":"xiaomo"},"description":""}</script><script async src=https://cdn.splitbee.io/sb.js></script></head><body class="dark:bg-darkBg dark:text-darkText"><div class="relative mx-auto shadow-lg md:max-w-4xl xl:max-w-4xl 2xl:max-w-4xl"><div class="main flex flex-col justify-between bg-white dark:bg-darkFg"><header class="fixed z-10 backdrop-blur-md bg-white/80 dark:bg-darkFg mx-auto w-full md:max-w-4xl xl:max-w-4xl 2xl:max-w-4xl"><nav id=nav class="navbar top-0 z-10 flex items-center border-b px-5 py-6 dark:border-darkBorder md:px-10"><div class="route-items flex w-full items-center justify-around"><a title=首页 data-active-link=/ href=/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-home flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">首页</span>
+</a><a title=关于我 data-active-link=/about/ href=/about/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-heart flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">关于我</span>
+</a><a title=朋友们 data-active-link=/links/ href=/links/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-people flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">朋友们</span>
+</a><a title=归档 data-active-link=/archives/ href=/archives/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-bar-chart flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">归档</span>
+</a><a title=推特 data-active-link=/twitter/ href=/twitter/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-twitter flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">推特</span>
+</a><a title=GitHub data-active-link=/github/ href=/github/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-github flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">GitHub</span>
+</a><a title=搜索 data-active-link=/search/ href=/search/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-search flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">搜索</span></a></div></nav><div class="dark-mode-switch absolute right-0 top-0 z-10 cursor-pointer pr-2 pt-2 text-xl leading-none"><i class="eva eva-moon opacity-20 dark:opacity-70"></i></div></header><main class="relative flex flex-grow mt-28 md:mt-20" id=swup><style>:root{--font:Times New Roman,Times,Heti Song,serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol}</style><div class="type-posts layout- w-full"><div class="relative h-full"><div class="relative h-full"><div class="page-view-article flex h-full flex-col bg-white dark:bg-darkFg"><div class=relative><div style=background-image:linear-gradient(180deg,#232324,#a3a4a5);padding-bottom:42% class="article-cover relative h-0Page(/posts/20201111_apple_signin/index.zh-cn.md) w-full"><picture class=noscript-hidden><source data-srcset="/2020/webapplesignin/cover_hu3966ca6cfa45e1861661284b3d5a08b6_298237_1390x0_resize_q95_h2_catmullrom_3.webp 1440w" type=image/webp><img data-src=https://blog.xiaomo.info/2020/webapplesignin/cover.png src=/2020/webapplesignin/cover_hu3966ca6cfa45e1861661284b3d5a08b6_298237_38626aa62c61ddfa160809cb2349696f.jpg width=1390 height=926 data-srcset="/2020/webapplesignin/cover_hu3966ca6cfa45e1861661284b3d5a08b6_298237_1390x0_resize_catmullrom_3.png 1440w" alt="web端接入apple Sign in流程" class="absolute left-0 top-0 h-full w-full object-cover object-center" data-lazyload data-lazyload-blur></picture><noscript><picture><source srcset="/2020/webapplesignin/cover_hu3966ca6cfa45e1861661284b3d5a08b6_298237_1390x0_resize_q95_h2_catmullrom_3.webp 1440w" type=image/webp><img src=https://blog.xiaomo.info/2020/webapplesignin/cover.png srcset="/2020/webapplesignin/cover_hu3966ca6cfa45e1861661284b3d5a08b6_298237_1390x0_resize_catmullrom_3.png 1440w" alt="web端接入apple Sign in流程" width=1390 height=926 class="absolute left-0 top-0 h-full w-full object-cover object-center"></picture></noscript></div><h1 class="article-title absolute bottom-0 left-0 w-full px-6 pb-8 pt-32 text-3xl text-white dark:text-darkText md:px-10 md:text-4xl">web端接入apple Sign in流程</h1></div><div class="article-info border-b p-6 pb-3 text-sm dark:border-darkBorder md:px-10"><div><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-clock-outline mr-1"></i>
+<span><time title="发布于 2020年11月8日 00:00:00" datetime=2020-11-08T00:00:00+09:00>2020年11月8日</time></span></div><span class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-edit-2-outline mr-1"></i>
+<span><time title="最后修改于：2023年1月6日 13:06:22" datetime=2023-01-06T13:06:22+09:00>2023年1月6日</time></span></span><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-flag-outline mr-1"></i>
+<span>5 分钟</span></div><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-bar-chart-outline mr-1"></i>
+<span>2046 字</span></div></div><div class="mb-3 flex items-center"><i class="eva eva-pricetags-outline mr-1"></i>
+<span class=mr-3>标签</span><a href=/tags/web title=web class="group mr-2 flex items-center text-sm">
+<i class="mr-1 text-gray-400 group-hover:text-theme">#</i>
+<span class="text-gray-400 group-hover:text-theme">web</span></a></div><div class="mb-3 flex items-center"><i class="eva eva-folder-outline mr-1"></i>
+<span class=mr-3>分类</span><a href=/categories/web title=web class="group flex items-center text-sm">
+<span class="text-gray-400 group-hover:text-theme">web</span>
+<span class="mx-0.5 group-last:hidden">,</span></a></div></div><aside class="toc border-b border-gray-300 px-5 py-5 dark:border-darkBorder md:px-10 2xl:fixed 2xl:top-10 2xl:m-0 2xl:-ml-72 2xl:w-72 2xl:border-none 2xl:p-0 2xl:py-4 2xl:pr-4"><header><h1 class="mb-3 text-2xl font-bold 2xl:mb-4">文章目录</h1></header><nav id=TableOfContents></nav></aside><section class="article-content typo relative flex-grow px-6 py-5 md:px-10"><i title=更快的阅读 id=bionicReading class="absolute right-0 top-0 cursor-pointer p-3"><svg class="w-4 h-4 fill-current text-gray-400" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" p-id="10811"><path d="M480 192c-19.2.0-32-12.8-32-32V32c0-19.2 12.8-32 32-32s32 12.8 32 32v128c0 19.2-12.8 32-32 32zM160 1024c-6.4.0-19.2.0-25.6-6.4l-128-128c0-6.4-6.4-19.2-6.4-25.6s6.4-19.2 6.4-25.6l512-512c12.8-6.4 38.4-6.4 51.2.0l128 128c0 6.4 6.4 19.2 6.4 25.6s-6.4 19.2-6.4 25.6l-512 512c-6.4 6.4-19.2 6.4-25.6 6.4zM76.8 864l83.2 83.2L627.2 480 544 396.8 76.8 864zM992 576H864c-19.2.0-32-12.8-32-32s12.8-32 32-32h128c19.2.0 32 12.8 32 32s-12.8 32-32 32zM768 288c-6.4.0-19.2.0-25.6-6.4-12.8-12.8-12.8-32 0-44.8l96-96c12.8-12.8 32-12.8 44.8.0s12.8 32 0 44.8l-96 96c0 6.4-12.8 6.4-19.2 6.4zm-512 0c-6.4.0-19.2.0-25.6-6.4l-96-96c-6.4-12.8-6.4-38.4.0-51.2s32-12.8 44.8.0l96 96c12.8 12.8 12.8 32 0 44.8.0 12.8-12.8 12.8-19.2 12.8zM864 896c-6.4.0-19.2.0-25.6-6.4l-96-96c-12.8-12.8-12.8-32 0-44.8s32-12.8 44.8.0l96 96c12.8 12.8 12.8 32 0 44.8.0 6.4-12.8 6.4-19.2 6.4z" p-id="10812"/><path d="M544 640c-6.4.0-19.2.0-25.6-6.4l-128-128c-6.4-12.8-6.4-38.4.0-51.2s32-12.8 44.8.0l128 128c12.8 12.8 12.8 38.4 6.4 51.2-6.4 6.4-19.2 6.4-25.6 6.4z" p-id="10813"/></svg></i><p>前一段时间接入了google sign in的功能，现在继续接入apple sign in。待apple sign in 正式上线之后，我们的游戏支持 line、Facebook、twitter、google、apple5种三方登陆，基本上涵盖了主流sns。apple和google虽然是不同的平台，但是都是采用上oauth2.0的协议，所以接入流程大同小异。</p><h1 class=group id=知识储备>知识储备<a href=#%e7%9f%a5%e8%af%86%e5%82%a8%e5%a4%87><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><ol><li>jwt相关知识（apple采用的是jwt的验证方式）</li><li>js/ts/java基础编程技能</li></ol><h1 class=group id=前提准备>前提准备<a href=#%e5%89%8d%e6%8f%90%e5%87%86%e5%a4%87><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p>登陆<a class=link href=https://developer.apple.com/account/resources/identifiers/list target=_blank rel=noopener>apple开发者中心</a></p><ol><li>在identifidr注册一个App ID</li></ol><p><figure><picture class=noscript-hidden><img data-src=https://image.xiaomo.info//blog/image-20201111175510479.png src=/images/outload.svg data-alt=image-20201111175510479 data-zoomable data-lazyload data-lazyload-blur></picture><noscript data-lazyload-noscript><a class=after:hidden href=https://image.xiaomo.info//blog/image-20201111175510479.png target=_blank rel="noopener noreferrer"><picture><img src=https://image.xiaomo.info//blog/image-20201111175510479.png alt=image-20201111175510479></picture></a></noscript><figcaption>image-20201111175510479</figcaption></figure></p><p><figure><picture class=noscript-hidden><img data-src=https://image.xiaomo.info//blog/image-20201111175649365.png src=/images/outload.svg data-alt=image-20201111175553237 data-zoomable data-lazyload data-lazyload-blur></picture><noscript data-lazyload-noscript><a class=after:hidden href=https://image.xiaomo.info//blog/image-20201111175649365.png target=_blank rel="noopener noreferrer"><picture><img src=https://image.xiaomo.info//blog/image-20201111175649365.png alt=image-20201111175553237></picture></a></noscript><figcaption>image-20201111175553237</figcaption></figure></p><p><figure><picture class=noscript-hidden><img data-src=https://image.xiaomo.info//blog/image-20201111175741824.png src=/images/outload.svg data-alt=image-20201111175741824 data-zoomable data-lazyload data-lazyload-blur></picture><noscript data-lazyload-noscript><a class=after:hidden href=https://image.xiaomo.info//blog/image-20201111175741824.png target=_blank rel="noopener noreferrer"><picture><img src=https://image.xiaomo.info//blog/image-20201111175741824.png alt=image-20201111175741824></picture></a></noscript><figcaption>image-20201111175741824</figcaption></figure></p><p>注册之后可以得到3个内容</p><p><code>Description</code>：对app的描述</p><p><code>Bundle ID</code>: 注册时第2步填的反向域名（也就是client_id）</p><p><code>App ID Prefix</code>: 也就是teamId，apple自动生成的随机唯一标识(init的时候不需要)</p><ol start=2><li>注册在identifier中注册service ID, 有几个环境就可以注册几个service ID,绑定同一个App Id就可以了。</li></ol><p><figure><picture class=noscript-hidden><img data-src=https://image.xiaomo.info//blog/image-20201111180250556.png src=/images/outload.svg data-alt=image-20201111180250556 data-zoomable data-lazyload data-lazyload-blur></picture><noscript data-lazyload-noscript><a class=after:hidden href=https://image.xiaomo.info//blog/image-20201111180250556.png target=_blank rel="noopener noreferrer"><picture><img src=https://image.xiaomo.info//blog/image-20201111180250556.png alt=image-20201111180250556></picture></a></noscript><figcaption>image-20201111180250556</figcaption></figure></p><p>注册好之后打开apple sign in 并配置</p><p><figure><picture class=noscript-hidden><img data-src=https://image.xiaomo.info//blog/image-20201111180330148.png src=/images/outload.svg data-alt=image-20201111180330148 data-zoomable data-lazyload data-lazyload-blur></picture><noscript data-lazyload-noscript><a class=after:hidden href=https://image.xiaomo.info//blog/image-20201111180330148.png target=_blank rel="noopener noreferrer"><picture><img src=https://image.xiaomo.info//blog/image-20201111180330148.png alt=image-20201111180330148></picture></a></noscript><figcaption>image-20201111180330148</figcaption></figure></p><p><figure><picture class=noscript-hidden><img data-src=https://image.xiaomo.info//blog/image-20201111180600392.png src=/images/outload.svg data-alt=image-20201111180600392 data-zoomable data-lazyload data-lazyload-blur></picture><noscript data-lazyload-noscript><a class=after:hidden href=https://image.xiaomo.info//blog/image-20201111180600392.png target=_blank rel="noopener noreferrer"><picture><img src=https://image.xiaomo.info//blog/image-20201111180600392.png alt=image-20201111180600392></picture></a></noscript><figcaption>image-20201111180600392</figcaption></figure></p><p><figure><picture class=noscript-hidden><img data-src=https://image.xiaomo.info//blog/image-20201111180815110.png src=/images/outload.svg data-alt=image-20201111180815110 data-zoomable data-lazyload data-lazyload-blur></picture><noscript data-lazyload-noscript><a class=after:hidden href=https://image.xiaomo.info//blog/image-20201111180815110.png target=_blank rel="noopener noreferrer"><picture><img src=https://image.xiaomo.info//blog/image-20201111180815110.png alt=image-20201111180815110></picture></a></noscript><figcaption>image-20201111180815110</figcaption></figure></p><h1 class=group id=代码演示>代码演示<a href=#%e4%bb%a3%e7%a0%81%e6%bc%94%e7%a4%ba><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><ol><li>下载声明</li></ol><p><code>yarn add @types/apple-sign-in-api</code></p><p><code>yarn add loadjs</code></p><ol start=2><li>初始化 <code>AppleID</code></li></ol><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">38
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#ff79c6>import</span> axios <span style=color:#ff79c6>from</span> <span style=color:#f1fa8c>&#39;redaxios&#39;</span>;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> { AppleWebConfig } <span style=color:#ff79c6>from</span> <span style=color:#f1fa8c>&#39;@/shared/models/AppleWebConfig&#39;</span>;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> { AuthConfig } <span style=color:#ff79c6>from</span> <span style=color:#f1fa8c>&#39;@/client/auth/index&#39;</span>;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> { loadScript } <span style=color:#ff79c6>from</span> <span style=color:#f1fa8c>&#39;@/client/utils/scriptUtils&#39;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6272a4>/**
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * apple init
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> */</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>async</span> <span style=color:#8be9fd;font-style:italic>function</span> appleInit()<span style=color:#ff79c6>:</span> Promise&lt;<span style=color:#ff79c6>void</span>&gt; {
+</span></span><span style=display:flex><span>  $(<span style=color:#f1fa8c>&#39;#apple-login&#39;</span>).removeClass(<span style=color:#f1fa8c>&#39;hidden&#39;</span>);
+</span></span><span style=display:flex><span>  $(<span style=color:#f1fa8c>&#39;#apple-link&#39;</span>).removeClass(<span style=color:#f1fa8c>&#39;hidden&#39;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#6272a4>// get the apple config
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  <span style=color:#ff79c6>const</span> response <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>await</span> axios({
+</span></span><span style=display:flex><span>    url<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;/oauth/v1/config&#39;</span>,
+</span></span><span style=display:flex><span>    method<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;get&#39;</span>,
+</span></span><span style=display:flex><span>  });
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>const</span> config: <span style=color:#8be9fd>AuthConfig</span> <span style=color:#ff79c6>=</span> response.data <span style=color:#ff79c6>as</span> AuthConfig;
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>!</span>config.apple) {
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>const</span> appleWebConfig: <span style=color:#8be9fd>AppleWebConfig</span> <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> AppleWebConfig();
+</span></span><span style=display:flex><span>  <span style=color:#8be9fd;font-style:italic>Object</span>.assign(appleWebConfig, config.apple);
+</span></span><span style=display:flex><span>  console.log(config.apple);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#6272a4>// use the config instance the AppleID
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  <span style=color:#ff79c6>await</span> loadScript(appleWebConfig.sdk_url)
+</span></span><span style=display:flex><span>    .then(() <span style=color:#ff79c6>=&gt;</span> {
+</span></span><span style=display:flex><span>      AppleID.auth.init({
+</span></span><span style=display:flex><span>        clientId: <span style=color:#8be9fd>appleWebConfig.identifier</span>, <span style=color:#6272a4>// 对应配置的反向域名
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>        scope: <span style=color:#8be9fd>appleWebConfig.scope</span>, <span style=color:#6272a4>// name email 需要获取的内容，多个用空格分开
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>        redirectURI: <span style=color:#8be9fd>appleWebConfig.redirect_url</span>, <span style=color:#6272a4>// 回调地址
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>        usePopup: <span style=color:#8be9fd>true</span>, <span style=color:#6272a4>// 是否用弹窗方式
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>      });
+</span></span><span style=display:flex><span>      console.info(<span style=color:#f1fa8c>&#39;apple environment ready&#39;</span>);
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>    .<span style=color:#ff79c6>catch</span>((e) <span style=color:#ff79c6>=&gt;</span> console.error(e));
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>loadScript 用于动态加载js</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#ff79c6>import</span> loadjs, { LoadOptions } <span style=color:#ff79c6>from</span> <span style=color:#f1fa8c>&#39;loadjs&#39;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>interface</span> CacheableOptions <span style=color:#ff79c6>extends</span> LoadOptions {
+</span></span><span style=display:flex><span>  cacheable?: <span style=color:#8be9fd>boolean</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>const</span> loadScript <span style=color:#ff79c6>=</span> (()<span style=color:#ff79c6>:</span> ((
+</span></span><span style=display:flex><span>  src: <span style=color:#8be9fd>string</span>,
+</span></span><span style=display:flex><span>  options?: <span style=color:#8be9fd>CacheableOptions</span>
+</span></span><span style=display:flex><span>) <span style=color:#ff79c6>=&gt;</span> Promise&lt;<span style=color:#ff79c6>void</span>&gt;) <span style=color:#ff79c6>=&gt;</span> {
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>const</span> cache: <span style=color:#8be9fd>Record</span>&lt;<span style=color:#ff79c6>string</span>, <span style=color:#50fa7b>Promise</span>&lt;<span style=color:#50fa7b>void</span>&gt;<span style=color:#ff79c6>&gt;</span> <span style=color:#ff79c6>=</span> {};
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>return</span> (src: <span style=color:#8be9fd>string</span>, options?: <span style=color:#8be9fd>CacheableOptions</span>)<span style=color:#ff79c6>:</span> Promise&lt;<span style=color:#ff79c6>void</span>&gt; <span style=color:#ff79c6>=&gt;</span> {
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>typeof</span> src <span style=color:#ff79c6>!==</span> <span style=color:#f1fa8c>&#39;string&#39;</span>) {
+</span></span><span style=display:flex><span>      <span style=color:#ff79c6>throw</span> <span style=color:#ff79c6>new</span> <span style=color:#8be9fd;font-style:italic>Error</span>(<span style=color:#f1fa8c>&#39;src must be string&#39;</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>const</span> opt: <span style=color:#8be9fd>CacheableOptions</span> <span style=color:#ff79c6>=</span> {
+</span></span><span style=display:flex><span>      cacheable: <span style=color:#8be9fd>true</span>,
+</span></span><span style=display:flex><span>      numRetries: <span style=color:#8be9fd>3</span>,
+</span></span><span style=display:flex><span>      ...(options <span style=color:#ff79c6>||</span> {}),
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> (opt.cacheable <span style=color:#ff79c6>&amp;&amp;</span> cache[src]) {
+</span></span><span style=display:flex><span>      <span style=color:#ff79c6>return</span> cache[src];
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>const</span> promise <span style=color:#ff79c6>=</span> loadjs([src], {
+</span></span><span style=display:flex><span>      ...opt,
+</span></span><span style=display:flex><span>      returnPromise: <span style=color:#8be9fd>true</span>,
+</span></span><span style=display:flex><span>    });
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> (opt.cacheable) {
+</span></span><span style=display:flex><span>      cache[src] <span style=color:#ff79c6>=</span> promise;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span> promise;
+</span></span><span style=display:flex><span>  };
+</span></span><span style=display:flex><span>})();
+</span></span></code></pre></td></tr></table></div></div><h1 class=group id=触发登陆>触发登陆<a href=#%e8%a7%a6%e5%8f%91%e7%99%bb%e9%99%86><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span>&lt;<span style=color:#ff79c6>button</span> <span style=color:#50fa7b>class</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;sns-btn apple sns-btn-apple-link hidden&#34;</span> <span style=color:#50fa7b>id</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;apple-login&#34;</span>&gt;&lt;<span style=color:#ff79c6>span</span>&gt;Apple&lt;/<span style=color:#ff79c6>span</span>&gt;&lt;/<span style=color:#ff79c6>button</span>&gt;
+</span></span></code></pre></td></tr></table></div></div><p>监听按钮点击事件</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span>$(<span style=color:#f1fa8c>&#39;#apple-login&#39;</span>).on(<span style=color:#f1fa8c>&#39;click&#39;</span>, <span style=color:#ff79c6>async</span> () <span style=color:#ff79c6>=&gt;</span> {
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>!</span>AppleID) {
+</span></span><span style=display:flex><span>    showLoginLinkTip();
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>const</span> data <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>await</span> AppleID.auth.signIn();
+</span></span><span style=display:flex><span>  console.log(data); <span style=color:#6272a4>// data是auth相关信息
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></td></tr></table></div></div><p>监听成功/失败（可选）</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>document</span>.addEventListener(<span style=color:#f1fa8c>&#39;AppleIDSignInOnSuccess&#39;</span>, (data: <span style=color:#8be9fd>any</span>) <span style=color:#ff79c6>=&gt;</span> {
+</span></span><span style=display:flex><span>  console.log(data);
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>document</span>.addEventListener(<span style=color:#f1fa8c>&#39;AppleIDSignInOnFailure&#39;</span>, (error: <span style=color:#8be9fd>any</span>) <span style=color:#ff79c6>=&gt;</span> {
+</span></span><span style=display:flex><span>  console.error(error.detail);
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></td></tr></table></div></div><p>实例</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 31
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 32
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 33
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 34
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 35
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 36
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 37
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 38
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 39
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 40
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 41
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 42
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 43
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 44
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 45
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 46
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 47
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 48
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 49
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 50
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 51
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 52
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 53
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 54
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 55
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 56
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 57
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 58
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 59
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 60
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 61
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 62
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 63
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 64
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 65
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 66
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 67
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 68
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 69
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 70
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 71
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 72
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 73
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 74
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 75
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 76
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 77
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 78
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 79
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 80
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 81
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 82
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 83
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 84
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 85
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 86
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 87
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 88
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 89
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 90
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 91
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 92
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 93
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 94
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 95
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 96
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 97
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 98
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 99
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">100
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">101
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">102
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">103
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">104
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">105
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">106
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">107
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">108
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">109
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">110
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">111
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">112
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">113
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">114
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">115
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">116
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">117
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">118
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">119
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">120
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">121
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">122
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">123
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">124
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">125
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">126
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">127
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">128
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">129
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">130
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">131
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">132
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">133
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">134
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">135
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">136
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">137
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">138
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">139
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">140
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">141
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">142
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">143
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">144
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">145
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">146
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">147
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">148
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">149
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">150
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">151
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">152
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">153
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">154
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">155
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">156
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">157
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">158
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">159
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">160
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">161
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">162
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">163
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">164
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">165
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">166
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">167
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">168
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">169
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">170
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#ff79c6>import</span> { AppleWebConfig } <span style=color:#ff79c6>from</span> <span style=color:#f1fa8c>&#39;@/shared/models/AppleWebConfig&#39;</span>;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> {
+</span></span><span style=display:flex><span>  AuthConfig,
+</span></span><span style=display:flex><span>  reloadSession,
+</span></span><span style=display:flex><span>  SNSLoginBindResponse,
+</span></span><span style=display:flex><span>} <span style=color:#ff79c6>from</span> <span style=color:#f1fa8c>&#39;@/client/auth/index&#39;</span>;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> { loadScript } <span style=color:#ff79c6>from</span> <span style=color:#f1fa8c>&#39;@/client/utils/scriptUtils&#39;</span>;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> axios <span style=color:#ff79c6>from</span> <span style=color:#f1fa8c>&#39;redaxios&#39;</span>;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> { PlatformReportType } <span style=color:#ff79c6>from</span> <span style=color:#f1fa8c>&#39;@/shared/types/reportTypes/platform&#39;</span>;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> { GameConst } <span style=color:#ff79c6>from</span> <span style=color:#f1fa8c>&#39;@/shared/constant/gameConst&#39;</span>;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> { showLoginLinkTip } <span style=color:#ff79c6>from</span> <span style=color:#f1fa8c>&#39;../common/popup&#39;</span>;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> { setCookie } <span style=color:#ff79c6>from</span> <span style=color:#f1fa8c>&#39;../common/cookie&#39;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>let</span> appleWebConfig: <span style=color:#8be9fd>AppleWebConfig</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6272a4>/**
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * apple signIn handler
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * @param data authInfo
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> */</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>async</span> <span style=color:#8be9fd;font-style:italic>function</span> appleSignInSuccess(
+</span></span><span style=display:flex><span>  data: <span style=color:#8be9fd>AppleSignInAPI.SignInResponseI</span>
+</span></span><span style=display:flex><span>)<span style=color:#ff79c6>:</span> Promise&lt;<span style=color:#ff79c6>void</span>&gt; {
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>const</span> idToken <span style=color:#ff79c6>=</span> data.authorization.id_token;
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>const</span> params <span style=color:#ff79c6>=</span> {
+</span></span><span style=display:flex><span>    appId: <span style=color:#8be9fd>window.option.appId</span>,
+</span></span><span style=display:flex><span>    idToken,
+</span></span><span style=display:flex><span>    provider_type<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;apple&#39;</span>,
+</span></span><span style=display:flex><span>  };
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>const</span> loginResponse <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>await</span> axios({
+</span></span><span style=display:flex><span>    url<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;/oauth/v1/login&#39;</span>,
+</span></span><span style=display:flex><span>    method<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;post&#39;</span>,
+</span></span><span style=display:flex><span>    params,
+</span></span><span style=display:flex><span>  }).<span style=color:#ff79c6>catch</span>((error) <span style=color:#ff79c6>=&gt;</span> {
+</span></span><span style=display:flex><span>    showLoginLinkTip(error);
+</span></span><span style=display:flex><span>  });
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>if</span> (loginResponse) {
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>const</span> result <span style=color:#ff79c6>=</span> loginResponse.data <span style=color:#ff79c6>as</span> SNSLoginBindResponse;
+</span></span><span style=display:flex><span>    showLoginLinkTip(result.code);
+</span></span><span style=display:flex><span>    reloadSession(<span style=color:#f1fa8c>&#39;visibilitychange&#39;</span>);
+</span></span><span style=display:flex><span>  } <span style=color:#ff79c6>else</span> {
+</span></span><span style=display:flex><span>    showLoginLinkTip(<span style=color:#f1fa8c>&#39;network timeout, please try again later&#39;</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6272a4>/**
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * apple link success handler
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * @param data authInfo
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> */</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>async</span> <span style=color:#8be9fd;font-style:italic>function</span> appleLinkSuccess(
+</span></span><span style=display:flex><span>  data: <span style=color:#8be9fd>AppleSignInAPI.SignInResponseI</span>
+</span></span><span style=display:flex><span>)<span style=color:#ff79c6>:</span> Promise&lt;<span style=color:#ff79c6>void</span>&gt; {
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>const</span> idToken <span style=color:#ff79c6>=</span> data.authorization.id_token;
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>const</span> params <span style=color:#ff79c6>=</span> {
+</span></span><span style=display:flex><span>    appId: <span style=color:#8be9fd>window.option.appId</span>,
+</span></span><span style=display:flex><span>    idToken,
+</span></span><span style=display:flex><span>    provider_type<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;apple&#39;</span>,
+</span></span><span style=display:flex><span>  };
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>const</span> linkResponse <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>await</span> axios({
+</span></span><span style=display:flex><span>    url<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;/oauth/v1/link&#39;</span>,
+</span></span><span style=display:flex><span>    method<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;post&#39;</span>,
+</span></span><span style=display:flex><span>    params,
+</span></span><span style=display:flex><span>  }).<span style=color:#ff79c6>catch</span>((error) <span style=color:#ff79c6>=&gt;</span> {
+</span></span><span style=display:flex><span>    showLoginLinkTip(error);
+</span></span><span style=display:flex><span>  });
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>if</span> (linkResponse) {
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>const</span> result <span style=color:#ff79c6>=</span> linkResponse.data <span style=color:#ff79c6>as</span> SNSLoginBindResponse;
+</span></span><span style=display:flex><span>    showLoginLinkTip(result.code);
+</span></span><span style=display:flex><span>    reloadSession(<span style=color:#f1fa8c>&#39;visibilitychange&#39;</span>);
+</span></span><span style=display:flex><span>  } <span style=color:#ff79c6>else</span> {
+</span></span><span style=display:flex><span>    showLoginLinkTip(<span style=color:#f1fa8c>&#39;network timeout ,please try again later&#39;</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6272a4>// eslint-disable-next-line @typescript-eslint/ban-types
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span><span style=color:#8be9fd;font-style:italic>function</span> appleSignInFail(error: <span style=color:#8be9fd>object</span>)<span style=color:#ff79c6>:</span> <span style=color:#ff79c6>void</span> {
+</span></span><span style=display:flex><span>  console.error(error);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>function</span> getQueryVariable(variable: <span style=color:#8be9fd>string</span>)<span style=color:#ff79c6>:</span> <span style=color:#8be9fd>string</span> <span style=color:#ff79c6>|</span> <span style=color:#ff79c6>null</span> {
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>return</span> <span style=color:#ff79c6>new</span> URL(<span style=color:#8be9fd;font-style:italic>window</span>.location.href).searchParams.<span style=color:#ff79c6>get</span>(variable);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6272a4>/**
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * apple init
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> */</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>async</span> <span style=color:#8be9fd;font-style:italic>function</span> appleInit()<span style=color:#ff79c6>:</span> Promise&lt;<span style=color:#ff79c6>void</span>&gt; {
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>const</span> cookie <span style=color:#ff79c6>=</span> getQueryVariable(GameConst.appleFeatureSwitchCookie);
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>if</span> (cookie) {
+</span></span><span style=display:flex><span>    setCookie(GameConst.appleFeatureSwitchCookie, cookie, <span style=color:#bd93f9>360000</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#6272a4>// get the apple config
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  <span style=color:#ff79c6>const</span> response <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>await</span> axios({
+</span></span><span style=display:flex><span>    url<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;/oauth/v1/config&#39;</span>,
+</span></span><span style=display:flex><span>    method<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;get&#39;</span>,
+</span></span><span style=display:flex><span>  });
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>const</span> config: <span style=color:#8be9fd>AuthConfig</span> <span style=color:#ff79c6>=</span> response.data <span style=color:#ff79c6>as</span> AuthConfig;
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>!</span>config.apple) {
+</span></span><span style=display:flex><span>    console.error(<span style=color:#f1fa8c>&#34;can&#39;t get the apple config&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  $(<span style=color:#f1fa8c>&#39;#apple-login&#39;</span>).removeClass(<span style=color:#f1fa8c>&#39;hidden&#39;</span>);
+</span></span><span style=display:flex><span>  $(<span style=color:#f1fa8c>&#39;#apple-link&#39;</span>).removeClass(<span style=color:#f1fa8c>&#39;hidden&#39;</span>);
+</span></span><span style=display:flex><span>  appleWebConfig <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> AppleWebConfig();
+</span></span><span style=display:flex><span>  <span style=color:#8be9fd;font-style:italic>Object</span>.assign(appleWebConfig, config.apple);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#6272a4>// use the config instance the AppleID
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  <span style=color:#ff79c6>await</span> loadScript(appleWebConfig.sdk_url).<span style=color:#ff79c6>catch</span>((e) <span style=color:#ff79c6>=&gt;</span> console.error(e));
+</span></span><span style=display:flex><span>  console.info(<span style=color:#f1fa8c>&#39;apple environment ready!&#39;</span>);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6272a4>/**
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * login listener
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> */</span>
+</span></span><span style=display:flex><span>$(<span style=color:#f1fa8c>&#39;#apple-login&#39;</span>).on(<span style=color:#f1fa8c>&#39;click&#39;</span>, <span style=color:#ff79c6>async</span> () <span style=color:#ff79c6>=&gt;</span> {
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>!</span>AppleID) {
+</span></span><span style=display:flex><span>    showLoginLinkTip();
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>try</span> {
+</span></span><span style=display:flex><span>    AppleID.auth.init({
+</span></span><span style=display:flex><span>      clientId: <span style=color:#8be9fd>appleWebConfig.identifier</span>,
+</span></span><span style=display:flex><span>      scope: <span style=color:#8be9fd>appleWebConfig.scope</span>,
+</span></span><span style=display:flex><span>      redirectURI: <span style=color:#8be9fd>appleWebConfig.login_callback</span>,
+</span></span><span style=display:flex><span>      usePopup: <span style=color:#8be9fd>true</span>,
+</span></span><span style=display:flex><span>    });
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>!</span>AppleID) {
+</span></span><span style=display:flex><span>      showLoginLinkTip();
+</span></span><span style=display:flex><span>      <span style=color:#ff79c6>return</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>const</span> data: <span style=color:#8be9fd>AppleSignInAPI.SignInResponseI</span> <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>await</span> AppleID.auth.signIn();
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> (data) {
+</span></span><span style=display:flex><span>      appleSignInSuccess(data);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  } <span style=color:#ff79c6>catch</span> (e) {
+</span></span><span style=display:flex><span>    appleSignInFail(e);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>});
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6272a4>/**
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * apple link listener
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> */</span>
+</span></span><span style=display:flex><span>$(<span style=color:#f1fa8c>&#39;#apple-link&#39;</span>).on(<span style=color:#f1fa8c>&#39;click&#39;</span>, <span style=color:#ff79c6>async</span> () <span style=color:#ff79c6>=&gt;</span> {
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>!</span>AppleID) {
+</span></span><span style=display:flex><span>    showLoginLinkTip();
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>try</span> {
+</span></span><span style=display:flex><span>    AppleID.auth.init({
+</span></span><span style=display:flex><span>      clientId: <span style=color:#8be9fd>appleWebConfig.identifier</span>,
+</span></span><span style=display:flex><span>      scope: <span style=color:#8be9fd>appleWebConfig.scope</span>,
+</span></span><span style=display:flex><span>      redirectURI: <span style=color:#8be9fd>appleWebConfig.link_callback</span>,
+</span></span><span style=display:flex><span>      usePopup: <span style=color:#8be9fd>true</span>,
+</span></span><span style=display:flex><span>    });
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>!</span>AppleID) {
+</span></span><span style=display:flex><span>      showLoginLinkTip();
+</span></span><span style=display:flex><span>      <span style=color:#ff79c6>return</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>const</span> data: <span style=color:#8be9fd>AppleSignInAPI.SignInResponseI</span> <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>await</span> AppleID.auth.signIn();
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> (data) {
+</span></span><span style=display:flex><span>      appleLinkSuccess(data);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  } <span style=color:#ff79c6>catch</span> (e) {
+</span></span><span style=display:flex><span>    appleSignInFail(e);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></td></tr></table></div></div><p>服务端代码(主要验证idToken的合法性和自己的用户系统关联起来)</p><p>build.gradle</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=display:flex><span>implementation <span style=color:#f1fa8c>&#39;com.nimbusds:nimbus-jose-jwt:9.0&#39;</span>
+</span></span></code></pre></td></tr></table></div></div><p>application.yml</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=display:flex><span><span style=color:#ff79c6>apple</span>:
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>identifier</span>: info.xiaomo.app
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>login_callback</span>: https://info.xiaomo.app/oauth/v1/login
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>link_callback</span>: https://info.xiaomo.app/oauth/v1/link
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>sdk_url</span>: https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/ja_JP/appleid.auth.js
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>verify_url</span>: https://appleid.apple.com/auth/token
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>team_id</span>: your teamId
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>scope</span>: email name
+</span></span></code></pre></td></tr></table></div></div><p>配置的实体类</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>@Data
+</span></span><span style=display:flex><span>@ConfigurationProperties<span style=color:#ff79c6>(</span>prefix <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;apple&#34;</span><span style=color:#ff79c6>)</span>
+</span></span><span style=display:flex><span>@Validated
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>public</span> <span style=color:#8be9fd;font-style:italic>class</span> <span style=color:#50fa7b>AppleProperties</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>private</span> String identifier<span style=color:#ff79c6>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>private</span> String sdkUrl<span style=color:#ff79c6>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>private</span> String verifyUrl<span style=color:#ff79c6>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>private</span> String teamId<span style=color:#ff79c6>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>private</span> String scope<span style=color:#ff79c6>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>private</span> String loginCallback<span style=color:#ff79c6>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>private</span> String linkCallback<span style=color:#ff79c6>;</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>配置文件和实体类关联</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>@Configuration
+</span></span><span style=display:flex><span>@EnableConfigurationProperties<span style=color:#ff79c6>(</span>AppleProperties<span style=color:#ff79c6>.</span><span style=color:#50fa7b>class</span><span style=color:#ff79c6>)</span>
+</span></span><span style=display:flex><span>@RequiredArgsConstructor
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>public</span> <span style=color:#8be9fd;font-style:italic>class</span> <span style=color:#50fa7b>AppleConfiguration</span> <span style=color:#ff79c6>{}</span>
+</span></span></code></pre></td></tr></table></div></div><p>验证jwt</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">59
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">60
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">61
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">62
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">63
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">64
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">65
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">66
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">67
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">68
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">69
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">70
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">71
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">72
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">73
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">74
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">75
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">76
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">77
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">78
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">79
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">80
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">81
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">82
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">83
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">84
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">85
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">86
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">87
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>
+</span></span><span style=display:flex><span>@autowird
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>private</span> AppleProperties appleProperties<span style=color:#ff79c6>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>   <span style=color:#8be9fd;font-style:italic>private</span> AppleJwtPayload <span style=color:#50fa7b>verifyAppleJWTAndGetPayload</span><span style=color:#ff79c6>(</span>String idToken<span style=color:#ff79c6>)</span>
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>throws</span> IllegalProviderProfileException <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>try</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>            JWSObject jwt <span style=color:#ff79c6>=</span> JWSObject<span style=color:#ff79c6>.</span><span style=color:#50fa7b>parse</span><span style=color:#ff79c6>(</span>idToken<span style=color:#ff79c6>);</span>
+</span></span><span style=display:flex><span>            JWSHeader appleJwtHeader <span style=color:#ff79c6>=</span> jwt<span style=color:#ff79c6>.</span><span style=color:#50fa7b>getHeader</span><span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>            AppleJwtPayload appleJwtPayload <span style=color:#ff79c6>=</span>
+</span></span><span style=display:flex><span>                    JsonUtil<span style=color:#ff79c6>.</span><span style=color:#50fa7b>toJsonObject</span><span style=color:#ff79c6>(</span>jwt<span style=color:#ff79c6>.</span><span style=color:#50fa7b>getPayload</span><span style=color:#ff79c6>().</span><span style=color:#50fa7b>toString</span><span style=color:#ff79c6>(),</span> AppleJwtPayload<span style=color:#ff79c6>.</span><span style=color:#50fa7b>class</span><span style=color:#ff79c6>);</span>
+</span></span><span style=display:flex><span>            jwtVerifyHandler<span style=color:#ff79c6>(</span>appleJwtHeader<span style=color:#ff79c6>,</span> idToken<span style=color:#ff79c6>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>return</span> appleJwtPayload<span style=color:#ff79c6>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>}</span> <span style=color:#ff79c6>catch</span> <span style=color:#ff79c6>(</span>ParseException e<span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>throw</span> <span style=color:#ff79c6>new</span> IllegalProviderProfileException<span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#6272a4>/**
+</span></span></span><span style=display:flex><span><span style=color:#6272a4>     * verify jwt
+</span></span></span><span style=display:flex><span><span style=color:#6272a4>     *
+</span></span></span><span style=display:flex><span><span style=color:#6272a4>     * @param appleJwtHeader appleJwtHeader
+</span></span></span><span style=display:flex><span><span style=color:#6272a4>     * @param jwt jwt
+</span></span></span><span style=display:flex><span><span style=color:#6272a4>     */</span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>private</span> <span style=color:#8be9fd>void</span> <span style=color:#50fa7b>jwtVerifyHandler</span><span style=color:#ff79c6>(</span>JWSHeader appleJwtHeader<span style=color:#ff79c6>,</span> String jwt<span style=color:#ff79c6>)</span>
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>throws</span> IllegalProviderProfileException <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>try</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>            Optional<span style=color:#ff79c6>&lt;</span>JWKSet<span style=color:#ff79c6>&gt;</span> publicKeyCache <span style=color:#ff79c6>=</span> findPublicKey<span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>if</span> <span style=color:#ff79c6>(</span>publicKeyCache<span style=color:#ff79c6>.</span><span style=color:#50fa7b>isEmpty</span><span style=color:#ff79c6>())</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>                reloadPublicKeyCache<span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>}</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>if</span> <span style=color:#ff79c6>(</span>publicKeyCache<span style=color:#ff79c6>.</span><span style=color:#50fa7b>isEmpty</span><span style=color:#ff79c6>())</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>                <span style=color:#ff79c6>throw</span> <span style=color:#ff79c6>new</span> IllegalProviderProfileException<span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            RSAKey rsaKey <span style=color:#ff79c6>=</span>
+</span></span><span style=display:flex><span>                    publicKeyCache<span style=color:#ff79c6>.</span><span style=color:#50fa7b>get</span><span style=color:#ff79c6>().</span><span style=color:#50fa7b>getKeyByKeyId</span><span style=color:#ff79c6>(</span>appleJwtHeader<span style=color:#ff79c6>.</span><span style=color:#50fa7b>getKeyID</span><span style=color:#ff79c6>()).</span><span style=color:#50fa7b>toRSAKey</span><span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>            SignedJWT signedJWT <span style=color:#ff79c6>=</span> SignedJWT<span style=color:#ff79c6>.</span><span style=color:#50fa7b>parse</span><span style=color:#ff79c6>(</span>jwt<span style=color:#ff79c6>);</span>
+</span></span><span style=display:flex><span>            JWSVerifier verifier <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> RSASSAVerifier<span style=color:#ff79c6>(</span>rsaKey<span style=color:#ff79c6>);</span>
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd>boolean</span> verify <span style=color:#ff79c6>=</span> signedJWT<span style=color:#ff79c6>.</span><span style=color:#50fa7b>verify</span><span style=color:#ff79c6>(</span>verifier<span style=color:#ff79c6>);</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>if</span> <span style=color:#ff79c6>(!</span>verify<span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>                <span style=color:#ff79c6>throw</span> <span style=color:#ff79c6>new</span> IllegalProviderProfileException<span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            @NotNull List<span style=color:#ff79c6>&lt;</span>String<span style=color:#ff79c6>&gt;</span> audience <span style=color:#ff79c6>=</span> signedJWT<span style=color:#ff79c6>.</span><span style=color:#50fa7b>getJWTClaimsSet</span><span style=color:#ff79c6>().</span><span style=color:#50fa7b>getAudience</span><span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>            @Nullable Date expirationTime <span style=color:#ff79c6>=</span> signedJWT<span style=color:#ff79c6>.</span><span style=color:#50fa7b>getJWTClaimsSet</span><span style=color:#ff79c6>().</span><span style=color:#50fa7b>getExpirationTime</span><span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>            @Nullable String issuer <span style=color:#ff79c6>=</span> signedJWT<span style=color:#ff79c6>.</span><span style=color:#50fa7b>getJWTClaimsSet</span><span style=color:#ff79c6>().</span><span style=color:#50fa7b>getIssuer</span><span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>if</span> <span style=color:#ff79c6>(!</span><span style=color:#f1fa8c>&#34;https://appleid.apple.com&#34;</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>equals</span><span style=color:#ff79c6>(</span>issuer<span style=color:#ff79c6>))</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>                <span style=color:#ff79c6>throw</span> <span style=color:#ff79c6>new</span> IllegalProviderProfileException<span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>if</span> <span style=color:#ff79c6>(</span>expirationTime <span style=color:#ff79c6>==</span> <span style=color:#ff79c6>null</span> <span style=color:#ff79c6>||</span> expirationTime<span style=color:#ff79c6>.</span><span style=color:#50fa7b>before</span><span style=color:#ff79c6>(</span><span style=color:#ff79c6>new</span> Date<span style=color:#ff79c6>()))</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>                log<span style=color:#ff79c6>.</span><span style=color:#50fa7b>error</span><span style=color:#ff79c6>(</span>
+</span></span><span style=display:flex><span>                        <span style=color:#f1fa8c>&#34;token expired: {}  {}-&gt;{}&#34;</span><span style=color:#ff79c6>,</span>
+</span></span><span style=display:flex><span>                        jwt<span style=color:#ff79c6>,</span>
+</span></span><span style=display:flex><span>                        expirationTime <span style=color:#ff79c6>==</span> <span style=color:#ff79c6>null</span> <span style=color:#ff79c6>?</span> <span style=color:#ff79c6>null</span> <span style=color:#ff79c6>:</span> expirationTime<span style=color:#ff79c6>.</span><span style=color:#50fa7b>getTime</span><span style=color:#ff79c6>(),</span>
+</span></span><span style=display:flex><span>                        <span style=color:#ff79c6>new</span> Date<span style=color:#ff79c6>().</span><span style=color:#50fa7b>getTime</span><span style=color:#ff79c6>());</span>
+</span></span><span style=display:flex><span>                <span style=color:#ff79c6>throw</span> <span style=color:#ff79c6>new</span> IllegalProviderProfileException<span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>}</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>if</span> <span style=color:#ff79c6>(!</span>audience<span style=color:#ff79c6>.</span><span style=color:#50fa7b>contains</span><span style=color:#ff79c6>(</span>appleProperties<span style=color:#ff79c6>.</span><span style=color:#50fa7b>getIdentifier</span><span style=color:#ff79c6>()))</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>                <span style=color:#ff79c6>throw</span> <span style=color:#ff79c6>new</span> IllegalProviderProfileException<span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>}</span> <span style=color:#ff79c6>catch</span> <span style=color:#ff79c6>(</span>JOSEException <span style=color:#ff79c6>|</span> ParseException e<span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>            <span style=color:#ff79c6>throw</span> <span style=color:#ff79c6>new</span> IllegalProviderProfileException<span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    @Scheduled<span style=color:#ff79c6>(</span>fixedRate <span style=color:#ff79c6>=</span> 5 <span style=color:#ff79c6>*</span> 60 <span style=color:#ff79c6>*</span> 1000<span style=color:#ff79c6>)</span> <span style=color:#6272a4>// auto reload/5 min
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>    <span style=color:#8be9fd;font-style:italic>private</span> <span style=color:#8be9fd>void</span> <span style=color:#50fa7b>reloadPublicKeyCache</span><span style=color:#ff79c6>()</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>try</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>            URL authKeyUrl <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> URL<span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#34;https://appleid.apple.com/auth/keys&#34;</span><span style=color:#ff79c6>);</span>
+</span></span><span style=display:flex><span>            JWKSet publicKeys <span style=color:#ff79c6>=</span> JWKSet<span style=color:#ff79c6>.</span><span style=color:#50fa7b>load</span><span style=color:#ff79c6>(</span>authKeyUrl<span style=color:#ff79c6>);</span>
+</span></span><span style=display:flex><span>            publicKeysCache<span style=color:#ff79c6>.</span><span style=color:#50fa7b>invalidateAll</span><span style=color:#ff79c6>();</span>
+</span></span><span style=display:flex><span>            publicKeysCache<span style=color:#ff79c6>.</span><span style=color:#50fa7b>put</span><span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#34;key&#34;</span><span style=color:#ff79c6>,</span> publicKeys<span style=color:#ff79c6>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>}</span> <span style=color:#ff79c6>catch</span> <span style=color:#ff79c6>(</span>IOException <span style=color:#ff79c6>|</span> ParseException e<span style=color:#ff79c6>)</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>            log<span style=color:#ff79c6>.</span><span style=color:#50fa7b>error</span><span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#34;get apple auth key error:{}&#34;</span><span style=color:#ff79c6>,</span> e<span style=color:#ff79c6>.</span><span style=color:#50fa7b>getMessage</span><span style=color:#ff79c6>());</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>public</span> Optional<span style=color:#ff79c6>&lt;</span>JWKSet<span style=color:#ff79c6>&gt;</span> <span style=color:#50fa7b>findPublicKey</span><span style=color:#ff79c6>()</span> <span style=color:#ff79c6>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>return</span> Optional<span style=color:#ff79c6>.</span><span style=color:#50fa7b>ofNullable</span><span style=color:#ff79c6>(</span>publicKeysCache<span style=color:#ff79c6>.</span><span style=color:#50fa7b>getIfPresent</span><span style=color:#ff79c6>(</span><span style=color:#f1fa8c>&#34;key&#34;</span><span style=color:#ff79c6>));</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>}</span>
+</span></span></code></pre></td></tr></table></div></div><h1 class=group id=参考>参考<a href=#%e5%8f%82%e8%80%83><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><ol><li><a class=link href=https://doofox.cn/sign-with-in-apple.html target=_blank rel=noopener>Sign with in Apple，网站配置 Apple 登录</a></li><li><a class=link href=https://segmentfault.com/a/1190000020786994 target=_blank rel=noopener>Sign in with Apple NODE，web端接入苹果第三方登录</a></li><li><a class=link href=https://bugjia.net/200531/804216.html target=_blank rel=noopener>java-如何在Nimbus JOSE JWT中验证令牌签名</a></li></ol><h1 class=group id=后记>后记<a href=#%e5%90%8e%e8%ae%b0><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p>文章中贴的实例代码只是提供一个开发思路，实际业务开发中牵扯的内容比较多。像是一些零散的util方法、css样式、业务耦合较重的内容等等没有一一提及，所以直接拷贝代码的话肯定会有不少的依赖文件找不到。</p></section><div class="px-6 pb-5 pt-4 text-center text-xl text-gray-500 md:px-10 md:pb-10 md:pt-14 flex items-center justify-center"><a class="mr-4 inline-flex h-5 w-5 items-center" title="分享到 Twitter" href="https://twitter.com/share?&text=%e5%89%8d%e4%b8%80%e6%ae%b5%e6%97%b6%e9%97%b4%e6%8e%a5%e5%85%a5%e4%ba%86google%20sign%20in%e7%9a%84%e5%8a%9f%e8%83%bd%ef%bc%8c%e7%8e%b0%e5%9c%a8%e7%bb%a7%e7%bb%ad%e6%8e%a5%e5%85%a5apple%20sign%20in%e3%80%82%e5%be%85apple%20sign%20in%20%e6%ad%a3%e5%bc%8f%e4%b8%8a%e7%ba%bf%e4%b9%8b%e5%90%8e%ef%bc%8c%e6%88%91%e4%bb%ac%e7%9a%84%e6%b8%b8%e6%88%8f%e6%94%af%e6%8c%81%20line%e3%80%81Faceboo&url=https://blog.xiaomo.info/2020/webapplesignin/" target=_blank rel="noopener noreferrer"><i class="eva eva-twitter hover:text-theme"></i></a><i class="eva eva-copy mr-4 cursor-pointer hover:text-theme" title=复制链接 data-clipboard-text=https://blog.xiaomo.info/2020/webapplesignin/></i><div class="group h-5 w-5 relative hidden cursor-pointer sm:inline-block"><i title=二维码 class="eva show-qrcode eva-smartphone hover:text-theme"></i><div class="qrcode-wrapper p-2 pointer-events-none absolute left-2/4 bottom-10 h-32 w-32 -translate-x-1/2 overflow-hidden rounded border border-gray-300 bg-white opacity-0 transition duration-300 ease-[ease] group-hover:opacity-100"><img class="h-full w-full" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://blog.xiaomo.info/2020/webapplesignin/" alt=二维码></div></div></div><div class="border-b dark:border-darkBorder"></div><div class="flex justify-between px-2 py-4 text-xl md:px-6 md:text-2xl"><div><a href=/2020/vueframeworkvuex/ title=vue框架状态管理之vuex class="invisible flex cursor-pointer items-center text-gray-500 transition duration-300 ease-[ease] hover:text-theme dark:text-darkTextPlaceholder dark:hover:text-darkText" style=visibility:visible><span class="flex items-center text-5xl opacity-70 dark:bg-opacity-100"><i class="eva eva-chevron-left-outline"></i></span>
+<span>上一篇</span></a></div><div class="hidden items-center text-xs xl:flex">除特殊声明外，本博客一律使用以下协议进行授权 「
+<a href=https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh target=_blank rel="noopener noreferrer" class=text-theme>署名 - 非商业性使用 - 禁止演绎 4.0</a>
+」</div><div class="flex items-center text-sm xl:hidden"><a href=https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh target=_blank rel="noopener noreferrer" class=text-theme><img src=/Cc-by-nc-nd.svg alt="署名 - 非商业性使用 - 禁止演绎 4.0" title="署名 - 非商业性使用 - 禁止演绎 4.0" class=w-24></a></div><a href=/2020/vuessrnuxt/ title=nuxt.js使用介绍 class="invisible flex cursor-pointer items-center text-gray-500 transition duration-300 ease-[ease] hover:text-theme dark:text-darkTextPlaceholder dark:hover:text-darkText" style=visibility:visible><span>下一篇</span>
+<span class="flex items-center text-5xl opacity-70 dark:bg-opacity-100"><i class="eva eva-chevron-right-outline"></i></span></a></div><div class="border-t py-6 px-6 md:px-8 dark:border-darkBorder"><script src=https://giscus.app/client.js data-repo=houko/houko.github.io data-repo-id="MDEwOlJlcG9zaXRvcnk3MjYwMDMxMg==" data-category=General data-category-id=DIC_kwDOBFPK-M4CSvHc data-mapping=title data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=light data-lang=zh-CN data-loading=false crossorigin=anonymous data-swup-reload-script async></script><script data-swup-reload-script>(function(){addEventListener("message",t=>{if(event.origin!=="https://giscus.app")return;e()}),window.addEventListener("onThemeChange",e);function e(){setGiscusTheme(document.documentElement.dataset.scheme==="light"?"light":"dark")}})();function setGiscusTheme(e){let t=document.querySelector("iframe.giscus-frame");t&&t.contentWindow.postMessage({giscus:{setConfig:{theme:e}}},"https://giscus.app")}</script></div></div></div></div></div></main><footer><div class="com-footer flex flex-col items-center border-t py-4 px-4 text-sm leading-none text-gray-600 dark:border-darkBorder dark:text-darkTextPlaceholder md:flex-row md:justify-between"><div class="mb-2 flex items-center justify-between text-center md:mb-0"><span>© 2016 - 2023</span>
+<span class="mx-1.5 opacity-50">| </span>由 <a data-no-swup class="mx-1 font-bold hover:text-theme" href=https://gohugo.io/ target=_blank rel="noopener noreferrer">Hugo</a> <span class="text-xs opacity-70">❤</span> <a data-no-swup class="mx-1 font-bold hover:text-theme" href=https://github.com/Ice-Hazymoon/hugo-theme-luna target=_blank rel="noopener noreferrer">Luna</a> 驱动</div><div class="flex items-center"></div><div id=run-time class="mt-2 flex-grow text-right md:mt-0"><span>运行时间： </span><b id=run-time-d>0</b>
+<span class=text-xs>天</span>
+<b id=run-time-h>0</b>
+<span class=text-xs>小时</span>
+<b id=run-time-m>0</b>
+<span class=text-xs>分钟</span>
+<b id=run-time-s>0</b>
+<span class=text-xs>秒</span></div></div><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-80824007-1","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"))</script><script async src=https://www.google-analytics.com/analytics.js></script>
+<script type=text/javascript>window.__theme={cdn:"",pjax:!0,isServer:!1,$version:"27318bae09d55a97ea7da355b574a3210186ba07",lang:"zh-cn",imageZoom:!0,lazyload:!0,bionicReading:{enabled:!0,skipLinks:!1,autoBionic:!1,excludeWords:[],excludeClasses:["github"],excludeNodeNames:[]},katex:!0,search:!0,backtop:!0,pangu:!0,autoDarkMode:!1,googleAnalytics:!0,hugoEncrypt:{wrongPasswordText:"密码错误",userStorage:window.sessionStorage},console:{enabled:!0,leftColor:"#dd6065",rightColor:"#feb462",leftText:"Hugo Theme Luna",rightText:"Powered by Hugo ❤ Luna"},assets:{error_svg:"/images/error.svg",search_svg:"/images/search.svg"},i18n:{copy:{success:"复制成功",failed:"复制失败，请手动复制",copyCode:"复制代码"},search:{untitled:"无标题",loadFailure:"初始化搜索引擎失败",input:"请输入内容..."},darkMode:{dark:"切换到夜间模式",light:"切换到日间模式"}},creatTime:"2016/06/30"}</script><script type=text/javascript src=/ts/main.5562dd676e11d79991ff088b5335690420b8a54043d1dd6ced64a624ca63167d.js defer integrity="sha256-VWLdZ24R15mR/wiLUzVpBCC4pUBD0d1s7WSmJMpjFn0="></script><script>"serviceWorker"in navigator&&window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js")})</script>
+<script></script><script data-swup-reload-script></script></footer></div></div><a href=#nav title=返回顶部 id=back-top class="fixed right-6 bottom-9 z-10 translate-y-3 scale-90 cursor-pointer rounded-full bg-white opacity-0 transition duration-300 ease-[ease] dark:bg-darkBgAccent sm:scale-100"><div class=relative><div class="absolute left-0 top-0 flex h-full w-full items-center justify-center text-xl"><i class="eva eva-arrow-upward-outline"></i></div><svg id="svg" width="54" height="54" viewBox="0 0 54 54" preserveAspectRatio="xMinYMin meet"><circle transform="rotate(-90, 27 , 27)" style="stroke-dasharray:157,157;stroke-dashoffset:157" cx="27" cy="27" r="25" fill="none" stroke-width="4" stroke-linecap="round" stroke="var(--theme)"/></svg></div></a><div id=i18nlist></div><noscript><style>.dark-mode-switch,#run-time,#bionicReading,.noscript-hidden,[data-clipboard-text],[data-lazyload]{display:none}#back-top{opacity:1}.noscript-show{display:initial}</style></noscript></body></html>

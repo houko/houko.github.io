@@ -1,0 +1,795 @@
+<!doctype html><html lang=zh-cn class=lang-zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=keywords content="源码系列,JDK源码系列,java,Hugo,Hugo Theme,Luna,"><meta name=description content="ConcurrentHashMap 是将锁的范围细化来实现高效并发的。 基本策略是将数据结构分为一个一个 Segment（每一个都是一个并发可读的 hash table， 即分段锁）作为一个"><meta itemprop=description content="ConcurrentHashMap 是将锁的范围细化来实现高效并发的。 基本策略是将数据结构分为一个一个 Segment（每一个都是一个并发可读的 hash table， 即分段锁）作为一个"><meta http-equiv=x-ua-compatible content="ie=edge"><meta itemprop=name content="jdk源码系列-ConcurrentHashMap - 小莫的博客-fighting(技术分享、生活随笔)"><link href=https://blog.xiaomo.info/index.xml title="jdk源码系列-ConcurrentHashMap - 小莫的博客-fighting(技术分享、生活随笔)" type=application/rss+xml rel=alternate><title>jdk源码系列-ConcurrentHashMap - 小莫的博客-fighting(技术分享、生活随笔)</title><link rel=stylesheet href="/main.86108ed4a3b93e077dcb401e0c40f8748d2fd7bc4de45cdcf25879e6a284dcb6.css" integrity="sha256-hhCO1KO5Pgd9y0AeDED4dI0v17xN5Fzc8lh55qKE3LY="><meta property="og:site_name" content="jdk源码系列-ConcurrentHashMap - 小莫的博客-fighting(技术分享、生活随笔)"><meta property="og:type" content="article"><meta property="og:title" content="jdk源码系列-ConcurrentHashMap"><meta property="og:description" content="ConcurrentHashMap 是将锁的范围细化来实现高效并发的。 基本策略是将数据结构分为一个一个 Segment（每一个都是一个并发可读的 hash table， 即分段锁）作为一个"><meta property="og:url" content="https://blog.xiaomo.info/2018/jdksourcecodereadconcurrenthashmap/"><meta property="og:image" content="https://blog.xiaomo.info/2018/jdksourcecodereadconcurrenthashmap/cover.png"><meta property="og:image:width" content="1024"><meta property="og:image:height" content="332"><meta property="article:publisher" content="https://blog.xiaomo.info/2018/jdksourcecodereadconcurrenthashmap/"><meta property="article:published_time" content="2018-06-02T00:00:00+09:00"><meta property="article:modified_time" content="2023-01-06T13:06:22+09:00"><meta name=theme-color content="#00B0FF"><meta name=mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-title content="jdk源码系列-ConcurrentHashMap - 小莫的博客-fighting(技术分享、生活随笔)"><meta name=apple-mobile-web-app-status-bar-style content="white"><meta name=twitter:card content="summary_large_image"><meta name=twitter:site content="@xiaomoinfo"><meta name=twitter:creator content="@xiaomoinfo"><meta name=twitter:title content="jdk源码系列-ConcurrentHashMap - 小莫的博客-fighting(技术分享、生活随笔)"><meta name=twitter:description content="ConcurrentHashMap 是将锁的范围细化来实现高效并发的。 基本策略是将数据结构分为一个一个 Segment（每一个都是一个并发可读的 hash table， 即分段锁）作为一个"><meta name=twitter:url content="https://blog.xiaomo.info/2018/jdksourcecodereadconcurrenthashmap/"><meta name=twitter:image content="https://blog.xiaomo.info/2018/jdksourcecodereadconcurrenthashmap/cover.png"><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=manifest href=/manifest.json><link href=/icon.png rel="shortcut icon"><link href=/icon.png rel=bookmark><link rel=apple-touch-icon href=/icon.png><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"jdk源码系列-ConcurrentHashMap","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.xiaomo.info\/2018\/jdksourcecodereadconcurrenthashmap\/"},"genre":"posts","keywords":"源码系列, JDK源码系列","wordcount":5599,"url":"https:\/\/blog.xiaomo.info\/2018\/jdksourcecodereadconcurrenthashmap\/","datePublished":"2018-06-02T00:00:00\u002b09:00","dateModified":"2023-01-06T13:06:22\u002b09:00","license":"@Copyright 2023","author":{"@type":"Person","name":"xiaomo"},"description":""}</script><script async src=https://cdn.splitbee.io/sb.js></script></head><body class="dark:bg-darkBg dark:text-darkText"><div class="relative mx-auto shadow-lg md:max-w-4xl xl:max-w-4xl 2xl:max-w-4xl"><div class="main flex flex-col justify-between bg-white dark:bg-darkFg"><header class="fixed z-10 backdrop-blur-md bg-white/80 dark:bg-darkFg mx-auto w-full md:max-w-4xl xl:max-w-4xl 2xl:max-w-4xl"><nav id=nav class="navbar top-0 z-10 flex items-center border-b px-5 py-6 dark:border-darkBorder md:px-10"><div class="route-items flex w-full items-center justify-around"><a title=首页 data-active-link=/ href=/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-home flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">首页</span>
+</a><a title=关于我 data-active-link=/about/ href=/about/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-heart flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">关于我</span>
+</a><a title=朋友们 data-active-link=/links/ href=/links/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-people flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">朋友们</span>
+</a><a title=归档 data-active-link=/archives/ href=/archives/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-bar-chart flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">归档</span>
+</a><a title=推特 data-active-link=/twitter/ href=/twitter/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-twitter flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">推特</span>
+</a><a title=GitHub data-active-link=/github/ href=/github/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-github flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">GitHub</span>
+</a><a title=搜索 data-active-link=/search/ href=/search/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-search flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">搜索</span></a></div></nav><div class="dark-mode-switch absolute right-0 top-0 z-10 cursor-pointer pr-2 pt-2 text-xl leading-none"><i class="eva eva-moon opacity-20 dark:opacity-70"></i></div></header><main class="relative flex flex-grow mt-28 md:mt-20" id=swup><style>:root{--font:Times New Roman,Times,Heti Song,serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol}</style><div class="type-posts layout- w-full"><div class="relative h-full"><div class="relative h-full"><div class="page-view-article flex h-full flex-col bg-white dark:bg-darkFg"><div class=relative><div style=background-image:linear-gradient(180deg,#362032,#ccc);padding-bottom:42% class="article-cover relative h-0Page(/posts/20180602_jdk_concurrenthashmap/index.zh-cn.md) w-full"><picture class=noscript-hidden><source data-srcset="/2018/jdksourcecodereadconcurrenthashmap/cover_hu181edef27d7ab46a4a39ae504c274006_225600_1024x0_resize_q95_h2_catmullrom_3.webp 1080w" type=image/webp><img data-src=https://blog.xiaomo.info/2018/jdksourcecodereadconcurrenthashmap/cover.png src=/2018/jdksourcecodereadconcurrenthashmap/cover_hu181edef27d7ab46a4a39ae504c274006_225600_c9e04c69fc1a303fccf5f4ca9d37d2de.jpg width=1024 height=332 data-srcset="/2018/jdksourcecodereadconcurrenthashmap/cover_hu181edef27d7ab46a4a39ae504c274006_225600_1024x0_resize_catmullrom_3.png 1080w" alt=jdk源码系列-ConcurrentHashMap class="absolute left-0 top-0 h-full w-full object-cover object-center" data-lazyload data-lazyload-blur></picture><noscript><picture><source srcset="/2018/jdksourcecodereadconcurrenthashmap/cover_hu181edef27d7ab46a4a39ae504c274006_225600_1024x0_resize_q95_h2_catmullrom_3.webp 1080w" type=image/webp><img src=https://blog.xiaomo.info/2018/jdksourcecodereadconcurrenthashmap/cover.png srcset="/2018/jdksourcecodereadconcurrenthashmap/cover_hu181edef27d7ab46a4a39ae504c274006_225600_1024x0_resize_catmullrom_3.png 1080w" alt=jdk源码系列-ConcurrentHashMap width=1024 height=332 class="absolute left-0 top-0 h-full w-full object-cover object-center"></picture></noscript></div><h1 class="article-title absolute bottom-0 left-0 w-full px-6 pb-8 pt-32 text-3xl text-white dark:text-darkText md:px-10 md:text-4xl">jdk源码系列-ConcurrentHashMap</h1></div><div class="article-info border-b p-6 pb-3 text-sm dark:border-darkBorder md:px-10"><div><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-clock-outline mr-1"></i>
+<span><time title="发布于 2018年6月2日 00:00:00" datetime=2018-06-02T00:00:00+09:00>2018年6月2日</time></span></div><span class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-edit-2-outline mr-1"></i>
+<span><time title="最后修改于：2023年1月6日 13:06:22" datetime=2023-01-06T13:06:22+09:00>2023年1月6日</time></span></span><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-flag-outline mr-1"></i>
+<span>12 分钟</span></div><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-bar-chart-outline mr-1"></i>
+<span>5599 字</span></div></div><div class="mb-3 flex items-center"><i class="eva eva-pricetags-outline mr-1"></i>
+<span class=mr-3>标签</span><a href=/tags/%E6%BA%90%E7%A0%81%E7%B3%BB%E5%88%97 title=源码系列 class="group mr-2 flex items-center text-sm">
+<i class="mr-1 text-gray-400 group-hover:text-theme">#</i>
+<span class="text-gray-400 group-hover:text-theme">源码系列</span>
+</a><a href=/tags/jdk%E6%BA%90%E7%A0%81%E7%B3%BB%E5%88%97 title=JDK源码系列 class="group mr-2 flex items-center text-sm"><i class="mr-1 text-gray-400 group-hover:text-theme">#</i>
+<span class="text-gray-400 group-hover:text-theme">JDK源码系列</span></a></div><div class="mb-3 flex items-center"><i class="eva eva-folder-outline mr-1"></i>
+<span class=mr-3>分类</span><a href=/categories/java title=java class="group flex items-center text-sm">
+<span class="text-gray-400 group-hover:text-theme">java</span>
+<span class="mx-0.5 group-last:hidden">,</span></a></div></div><aside class="toc border-b border-gray-300 px-5 py-5 dark:border-darkBorder md:px-10 2xl:fixed 2xl:top-10 2xl:m-0 2xl:-ml-72 2xl:w-72 2xl:border-none 2xl:p-0 2xl:py-4 2xl:pr-4"><header><h1 class="mb-3 text-2xl font-bold 2xl:mb-4">文章目录</h1></header><nav id=TableOfContents></nav></aside><section class="article-content typo relative flex-grow px-6 py-5 md:px-10"><i title=更快的阅读 id=bionicReading class="absolute right-0 top-0 cursor-pointer p-3"><svg class="w-4 h-4 fill-current text-gray-400" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" p-id="10811"><path d="M480 192c-19.2.0-32-12.8-32-32V32c0-19.2 12.8-32 32-32s32 12.8 32 32v128c0 19.2-12.8 32-32 32zM160 1024c-6.4.0-19.2.0-25.6-6.4l-128-128c0-6.4-6.4-19.2-6.4-25.6s6.4-19.2 6.4-25.6l512-512c12.8-6.4 38.4-6.4 51.2.0l128 128c0 6.4 6.4 19.2 6.4 25.6s-6.4 19.2-6.4 25.6l-512 512c-6.4 6.4-19.2 6.4-25.6 6.4zM76.8 864l83.2 83.2L627.2 480 544 396.8 76.8 864zM992 576H864c-19.2.0-32-12.8-32-32s12.8-32 32-32h128c19.2.0 32 12.8 32 32s-12.8 32-32 32zM768 288c-6.4.0-19.2.0-25.6-6.4-12.8-12.8-12.8-32 0-44.8l96-96c12.8-12.8 32-12.8 44.8.0s12.8 32 0 44.8l-96 96c0 6.4-12.8 6.4-19.2 6.4zm-512 0c-6.4.0-19.2.0-25.6-6.4l-96-96c-6.4-12.8-6.4-38.4.0-51.2s32-12.8 44.8.0l96 96c12.8 12.8 12.8 32 0 44.8.0 12.8-12.8 12.8-19.2 12.8zM864 896c-6.4.0-19.2.0-25.6-6.4l-96-96c-12.8-12.8-12.8-32 0-44.8s32-12.8 44.8.0l96 96c12.8 12.8 12.8 32 0 44.8.0 6.4-12.8 6.4-19.2 6.4z" p-id="10812"/><path d="M544 640c-6.4.0-19.2.0-25.6-6.4l-128-128c-6.4-12.8-6.4-38.4.0-51.2s32-12.8 44.8.0l128 128c12.8 12.8 12.8 38.4 6.4 51.2-6.4 6.4-19.2 6.4-25.6 6.4z" p-id="10813"/></svg></i><p>ConcurrentHashMap 是将锁的范围细化来实现高效并发的。 基本策略是将数据结构分为一个一个 Segment（每一个都是一个并发可读的 hash table， 即分段锁）作为一个并发单元。 为了减少开销， 除了一处 Segment 是在构造器初始化的， 其他都延迟初始化（详见 ensureSegment）。 并使用 volatile 关键字来保证 Segment 延迟初始化的可见性问题。</p><p>HashMap 不是线程安全的， 故多线程情况下会出现 infinit loop。 HashTable 是线程安全的， 但是是用全局锁来保障， 效率很低。 所以 Doug Lea 并发专家研发了高效并发的 ConcurrentHashMap 来应对并发情况下的情景。 阅读本文前最好先看： <a class=link href=https://blog.xiaomo.info/2018/jdkSourceCodeReadMemoryActor/ target=_blank rel=noopener>Java内存模型</a>
+和 <a class=link href=https://blog.xiaomo.info/2018/jdkSourceCodeReadAtomicInteger/ target=_blank rel=noopener>AtomicInteger 分析</a>
+。</p><h1 class=group id=术语定义>术语定义<a href=#%e6%9c%af%e8%af%ad%e5%ae%9a%e4%b9%89><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><ol><li><p>哈希算法
+是一种将任意内容的输入转换成相同长度输出的加密方式，其输出被称为哈希值。</p></li><li><p>哈希表
+根据设定的哈希函数H(key)和处理冲突方法将一组关键字映象到一个有限的地址区间上，并以关键字在地址区间中的象作为记录在表中的存储位置，这种表称为哈希表或散列，所得存储位置称为哈希地址或散列地址。</p></li></ol><h1 class=group id=数据结构>数据结构<a href=#%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p><figure><picture class=noscript-hidden><img data-src=https://image.xiaomo.info/blog/c1.png src=/images/outload.svg data-data-zoomable data-lazyload data-lazyload-blur></picture><noscript data-lazyload-noscript><a class=after:hidden href=https://image.xiaomo.info/blog/c1.png target=_blank rel="noopener noreferrer"><picture><img src=https://image.xiaomo.info/blog/c1.png></picture></a></noscript></figure></p><p>抽象结构图<figure><picture class=noscript-hidden><img data-src=https://image.xiaomo.info/blog/c2.png src=/images/outload.svg data-data-zoomable data-lazyload data-lazyload-blur></picture><noscript data-lazyload-noscript><a class=after:hidden href=https://image.xiaomo.info/blog/c2.png target=_blank rel="noopener noreferrer"><picture><img src=https://image.xiaomo.info/blog/c2.png></picture></a></noscript></figure></p><p>从上述类图和抽象结构图可以看出 ConcurrentHashMap 是由 Segment 数组结构和 HashEntry 数组结构组成。Segment 继承(Generalization)了可重入锁ReentrantLock，HashEntry 用于存储键值对数据。一个 ConcurrentHashMap 里 contains-a (Composition) 一个 Segment []，Segment 的结构和 HashMap 类似，是一种数组和链表结构， 一个 Segment 里 has-a (Aggregation)一个 HashEntry 数组，每个 HashEntry 是一个链表结构的元素， 每个 Segment 锁定一个 HashEntry 数组里的元素, 当对 HashEntry 数组的数据进行 put 等修改操作时，必须先获得它对应的 Segment 锁。</p><h1 class=group id=源码解析>源码解析<a href=#%e6%ba%90%e7%a0%81%e8%a7%a3%e6%9e%90><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p>内部类 Segment 类：
+Segment 维护着条目列表状态一致性， 所以可以实现无锁读。 在表超出 threshold 进行 resize 的时候， 复制节点， 所以在做 resize 修改操作的时候， 还可以进行读操作（在旧 list 读）。 本类里只有变化操作的方法才需要加锁， 变化的方法利用一系列忙等控制来处理资源争用， 例如 scanAndLock 和 scanAndLockForPut 。 那些遍历去查找节点的 tryLocks() 方法， 主要是用来吸收 cached 不命中(在 hash tables 经常出现)， 这样后续获取锁的遍历操作效率将会有不小提升。 我们可能不是真的需要使用找到的数据， 因为重新获得数据还需要加锁来保证更新操作的一致性， 但他们会更快地进行重定位。 此外， scanAndLockForPut 特地创建新数据用于没有数据被找到的 put 方法。</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>// 在准备锁住 segment 操作前最大的 tryLock() 次数。 多核情况下， 在定位 nodes 时使用 64 次最大值维持缓存  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>static final int MAX_SCAN_RETRIES =  
+</span></span><span style=display:flex><span>    Runtime.getRuntime().availableProcessors() &gt; 1 ? 64 : 1;  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> * The per-segment table. 数据访问通过 
+</span></span><span style=display:flex><span> * entryAt/setEntryAt 提供的 volatile 语义来保证可见性. 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>transient volatile HashEntry&lt;K,V&gt;[] table;  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> * sengment 内 hash entry 元素个数 , 之所以在每个 Segment 对象中包含一个计数器，而不是在 ConcurrentHashMap 中使用全局的计数器，是为了避免出现“热点域”而影响 ConcurrentHashMap 的并发性。 
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>transient int count;  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> * 在 segment 中可变操作总数, 即更新次数 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>transient int modCount;  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> * 当超过threshold 时候，  table 再哈希 
+</span></span><span style=display:flex><span> * (The value of this field is always &lt;tt&gt;(int)(capacity * 
+</span></span><span style=display:flex><span> * loadFactor)&lt;/tt&gt;.) 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>transient int threshold;  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> *  hash table 负载因子.  Even though this value 
+</span></span><span style=display:flex><span> * is same for all segments, it is replicated to avoid needing 
+</span></span><span style=display:flex><span> * links to outer object. 
+</span></span><span style=display:flex><span> * @serial 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>final float loadFactor;  
+</span></span></code></pre></td></tr></table></div></div><p><code>put</code> 方法：
+插入A， B， C后 Segment 示意图：</p><p><figure><picture class=noscript-hidden><img data-src=https://image.xiaomo.info/blog/c3.png src=/images/outload.svg data-data-zoomable data-lazyload data-lazyload-blur></picture><noscript data-lazyload-noscript><a class=after:hidden href=https://image.xiaomo.info/blog/c3.png target=_blank rel="noopener noreferrer"><picture><img src=https://image.xiaomo.info/blog/c3.png></picture></a></noscript></figure></p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">51
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>final V put(K key, int hash, V value, boolean onlyIfAbsent) {  
+</span></span><span style=display:flex><span> // tryLock 一般缓存作用  
+</span></span><span style=display:flex><span>HashEntry&lt;K,V&gt; node = tryLock() ? null :  
+</span></span><span style=display:flex><span>        scanAndLockForPut(key, hash, value);  
+</span></span><span style=display:flex><span>    V oldValue;  
+</span></span><span style=display:flex><span>    try {  
+</span></span><span style=display:flex><span>        HashEntry&lt;K,V&gt;[] tab = table;  
+</span></span><span style=display:flex><span>        int index = (tab.length - 1) &amp; hash;  
+</span></span><span style=display:flex><span>        // 找到 bucket 位置  
+</span></span><span style=display:flex><span>        HashEntry&lt;K,V&gt; first = entryAt(tab, index);  
+</span></span><span style=display:flex><span>        for (HashEntry&lt;K,V&gt; e = first;;) {  
+</span></span><span style=display:flex><span>            if (e != null) {  
+</span></span><span style=display:flex><span>                K k;  
+</span></span><span style=display:flex><span>                if ((k = e.key) == key ||  
+</span></span><span style=display:flex><span>                    (e.hash == hash &amp;&amp; key.equals(k))) {  
+</span></span><span style=display:flex><span>                    // 保存旧值， 这样 get 操作就可以无锁访问正在写操作的节点  
+</span></span><span style=display:flex><span>                    oldValue = e.value;  
+</span></span><span style=display:flex><span>                    if (!onlyIfAbsent) {  
+</span></span><span style=display:flex><span>                        // 覆盖原来的值  
+</span></span><span style=display:flex><span>                        e.value = value;  
+</span></span><span style=display:flex><span>                        // 修改计数  
+</span></span><span style=display:flex><span>                        ++modCount;  
+</span></span><span style=display:flex><span>                    }  
+</span></span><span style=display:flex><span>                    break;  
+</span></span><span style=display:flex><span>                }  
+</span></span><span style=display:flex><span>                // 每次从头部插入  
+</span></span><span style=display:flex><span>                e = e.next;  
+</span></span><span style=display:flex><span>            }  
+</span></span><span style=display:flex><span>            else {  
+</span></span><span style=display:flex><span>                if (node != null)  
+</span></span><span style=display:flex><span>                    node.setNext(first);  
+</span></span><span style=display:flex><span>                else  
+</span></span><span style=display:flex><span>                    node = new HashEntry&lt;K,V&gt;(hash, key, value, first);  
+</span></span><span style=display:flex><span>                int c = count + 1;  
+</span></span><span style=display:flex><span>                // 超过 threshold 则， rehash()  
+</span></span><span style=display:flex><span>                if (c &gt; threshold &amp;&amp; tab.length &lt; MAXIMUM_CAPACITY)  
+</span></span><span style=display:flex><span>                    rehash(node);  
+</span></span><span style=display:flex><span>                else  
+</span></span><span style=display:flex><span>                    setEntryAt(tab, index, node);  
+</span></span><span style=display:flex><span>                ++modCount;  
+</span></span><span style=display:flex><span>                count = c;  
+</span></span><span style=display:flex><span>                oldValue = null;  
+</span></span><span style=display:flex><span>                break;  
+</span></span><span style=display:flex><span>            }  
+</span></span><span style=display:flex><span>        }  
+</span></span><span style=display:flex><span>    } finally {  
+</span></span><span style=display:flex><span>        // 典型的 ReentrantLock 释放锁  
+</span></span><span style=display:flex><span>        unlock();  
+</span></span><span style=display:flex><span>    }  
+</span></span><span style=display:flex><span>    return oldValue;  
+</span></span><span style=display:flex><span>}  
+</span></span></code></pre></td></tr></table></div></div><p>ConcurrentHashMap的size操作
+如果我们要统计整个ConcurrentHashMap里元素的大小，就必须统计所有Segment里元素的大小后求和。Segment里的全局变量count是一个volatile变量，那么在多线程场景下，我们是不是直接把所有Segment的count相加就可以得到整个ConcurrentHashMap大小了呢？不是的，虽然相加时可以获取每个Segment的count的最新值，但是拿到之后可能累加前使用的count发生了变化，那么统计结果就不准了。所以最安全的做法，是在统计size的时候把所有Segment的put，remove和clean方法全部锁住，但是这种做法显然非常低效。 因为在累加count操作过程中，之前累加过的count发生变化的几率非常小，所以ConcurrentHashMap的做法是先尝试2次通过不锁住Segment的方式来统计各个Segment大小，如果统计的过程中，容器的count发生了变化，则再采用加锁的方式来统计所有Segment的大小。</p><p>那么ConcurrentHashMap是如何判断在统计的时候容器是否发生了变化呢？使用modCount变量，在put , remove和clean方法里操作元素前都会将变量modCount进行加1，那么在统计size前后比较modCount是否发生变化，从而得知容器的大小是否发生变化。</p><p><code>rehash()</code> 方法: 在新 table 中重新分类节点。 因为使用了 2 的幂指数扩展方式， bucket/bin 中的数据还是在原位， 即旧数据的索引位置不变或者偏移了 2 的幂指数距离。 可以重用旧节点减少不必要的节点生成。</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">49
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> * table 大小 *2， 重新放置 HashEntry， 加入新节点 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>@SuppressWarnings(&#34;unchecked&#34;)  
+</span></span><span style=display:flex><span>private void rehash(HashEntry&lt;K,V&gt; node) {  
+</span></span><span style=display:flex><span>    // 保存旧值以便 get 操作遍历  
+</span></span><span style=display:flex><span>    HashEntry&lt;K,V&gt;[] oldTable = table;  
+</span></span><span style=display:flex><span>    int oldCapacity = oldTable.length;  
+</span></span><span style=display:flex><span>    int newCapacity = oldCapacity &lt;&lt; 1;  
+</span></span><span style=display:flex><span>    threshold = (int)(newCapacity * loadFactor);  
+</span></span><span style=display:flex><span>    HashEntry&lt;K,V&gt;[] newTable =  
+</span></span><span style=display:flex><span>        (HashEntry&lt;K,V&gt;[]) new HashEntry[newCapacity];  
+</span></span><span style=display:flex><span>    int sizeMask = newCapacity - 1;  
+</span></span><span style=display:flex><span>    for (int i = 0; i &lt; oldCapacity ; i++) {  
+</span></span><span style=display:flex><span>        HashEntry&lt;K,V&gt; e = oldTable[i];  
+</span></span><span style=display:flex><span>        if (e != null) {  
+</span></span><span style=display:flex><span>            HashEntry&lt;K,V&gt; next = e.next;  
+</span></span><span style=display:flex><span>            int idx = e.hash &amp; sizeMask;  
+</span></span><span style=display:flex><span>            if (next == null)   //  单节点链表  
+</span></span><span style=display:flex><span>                newTable[idx] = e;  
+</span></span><span style=display:flex><span>            else { // 重用在同一个 slot 的连续序列  
+</span></span><span style=display:flex><span>                HashEntry&lt;K,V&gt; lastRun = e;  
+</span></span><span style=display:flex><span>                int lastIdx = idx;  
+</span></span><span style=display:flex><span>                for (HashEntry&lt;K,V&gt; last = next;  
+</span></span><span style=display:flex><span>                     last != null;  
+</span></span><span style=display:flex><span>                     last = last.next) {  
+</span></span><span style=display:flex><span>                    int k = last.hash &amp; sizeMask;  
+</span></span><span style=display:flex><span>                    if (k != lastIdx) {  
+</span></span><span style=display:flex><span>                        lastIdx = k;  
+</span></span><span style=display:flex><span>                        lastRun = last;  
+</span></span><span style=display:flex><span>                    }  
+</span></span><span style=display:flex><span>                }  
+</span></span><span style=display:flex><span>                newTable[lastIdx] = lastRun;  
+</span></span><span style=display:flex><span>                // Clone remaining nodes  
+</span></span><span style=display:flex><span>                for (HashEntry&lt;K,V&gt; p = e; p != lastRun; p = p.next) {  
+</span></span><span style=display:flex><span>                    V v = p.value;  
+</span></span><span style=display:flex><span>                    int h = p.hash;  
+</span></span><span style=display:flex><span>                    int k = h &amp; sizeMask;  
+</span></span><span style=display:flex><span>                    HashEntry&lt;K,V&gt; n = newTable[k];  
+</span></span><span style=display:flex><span>                    newTable[k] = new HashEntry&lt;K,V&gt;(h, p.key, v, n);  
+</span></span><span style=display:flex><span>                }  
+</span></span><span style=display:flex><span>            }  
+</span></span><span style=display:flex><span>        }  
+</span></span><span style=display:flex><span>    }  
+</span></span><span style=display:flex><span>    int nodeIndex = node.hash &amp; sizeMask; // add the new node  
+</span></span><span style=display:flex><span>    node.setNext(newTable[nodeIndex]);  
+</span></span><span style=display:flex><span>    newTable[nodeIndex] = node;  
+</span></span><span style=display:flex><span>    table = newTable;  
+</span></span><span style=display:flex><span>}  
+</span></span></code></pre></td></tr></table></div></div><p>内部类 <code>HashEntry</code>：链表结构</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>static final class HashEntry&lt;K,V&gt; {  
+</span></span><span style=display:flex><span>    // final 保证不变性， 即为线程安全的字段  
+</span></span><span style=display:flex><span>    final int hash;  
+</span></span><span style=display:flex><span>    final K key;  
+</span></span><span style=display:flex><span>    // 根据 volatile 写永远先于读操作的 happens-before 原则来保证获取到都是最新值  
+</span></span><span style=display:flex><span>    volatile V value;  
+</span></span><span style=display:flex><span>    volatile HashEntry&lt;K,V&gt; next;  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>    HashEntry(int hash, K key, V value, HashEntry&lt;K,V&gt; next) {  
+</span></span><span style=display:flex><span>        this.hash = hash;  
+</span></span><span style=display:flex><span>        this.key = key;  
+</span></span><span style=display:flex><span>        this.value = value;  
+</span></span><span style=display:flex><span>        this.next = next;  
+</span></span><span style=display:flex><span>    }  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>    /** 
+</span></span><span style=display:flex><span>     * 使用 volatile 写语义设置 next 
+</span></span><span style=display:flex><span>     */  
+</span></span><span style=display:flex><span>    final void setNext(HashEntry&lt;K,V&gt; n) {  
+</span></span><span style=display:flex><span>        UNSAFE.putOrderedObject(this, nextOffset, n);  
+</span></span><span style=display:flex><span>    }  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>    // Unsafe mechanics  
+</span></span><span style=display:flex><span>    static final sun.misc.Unsafe UNSAFE;  
+</span></span><span style=display:flex><span>    static final long nextOffset;  
+</span></span><span style=display:flex><span>    static {  
+</span></span><span style=display:flex><span>        try {  
+</span></span><span style=display:flex><span>            UNSAFE = sun.misc.Unsafe.getUnsafe();  
+</span></span><span style=display:flex><span>            Class k = HashEntry.class;  
+</span></span><span style=display:flex><span>            nextOffset = UNSAFE.objectFieldOffset  
+</span></span><span style=display:flex><span>                (k.getDeclaredField(&#34;next&#34;));  
+</span></span><span style=display:flex><span>        } catch (Exception e) {  
+</span></span><span style=display:flex><span>            throw new Error(e);  
+</span></span><span style=display:flex><span>        }  
+</span></span><span style=display:flex><span>    }  
+</span></span><span style=display:flex><span>}  
+</span></span></code></pre></td></tr></table></div></div><p><code>ConcurrentHashMap 类：</code></p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">57
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>/* ---------------- Constants -------------- */  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> * The default initial capacity for this table, 
+</span></span><span style=display:flex><span> * used when not otherwise specified in a constructor. 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>static final int DEFAULT_INITIAL_CAPACITY = 16;  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> * 本值是 HashEntry 个数与 table 数组长度的比值 
+</span></span><span style=display:flex><span> * 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>static final float DEFAULT_LOAD_FACTOR = 0.75f;  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> * 
+</span></span><span style=display:flex><span> * 当前并发线程的使用数 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>static final int DEFAULT_CONCURRENCY_LEVEL = 16;  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> * The maximum capacity, used if a higher value is implicitly 
+</span></span><span style=display:flex><span> * specified by either of the constructors with arguments.  MUST 
+</span></span><span style=display:flex><span> * be a power of two &lt;= 1&lt;&lt;30 to ensure that entries are indexable 
+</span></span><span style=display:flex><span> * using ints. 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>static final int MAXIMUM_CAPACITY = 1 &lt;&lt; 30;  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> * The minimum capacity for per-segment tables.  Must be a power 
+</span></span><span style=display:flex><span> * of two, at least two to avoid immediate resizing on next use 
+</span></span><span style=display:flex><span> * after lazy construction. 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>static final int MIN_SEGMENT_TABLE_CAPACITY = 2;  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> * The maximum number of segments to allow; used to bound 
+</span></span><span style=display:flex><span> * constructor arguments. Must be power of two less than 1 &lt;&lt; 24. 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>static final int MAX_SEGMENTS = 1 &lt;&lt; 16; // slightly conservative  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> * Number of unsynchronized retries in size and containsValue 
+</span></span><span style=display:flex><span> * methods before resorting to locking. This is used to avoid 
+</span></span><span style=display:flex><span> * unbounded retries if tables undergo continuous modification 
+</span></span><span style=display:flex><span> * which would make it impossible to obtain an accurate result. 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>static final int RETRIES_BEFORE_LOCK = 2;  
+</span></span><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> * 索引 segments 时使用： 使用高比特位的 hash 值去选择 segment 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>final int segmentMask;  
+</span></span><span style=display:flex><span>  
+</span></span><span style=display:flex><span>/** 
+</span></span><span style=display:flex><span> * Shift value for indexing within segments. 
+</span></span><span style=display:flex><span> */  
+</span></span><span style=display:flex><span>final int segmentShift;  
+</span></span></code></pre></td></tr></table></div></div><p>初始化 ConcurrentHashMap:
+ConcurrentHashMap 结构图</p><p><figure><picture class=noscript-hidden><img data-src=https://image.xiaomo.info/blog/c4.png src=/images/outload.svg data-data-zoomable data-lazyload data-lazyload-blur></picture><noscript data-lazyload-noscript><a class=after:hidden href=https://image.xiaomo.info/blog/c4.png target=_blank rel="noopener noreferrer"><picture><img src=https://image.xiaomo.info/blog/c4.png></picture></a></noscript></figure></p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>public ConcurrentHashMap(int initialCapacity,  
+</span></span><span style=display:flex><span>                         float loadFactor, int concurrencyLevel) {  
+</span></span><span style=display:flex><span>    if (!(loadFactor &gt; 0) || initialCapacity &lt; 0 || concurrencyLevel &lt;= 0)  
+</span></span><span style=display:flex><span>        throw new IllegalArgumentException();  
+</span></span><span style=display:flex><span>    if (concurrencyLevel &gt; MAX_SEGMENTS)  
+</span></span><span style=display:flex><span>        concurrencyLevel = MAX_SEGMENTS;  
+</span></span><span style=display:flex><span>    // Find power-of-two sizes best matching arguments  
+</span></span><span style=display:flex><span>    int sshift = 0;  
+</span></span><span style=display:flex><span>    int ssize = 1;  
+</span></span><span style=display:flex><span>    while (ssize &lt; concurrencyLevel) {  
+</span></span><span style=display:flex><span>        ++sshift;  
+</span></span><span style=display:flex><span>        ssize &lt;&lt;= 1;  
+</span></span><span style=display:flex><span>    }  
+</span></span><span style=display:flex><span>    this.segmentShift = 32 - sshift;  
+</span></span><span style=display:flex><span>    this.segmentMask = ssize - 1;  
+</span></span><span style=display:flex><span>    if (initialCapacity &gt; MAXIMUM_CAPACITY)  
+</span></span><span style=display:flex><span>        initialCapacity = MAXIMUM_CAPACITY;  
+</span></span><span style=display:flex><span>    int c = initialCapacity / ssize;  
+</span></span><span style=display:flex><span>    if (c * ssize &lt; initialCapacity)  
+</span></span><span style=display:flex><span>        ++c;  
+</span></span><span style=display:flex><span>    int cap = MIN_SEGMENT_TABLE_CAPACITY;  
+</span></span><span style=display:flex><span>    while (cap &lt; c)  
+</span></span><span style=display:flex><span>        cap &lt;&lt;= 1;  
+</span></span><span style=display:flex><span>    // create segments and segments[0]  
+</span></span><span style=display:flex><span>    Segment&lt;K,V&gt; s0 =  
+</span></span><span style=display:flex><span>        new Segment&lt;K,V&gt;(loadFactor, (int)(cap * loadFactor),  
+</span></span><span style=display:flex><span>                         (HashEntry&lt;K,V&gt;[])new HashEntry[cap]);  
+</span></span><span style=display:flex><span>    Segment&lt;K,V&gt;[] ss = (Segment&lt;K,V&gt;[])new Segment[ssize];  
+</span></span><span style=display:flex><span>    UNSAFE.putOrderedObject(ss, SBASE, s0); // ordered write of segments[0]  
+</span></span><span style=display:flex><span>    this.segments = ss;  
+</span></span><span style=display:flex><span>}  
+</span></span></code></pre></td></tr></table></div></div><p>由上面的代码可知segments数组的长度size通过concurrencyLevel计算得出。为了能通过按位与的哈希算法来定位segments数组的索引，必须保证segments数组的长度是2的N次方（power-of-two size），所以必须计算出一个是大于或等于concurrencyLevel的最小的2的N次方值来作为segments数组的长度。假如concurrencyLevel等于14，15或16，ssize都会等于16，即容器里锁的个数也是16。注意concurrencyLevel的最大大小是65535，意味着segments数组的长度最大为65536，对应的二进制是16位。</p><p>初始化segmentShift和segmentMask。这两个全局变量在定位segment时的哈希算法里需要使用，sshift等于ssize从1向左移位的次数，在默认情况下concurrencyLevel等于16，1需要向左移位移动4次，所以sshift等于4。segmentShift用于定位参与hash运算的位数，segmentShift等于32减sshift，所以等于28，这里之所以用32是因为ConcurrentHashMap里的hash()方法输出的最大数是32位的，后面的测试中我们可以看到这点。segmentMask是哈希运算的掩码，等于ssize减1，即15，掩码的二进制各个位的值都是1。因为ssize的最大长度是65536，所以segmentShift最大值是16，segmentMask最大值是65535，对应的二进制是16位，每个位都是1。</p><p>变量cap就是segment里HashEntry数组的长度，它等于initialCapacity除以ssize的倍数c，如果c大于1，就会取大于等于c的2的N次方值，所以cap不是1，就是2的N次方。segment的容量threshold＝(int)cap*loadFactor，默认情况下initialCapacity等于16，load factor等于0.75，通过运算cap等于1，threshold等于零。</p><h1 class=group id=在jdk18中主要做了2方面的改进>在jdk1.8中主要做了2方面的改进<a href=#%e5%9c%a8jdk18%e4%b8%ad%e4%b8%bb%e8%a6%81%e5%81%9a%e4%ba%862%e6%96%b9%e9%9d%a2%e7%9a%84%e6%94%b9%e8%bf%9b><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p>数据结构
+1.8中放弃了Segment臃肿的设计，取而代之的是采用Node + CAS + Synchronized来保证并发安全进行实现，结构如下：<figure><picture class=noscript-hidden><img data-src=https://image.xiaomo.info/blog/nodeArray.png src=/images/outload.svg data-data-zoomable data-lazyload data-lazyload-blur></picture><noscript data-lazyload-noscript><a class=after:hidden href=https://image.xiaomo.info/blog/nodeArray.png target=_blank rel="noopener noreferrer"><picture><img src=https://image.xiaomo.info/blog/nodeArray.png></picture></a></noscript></figure></p><p>只有在执行第一次put方法时才会调用initTable()初始化Node数组，实现如下：</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>private final Node&lt;K,V&gt;[] initTable() {
+</span></span><span style=display:flex><span>    Node&lt;K,V&gt;[] tab; int sc;
+</span></span><span style=display:flex><span>    while ((tab = table) == null || tab.length == 0) {
+</span></span><span style=display:flex><span>        if ((sc = sizeCtl) &lt; 0)
+</span></span><span style=display:flex><span>            Thread.yield(); // lost initialization race; just spin
+</span></span><span style=display:flex><span>        else if (U.compareAndSwapInt(this, SIZECTL, sc, -1)) {
+</span></span><span style=display:flex><span>            try {
+</span></span><span style=display:flex><span>                if ((tab = table) == null || tab.length == 0) {
+</span></span><span style=display:flex><span>                    int n = (sc &gt; 0) ? sc : DEFAULT_CAPACITY;
+</span></span><span style=display:flex><span>                    @SuppressWarnings(&#34;unchecked&#34;)
+</span></span><span style=display:flex><span>                    Node&lt;K,V&gt;[] nt = (Node&lt;K,V&gt;[])new Node&lt;?,?&gt;[n];
+</span></span><span style=display:flex><span>                    table = tab = nt;
+</span></span><span style=display:flex><span>                    sc = n - (n &gt;&gt;&gt; 2);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            } finally {
+</span></span><span style=display:flex><span>                sizeCtl = sc;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            break;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    return tab;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>put实现
+当执行put方法插入数据时，根据key的hash值，在Node数组中找到相应的位置，实现如下：</p><p>1、如果相应位置的Node还未初始化，则通过CAS插入相应的数据；</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>else if ((f = tabAt(tab, i = (n - 1) &amp; hash)) == null) {
+</span></span><span style=display:flex><span>    if (casTabAt(tab, i, null, new Node&lt;K,V&gt;(hash, key, value, null)))
+</span></span><span style=display:flex><span>        break;                   // no lock when adding to empty bin
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>2、如果相应位置的Node不为空，且当前该节点不处于移动状态，则对该节点加synchronized锁，如果该节点的hash不小于0，则遍历链表更新节点或插入新节点；</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>if (fh &gt;= 0) {
+</span></span><span style=display:flex><span>    binCount = 1;
+</span></span><span style=display:flex><span>    for (Node&lt;K,V&gt; e = f;; ++binCount) {
+</span></span><span style=display:flex><span>        K ek;
+</span></span><span style=display:flex><span>        if (e.hash == hash &amp;&amp;
+</span></span><span style=display:flex><span>            ((ek = e.key) == key ||
+</span></span><span style=display:flex><span>             (ek != null &amp;&amp; key.equals(ek)))) {
+</span></span><span style=display:flex><span>            oldVal = e.val;
+</span></span><span style=display:flex><span>            if (!onlyIfAbsent)
+</span></span><span style=display:flex><span>                e.val = value;
+</span></span><span style=display:flex><span>            break;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        Node&lt;K,V&gt; pred = e;
+</span></span><span style=display:flex><span>        if ((e = e.next) == null) {
+</span></span><span style=display:flex><span>            pred.next = new Node&lt;K,V&gt;(hash, key, value, null);
+</span></span><span style=display:flex><span>            break;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>3、如果该节点是TreeBin类型的节点，说明是红黑树结构，则通过putTreeVal方法往红黑树中插入节点；</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>else if (f instanceof TreeBin) {
+</span></span><span style=display:flex><span>    Node&lt;K,V&gt; p;
+</span></span><span style=display:flex><span>    binCount = 2;
+</span></span><span style=display:flex><span>    if ((p = ((TreeBin&lt;K,V&gt;)f).putTreeVal(hash, key, value)) != null) {
+</span></span><span style=display:flex><span>        oldVal = p.val;
+</span></span><span style=display:flex><span>        if (!onlyIfAbsent)
+</span></span><span style=display:flex><span>            p.val = value;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>4、如果binCount不为0，说明put操作对数据产生了影响，如果当前链表的个数达到8个，则通过treeifyBin方法转化为红黑树，如果oldVal不为空，说明是一次更新操作，没有对元素个数产生影响，则直接返回旧值；</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>if (binCount != 0) {
+</span></span><span style=display:flex><span>    if (binCount &gt;= TREEIFY_THRESHOLD)
+</span></span><span style=display:flex><span>        treeifyBin(tab, i);
+</span></span><span style=display:flex><span>    if (oldVal != null)
+</span></span><span style=display:flex><span>        return oldVal;
+</span></span><span style=display:flex><span>    break;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>5、如果插入的是一个新节点，则执行addCount()方法尝试更新元素个数baseCount；</p><p>size实现
+1.8中使用一个volatile类型的变量baseCount记录元素的个数，当插入新数据或则删除数据时，会通过addCount()方法更新baseCount，实现如下：</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>if ((as = counterCells) != null ||
+</span></span><span style=display:flex><span>    !U.compareAndSwapLong(this, BASECOUNT, b = baseCount, s = b + x)) {
+</span></span><span style=display:flex><span>    CounterCell a; long v; int m;
+</span></span><span style=display:flex><span>    boolean uncontended = true;
+</span></span><span style=display:flex><span>    if (as == null || (m = as.length - 1) &lt; 0 ||
+</span></span><span style=display:flex><span>        (a = as[ThreadLocalRandom.getProbe() &amp; m]) == null ||
+</span></span><span style=display:flex><span>        !(uncontended =
+</span></span><span style=display:flex><span>          U.compareAndSwapLong(a, CELLVALUE, v = a.value, v + x))) {
+</span></span><span style=display:flex><span>        fullAddCount(x, uncontended);
+</span></span><span style=display:flex><span>        return;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    if (check &lt;= 1)
+</span></span><span style=display:flex><span>        return;
+</span></span><span style=display:flex><span>    s = sumCount();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>1、初始化时counterCells为空，在并发量很高时，如果存在两个线程同时执行CAS修改baseCount值，则失败的线程会继续执行方法体中的逻辑，使用CounterCell记录元素个数的变化；</p><p>2、如果CounterCell数组counterCells为空，调用fullAddCount()方法进行初始化，并插入对应的记录数，通过CAS设置cellsBusy字段，只有设置成功的线程才能初始化CounterCell数组，实现如下：</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>else if (cellsBusy == 0 &amp;&amp; counterCells == as &amp;&amp;
+</span></span><span style=display:flex><span>         U.compareAndSwapInt(this, CELLSBUSY, 0, 1)) {
+</span></span><span style=display:flex><span>    boolean init = false;
+</span></span><span style=display:flex><span>    try {                           // Initialize table
+</span></span><span style=display:flex><span>        if (counterCells == as) {
+</span></span><span style=display:flex><span>            CounterCell[] rs = new CounterCell[2];
+</span></span><span style=display:flex><span>            rs[h &amp; 1] = new CounterCell(x);
+</span></span><span style=display:flex><span>            counterCells = rs;
+</span></span><span style=display:flex><span>            init = true;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    } finally {
+</span></span><span style=display:flex><span>        cellsBusy = 0;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    if (init)
+</span></span><span style=display:flex><span>        break;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>3、如果通过CAS设置cellsBusy字段失败的话，则继续尝试通过CAS修改baseCount字段，如果修改baseCount字段成功的话，就退出循环，否则继续循环插入CounterCell对象；</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>else if (U.compareAndSwapLong(this, BASECOUNT, v = baseCount, v + x))
+</span></span><span style=display:flex><span>    break;
+</span></span></code></pre></td></tr></table></div></div><p>所以在1.8中的size实现比1.7简单多，因为元素个数保存baseCount中，部分元素的变化个数保存在CounterCell数组中，实现如下：</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>public int size() {
+</span></span><span style=display:flex><span>    long n = sumCount();
+</span></span><span style=display:flex><span>    return ((n &lt; 0L) ? 0 :
+</span></span><span style=display:flex><span>            (n &gt; (long)Integer.MAX_VALUE) ? Integer.MAX_VALUE :
+</span></span><span style=display:flex><span>            (int)n);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>final long sumCount() {
+</span></span><span style=display:flex><span>    CounterCell[] as = counterCells; CounterCell a;
+</span></span><span style=display:flex><span>    long sum = baseCount;
+</span></span><span style=display:flex><span>    if (as != null) {
+</span></span><span style=display:flex><span>        for (int i = 0; i &lt; as.length; ++i) {
+</span></span><span style=display:flex><span>            if ((a = as[i]) != null)
+</span></span><span style=display:flex><span>                sum += a.value;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    return sum;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>通过累加baseCount和CounterCell数组中的数量，即可得到元素的总个数；</p><h1 class=group id=鸣谢>鸣谢<a href=#%e9%b8%a3%e8%b0%a2><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p><a class=link href=https://blog.csdn.net/wenniuwuren target=_blank rel=noopener>wenniuwuren</a></p></section><div class="px-6 pb-5 pt-4 text-center text-xl text-gray-500 md:px-10 md:pb-10 md:pt-14 flex items-center justify-center"><a class="mr-4 inline-flex h-5 w-5 items-center" title="分享到 Twitter" href="https://twitter.com/share?&text=ConcurrentHashMap%20%e6%98%af%e5%b0%86%e9%94%81%e7%9a%84%e8%8c%83%e5%9b%b4%e7%bb%86%e5%8c%96%e6%9d%a5%e5%ae%9e%e7%8e%b0%e9%ab%98%e6%95%88%e5%b9%b6%e5%8f%91%e7%9a%84%e3%80%82%20%e5%9f%ba%e6%9c%ac%e7%ad%96%e7%95%a5%e6%98%af%e5%b0%86%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e5%88%86%e4%b8%ba%e4%b8%80%e4%b8%aa%e4%b8%80%e4%b8%aa%20Segment%ef%bc%88%e6%af%8f%e4%b8%80%e4%b8%aa%e9%83%bd%e6%98%af%e4%b8%80%e4%b8%aa%e5%b9%b6%e5%8f%91%e5%8f%af%e8%af%bb%e7%9a%84%20hash%20table%ef%bc%8c%20%e5%8d%b3%e5%88%86%e6%ae%b5%e9%94%81%ef%bc%89%e4%bd%9c%e4%b8%ba%e4%b8%80%e4%b8%aa&url=https://blog.xiaomo.info/2018/jdksourcecodereadconcurrenthashmap/" target=_blank rel="noopener noreferrer"><i class="eva eva-twitter hover:text-theme"></i></a><i class="eva eva-copy mr-4 cursor-pointer hover:text-theme" title=复制链接 data-clipboard-text=https://blog.xiaomo.info/2018/jdksourcecodereadconcurrenthashmap/></i><div class="group h-5 w-5 relative hidden cursor-pointer sm:inline-block"><i title=二维码 class="eva show-qrcode eva-smartphone hover:text-theme"></i><div class="qrcode-wrapper p-2 pointer-events-none absolute left-2/4 bottom-10 h-32 w-32 -translate-x-1/2 overflow-hidden rounded border border-gray-300 bg-white opacity-0 transition duration-300 ease-[ease] group-hover:opacity-100"><img class="h-full w-full" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://blog.xiaomo.info/2018/jdksourcecodereadconcurrenthashmap/" alt=二维码></div></div></div><div class="border-b dark:border-darkBorder"></div><div class="flex justify-between px-2 py-4 text-xl md:px-6 md:text-2xl"><div><a href=/2018/jdksourcecodereadinteger/ title=jdk源码系列-Integer class="invisible flex cursor-pointer items-center text-gray-500 transition duration-300 ease-[ease] hover:text-theme dark:text-darkTextPlaceholder dark:hover:text-darkText" style=visibility:visible><span class="flex items-center text-5xl opacity-70 dark:bg-opacity-100"><i class="eva eva-chevron-left-outline"></i></span>
+<span>上一篇</span></a></div><div class="hidden items-center text-xs xl:flex">除特殊声明外，本博客一律使用以下协议进行授权 「
+<a href=https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh target=_blank rel="noopener noreferrer" class=text-theme>署名 - 非商业性使用 - 禁止演绎 4.0</a>
+」</div><div class="flex items-center text-sm xl:hidden"><a href=https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh target=_blank rel="noopener noreferrer" class=text-theme><img src=/Cc-by-nc-nd.svg alt="署名 - 非商业性使用 - 禁止演绎 4.0" title="署名 - 非商业性使用 - 禁止演绎 4.0" class=w-24></a></div><a href=/2018/jdksourcecodereadatomicinteger/ title=jdk源码系列-AtomicInteger class="invisible flex cursor-pointer items-center text-gray-500 transition duration-300 ease-[ease] hover:text-theme dark:text-darkTextPlaceholder dark:hover:text-darkText" style=visibility:visible><span>下一篇</span>
+<span class="flex items-center text-5xl opacity-70 dark:bg-opacity-100"><i class="eva eva-chevron-right-outline"></i></span></a></div><div class="border-t py-6 px-6 md:px-8 dark:border-darkBorder"><script src=https://giscus.app/client.js data-repo=houko/houko.github.io data-repo-id="MDEwOlJlcG9zaXRvcnk3MjYwMDMxMg==" data-category=General data-category-id=DIC_kwDOBFPK-M4CSvHc data-mapping=title data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=light data-lang=zh-CN data-loading=false crossorigin=anonymous data-swup-reload-script async></script><script data-swup-reload-script>(function(){addEventListener("message",t=>{if(event.origin!=="https://giscus.app")return;e()}),window.addEventListener("onThemeChange",e);function e(){setGiscusTheme(document.documentElement.dataset.scheme==="light"?"light":"dark")}})();function setGiscusTheme(e){let t=document.querySelector("iframe.giscus-frame");t&&t.contentWindow.postMessage({giscus:{setConfig:{theme:e}}},"https://giscus.app")}</script></div></div></div></div></div></main><footer><div class="com-footer flex flex-col items-center border-t py-4 px-4 text-sm leading-none text-gray-600 dark:border-darkBorder dark:text-darkTextPlaceholder md:flex-row md:justify-between"><div class="mb-2 flex items-center justify-between text-center md:mb-0"><span>© 2016 - 2023</span>
+<span class="mx-1.5 opacity-50">| </span>由 <a data-no-swup class="mx-1 font-bold hover:text-theme" href=https://gohugo.io/ target=_blank rel="noopener noreferrer">Hugo</a> <span class="text-xs opacity-70">❤</span> <a data-no-swup class="mx-1 font-bold hover:text-theme" href=https://github.com/Ice-Hazymoon/hugo-theme-luna target=_blank rel="noopener noreferrer">Luna</a> 驱动</div><div class="flex items-center"></div><div id=run-time class="mt-2 flex-grow text-right md:mt-0"><span>运行时间： </span><b id=run-time-d>0</b>
+<span class=text-xs>天</span>
+<b id=run-time-h>0</b>
+<span class=text-xs>小时</span>
+<b id=run-time-m>0</b>
+<span class=text-xs>分钟</span>
+<b id=run-time-s>0</b>
+<span class=text-xs>秒</span></div></div><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-80824007-1","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"))</script><script async src=https://www.google-analytics.com/analytics.js></script>
+<script type=text/javascript>window.__theme={cdn:"",pjax:!0,isServer:!1,$version:"27318bae09d55a97ea7da355b574a3210186ba07",lang:"zh-cn",imageZoom:!0,lazyload:!0,bionicReading:{enabled:!0,skipLinks:!1,autoBionic:!1,excludeWords:[],excludeClasses:["github"],excludeNodeNames:[]},katex:!0,search:!0,backtop:!0,pangu:!0,autoDarkMode:!1,googleAnalytics:!0,hugoEncrypt:{wrongPasswordText:"密码错误",userStorage:window.sessionStorage},console:{enabled:!0,leftColor:"#dd6065",rightColor:"#feb462",leftText:"Hugo Theme Luna",rightText:"Powered by Hugo ❤ Luna"},assets:{error_svg:"/images/error.svg",search_svg:"/images/search.svg"},i18n:{copy:{success:"复制成功",failed:"复制失败，请手动复制",copyCode:"复制代码"},search:{untitled:"无标题",loadFailure:"初始化搜索引擎失败",input:"请输入内容..."},darkMode:{dark:"切换到夜间模式",light:"切换到日间模式"}},creatTime:"2016/06/30"}</script><script type=text/javascript src=/ts/main.5562dd676e11d79991ff088b5335690420b8a54043d1dd6ced64a624ca63167d.js defer integrity="sha256-VWLdZ24R15mR/wiLUzVpBCC4pUBD0d1s7WSmJMpjFn0="></script><script>"serviceWorker"in navigator&&window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js")})</script>
+<script></script><script data-swup-reload-script></script></footer></div></div><a href=#nav title=返回顶部 id=back-top class="fixed right-6 bottom-9 z-10 translate-y-3 scale-90 cursor-pointer rounded-full bg-white opacity-0 transition duration-300 ease-[ease] dark:bg-darkBgAccent sm:scale-100"><div class=relative><div class="absolute left-0 top-0 flex h-full w-full items-center justify-center text-xl"><i class="eva eva-arrow-upward-outline"></i></div><svg id="svg" width="54" height="54" viewBox="0 0 54 54" preserveAspectRatio="xMinYMin meet"><circle transform="rotate(-90, 27 , 27)" style="stroke-dasharray:157,157;stroke-dashoffset:157" cx="27" cy="27" r="25" fill="none" stroke-width="4" stroke-linecap="round" stroke="var(--theme)"/></svg></div></a><div id=i18nlist></div><noscript><style>.dark-mode-switch,#run-time,#bionicReading,.noscript-hidden,[data-clipboard-text],[data-lazyload]{display:none}#back-top{opacity:1}.noscript-show{display:initial}</style></noscript></body></html>

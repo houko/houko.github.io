@@ -1,0 +1,692 @@
+<!doctype html><html lang=zh-cn class=lang-zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=keywords content="nuxt,web,Hugo,Hugo Theme,Luna,"><meta name=description content="vue全家桶还算是比较全面的，从构建工具vue-cli、vite，到vue-router、vuex、element-ui，vue-dev-t"><meta itemprop=description content="vue全家桶还算是比较全面的，从构建工具vue-cli、vite，到vue-router、vuex、element-ui，vue-dev-t"><meta http-equiv=x-ua-compatible content="ie=edge"><meta itemprop=name content="nuxt.js使用介绍 - 小莫的博客-fighting(技术分享、生活随笔)"><link href=https://blog.xiaomo.info/index.xml title="nuxt.js使用介绍 - 小莫的博客-fighting(技术分享、生活随笔)" type=application/rss+xml rel=alternate><title>nuxt.js使用介绍 - 小莫的博客-fighting(技术分享、生活随笔)</title><link rel=stylesheet href="/main.86108ed4a3b93e077dcb401e0c40f8748d2fd7bc4de45cdcf25879e6a284dcb6.css" integrity="sha256-hhCO1KO5Pgd9y0AeDED4dI0v17xN5Fzc8lh55qKE3LY="><meta property="og:site_name" content="nuxt.js使用介绍 - 小莫的博客-fighting(技术分享、生活随笔)"><meta property="og:type" content="article"><meta property="og:title" content="nuxt.js使用介绍"><meta property="og:description" content="vue全家桶还算是比较全面的，从构建工具vue-cli、vite，到vue-router、vuex、element-ui，vue-dev-t"><meta property="og:url" content="https://blog.xiaomo.info/2020/vuessrnuxt/"><meta property="og:image" content="https://blog.xiaomo.info/2020/vuessrnuxt/cover.png"><meta property="og:image:width" content="1000"><meta property="og:image:height" content="420"><meta property="article:publisher" content="https://blog.xiaomo.info/2020/vuessrnuxt/"><meta property="article:published_time" content="2020-11-08T00:00:00+09:00"><meta property="article:modified_time" content="2023-01-06T13:06:22+09:00"><meta name=theme-color content="#00B0FF"><meta name=mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-title content="nuxt.js使用介绍 - 小莫的博客-fighting(技术分享、生活随笔)"><meta name=apple-mobile-web-app-status-bar-style content="white"><meta name=twitter:card content="summary_large_image"><meta name=twitter:site content="@xiaomoinfo"><meta name=twitter:creator content="@xiaomoinfo"><meta name=twitter:title content="nuxt.js使用介绍 - 小莫的博客-fighting(技术分享、生活随笔)"><meta name=twitter:description content="vue全家桶还算是比较全面的，从构建工具vue-cli、vite，到vue-router、vuex、element-ui，vue-dev-t"><meta name=twitter:url content="https://blog.xiaomo.info/2020/vuessrnuxt/"><meta name=twitter:image content="https://blog.xiaomo.info/2020/vuessrnuxt/cover.png"><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=manifest href=/manifest.json><link href=/icon.png rel="shortcut icon"><link href=/icon.png rel=bookmark><link rel=apple-touch-icon href=/icon.png><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"nuxt.js使用介绍","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.xiaomo.info\/2020\/vuessrnuxt\/"},"genre":"posts","keywords":"nuxt","wordcount":4965,"url":"https:\/\/blog.xiaomo.info\/2020\/vuessrnuxt\/","datePublished":"2020-11-08T00:00:00\u002b09:00","dateModified":"2023-01-06T13:06:22\u002b09:00","license":"@Copyright 2023","author":{"@type":"Person","name":"xiaomo"},"description":""}</script><script async src=https://cdn.splitbee.io/sb.js></script></head><body class="dark:bg-darkBg dark:text-darkText"><div class="relative mx-auto shadow-lg md:max-w-4xl xl:max-w-4xl 2xl:max-w-4xl"><div class="main flex flex-col justify-between bg-white dark:bg-darkFg"><header class="fixed z-10 backdrop-blur-md bg-white/80 dark:bg-darkFg mx-auto w-full md:max-w-4xl xl:max-w-4xl 2xl:max-w-4xl"><nav id=nav class="navbar top-0 z-10 flex items-center border-b px-5 py-6 dark:border-darkBorder md:px-10"><div class="route-items flex w-full items-center justify-around"><a title=首页 data-active-link=/ href=/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-home flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">首页</span>
+</a><a title=关于我 data-active-link=/about/ href=/about/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-heart flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">关于我</span>
+</a><a title=朋友们 data-active-link=/links/ href=/links/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-people flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">朋友们</span>
+</a><a title=归档 data-active-link=/archives/ href=/archives/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-bar-chart flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">归档</span>
+</a><a title=推特 data-active-link=/twitter/ href=/twitter/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-twitter flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">推特</span>
+</a><a title=GitHub data-active-link=/github/ href=/github/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-github flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">GitHub</span>
+</a><a title=搜索 data-active-link=/search/ href=/search/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-search flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">搜索</span></a></div></nav><div class="dark-mode-switch absolute right-0 top-0 z-10 cursor-pointer pr-2 pt-2 text-xl leading-none"><i class="eva eva-moon opacity-20 dark:opacity-70"></i></div></header><main class="relative flex flex-grow mt-28 md:mt-20" id=swup><style>:root{--font:Times New Roman,Times,Heti Song,serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol}</style><div class="type-posts layout- w-full"><div class="relative h-full"><div class="relative h-full"><div class="page-view-article flex h-full flex-col bg-white dark:bg-darkFg"><div class=relative><div style=background-image:linear-gradient(180deg,#f1f6f6,#ccc);padding-bottom:42% class="article-cover relative h-0Page(/posts/20201108_nuxtjs/index.zh-cn.md) w-full"><picture class=noscript-hidden><source data-srcset="/2020/vuessrnuxt/cover_hue46aa9df300699809bc2497d73c1756b_73913_1000x0_resize_q95_h2_catmullrom_3.webp 1080w" type=image/webp><img data-src=https://blog.xiaomo.info/2020/vuessrnuxt/cover.png src=/2020/vuessrnuxt/cover_hue46aa9df300699809bc2497d73c1756b_73913_f9586c173cd0b1844a7b6b65ffb00fc1.jpg width=1000 height=420 data-srcset="/2020/vuessrnuxt/cover_hue46aa9df300699809bc2497d73c1756b_73913_1000x0_resize_catmullrom_3.png 1080w" alt=nuxt.js使用介绍 class="absolute left-0 top-0 h-full w-full object-cover object-center" data-lazyload data-lazyload-blur></picture><noscript><picture><source srcset="/2020/vuessrnuxt/cover_hue46aa9df300699809bc2497d73c1756b_73913_1000x0_resize_q95_h2_catmullrom_3.webp 1080w" type=image/webp><img src=https://blog.xiaomo.info/2020/vuessrnuxt/cover.png srcset="/2020/vuessrnuxt/cover_hue46aa9df300699809bc2497d73c1756b_73913_1000x0_resize_catmullrom_3.png 1080w" alt=nuxt.js使用介绍 width=1000 height=420 class="absolute left-0 top-0 h-full w-full object-cover object-center"></picture></noscript></div><h1 class="article-title absolute bottom-0 left-0 w-full px-6 pb-8 pt-32 text-3xl text-white dark:text-darkText md:px-10 md:text-4xl">nuxt.js使用介绍</h1></div><div class="article-info border-b p-6 pb-3 text-sm dark:border-darkBorder md:px-10"><div><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-clock-outline mr-1"></i>
+<span><time title="发布于 2020年11月8日 00:00:00" datetime=2020-11-08T00:00:00+09:00>2020年11月8日</time></span></div><span class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-edit-2-outline mr-1"></i>
+<span><time title="最后修改于：2023年1月6日 13:06:22" datetime=2023-01-06T13:06:22+09:00>2023年1月6日</time></span></span><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-flag-outline mr-1"></i>
+<span>10 分钟</span></div><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-bar-chart-outline mr-1"></i>
+<span>4965 字</span></div></div><div class="mb-3 flex items-center"><i class="eva eva-pricetags-outline mr-1"></i>
+<span class=mr-3>标签</span><a href=/tags/nuxt title=nuxt class="group mr-2 flex items-center text-sm">
+<i class="mr-1 text-gray-400 group-hover:text-theme">#</i>
+<span class="text-gray-400 group-hover:text-theme">nuxt</span></a></div><div class="mb-3 flex items-center"><i class="eva eva-folder-outline mr-1"></i>
+<span class=mr-3>分类</span><a href=/categories/web title=web class="group flex items-center text-sm">
+<span class="text-gray-400 group-hover:text-theme">web</span>
+<span class="mx-0.5 group-last:hidden">,</span></a></div></div><aside class="toc border-b border-gray-300 px-5 py-5 dark:border-darkBorder md:px-10 2xl:fixed 2xl:top-10 2xl:m-0 2xl:-ml-72 2xl:w-72 2xl:border-none 2xl:p-0 2xl:py-4 2xl:pr-4"><header><h1 class="mb-3 text-2xl font-bold 2xl:mb-4">文章目录</h1></header><nav id=TableOfContents></nav></aside><section class="article-content typo relative flex-grow px-6 py-5 md:px-10"><i title=更快的阅读 id=bionicReading class="absolute right-0 top-0 cursor-pointer p-3"><svg class="w-4 h-4 fill-current text-gray-400" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" p-id="10811"><path d="M480 192c-19.2.0-32-12.8-32-32V32c0-19.2 12.8-32 32-32s32 12.8 32 32v128c0 19.2-12.8 32-32 32zM160 1024c-6.4.0-19.2.0-25.6-6.4l-128-128c0-6.4-6.4-19.2-6.4-25.6s6.4-19.2 6.4-25.6l512-512c12.8-6.4 38.4-6.4 51.2.0l128 128c0 6.4 6.4 19.2 6.4 25.6s-6.4 19.2-6.4 25.6l-512 512c-6.4 6.4-19.2 6.4-25.6 6.4zM76.8 864l83.2 83.2L627.2 480 544 396.8 76.8 864zM992 576H864c-19.2.0-32-12.8-32-32s12.8-32 32-32h128c19.2.0 32 12.8 32 32s-12.8 32-32 32zM768 288c-6.4.0-19.2.0-25.6-6.4-12.8-12.8-12.8-32 0-44.8l96-96c12.8-12.8 32-12.8 44.8.0s12.8 32 0 44.8l-96 96c0 6.4-12.8 6.4-19.2 6.4zm-512 0c-6.4.0-19.2.0-25.6-6.4l-96-96c-6.4-12.8-6.4-38.4.0-51.2s32-12.8 44.8.0l96 96c12.8 12.8 12.8 32 0 44.8.0 12.8-12.8 12.8-19.2 12.8zM864 896c-6.4.0-19.2.0-25.6-6.4l-96-96c-12.8-12.8-12.8-32 0-44.8s32-12.8 44.8.0l96 96c12.8 12.8 12.8 32 0 44.8.0 6.4-12.8 6.4-19.2 6.4z" p-id="10812"/><path d="M544 640c-6.4.0-19.2.0-25.6-6.4l-128-128c-6.4-12.8-6.4-38.4.0-51.2s32-12.8 44.8.0l128 128c12.8 12.8 12.8 38.4 6.4 51.2-6.4 6.4-19.2 6.4-25.6 6.4z" p-id="10813"/></svg></i><p>vue全家桶还算是比较全面的，从构建工具vue-cli、vite，到vue-router、vuex、element-ui，vue-dev-tools，最后服务器渲染方案nuxt.js等等构成了一个完整的开发生态，用着还是比较省心的。总结一下nux.js用法以供参考。</p><h1 class=group id=什么是ssr>什么是SSR<a href=#%e4%bb%80%e4%b9%88%e6%98%afssr><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p>服务端渲染（Server Side Render），即：网页是通过服务端渲染生成后输出给客户端。</p><p>在 SPA(Single Page Application，即单页面应用) 之前的时代，我们的Web架构大都是 SSR，如：Wordpress（PHP）、JSP技术、JavaWeb&mldr;或者 DEDE CMS、Discuz! 等这些程序都是传统典型的 SSR 架构， 即：服务端取出数据和模板组合生成 html 输出给前端，前端发生请求时，重新向服务端请求 html 资源，路由也由服务端来控制。</p><p>其次，有个概念叫预渲染（Prerendering）。</p><p>如果你只是用服务端渲染来改善一个少数的营销页面（如 首页，关于，联系 等等）的 SEO，那你可以用预渲染来实现。 预渲染不像服务器渲染那样即时编译 HTML，它只在构建时为了特定的路由生成特定的几个静态页面，等于我们可以通过 Webpack 插件将一些特定页面组件 build 时就编译为 html 文件，直接以静态资源的形式输出给搜索引擎。</p><p>但实际的商业应用中，大部分时候我们需要的是即时渲染，这也是我们今天讨论的主题。</p><h1 class=group id=为什么需要ssr>为什么需要SSR<a href=#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81ssr><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><ol><li><p>为了兼容性</p><p>虽然现在大部分的浏览器对单页面应用支持优化，但还有一少部分浏览器比较古老。对于世界上的一些地区人，可能只能用1998年产的电脑访问互联网的方式使用计算机。 而 Vue 只能运行在 IE9 以上的浏览器，你可能也想为那些老式浏览器提供基础内容 - 或者是在命令行中使用 Lynx 的时髦的黑客。</p></li><li><p>为了SEO</p></li></ol><pre><code>SEO是流量是变现的快车道，SEO 是低成本获取流量的最佳方法。
+
+目前大部分的搜索引擎仅能抓取URI直接输出的数据资源，对于 Ajax 类的异步请求的数据无法抓取；Google 除外，Google 有自己的[Google’s Webmaster AJAX Crawling Guidelines.](https://developers.google.com/webmasters/ajax-crawling/)技术支持。在大部分的商业应用中，我们有 SEO 的需求，我们需要搜索引擎更多地抓取到我们的内容，更详细地认识到我们的网页结构，而不是仅对首页或特定静态页进行索引，这是 SSR 最重要的意义。
+
+简单说就是，我们需要搜素引擎看到这样的代码：
+
+![image-20201106154440746](https://image.xiaomo.info//blog/image-20201106154440746.png)
+
+
+
+而不是这样的代码：
+
+![image-20201106154506477](https://image.xiaomo.info//blog/image-20201106154506477.png)
+
+
+
+3.  为了数据安全      
+
+现在基本上B/S架构的应用都是前后端分离方式开发的，即前端使用XHR异步获取数据并渲染到页面上，如果我们不使用SSR的话，用户可以直接在调试控制台拿到我们的接口数据。但如果是我们使用的是SSR渲染的话，浏览器收到的就是一个填充好数据的HTML，如果别有用心的人想拿我们的数据。要么人肉复制，要么使用jsonp等技术定位我们的元素。当我们发现有spider在偷我们的数据的时候，稍微换下html的dom结构，偷数据的人就得吭赤吭赤的更新他们的爬虫代码。
+
+
+
+此外，我们还需要在 SSR 的基础上实现 SPA，即：**首屏渲染**。
+</code></pre><p>基本流程是：</p><p>在浏览器第一次访问某个 URI 资源的时候（首屏），Web 服务器根据路由拿到对应数据渲染并输出，且输出的数据中包含两部分：</p><p>路由页对应的页面及已渲染好的数据</p><p>完整的SPA程序代码</p><p>在客户端首屏渲染完成之后，此时我们看到的其实已经是一个和之前的 SPA 相差无几的应用程序了，接下来我们进行的任何操作都只是客户端的应用进行交互， 页面/组件由Web端渲染，路由也由浏览器控制，用户只需要和当前浏览器内的应用打交道就可以了。</p><p>之前在各大 SPA 框架还未正式官方支持 SSR 时，有一些第三方的解决方案，如：<a class=link href=https://prerender.io/ target=_blank rel=noopener>prerender.io</a>
+， 它们做的事情就是建立HTTP一个中间层，在判断到访问来源是蜘蛛时，输出已缓存好的html数据，此数据若不存在，则调用第三方服务对 html 进行缓存，往复进行。</p><p>另一方法是自行构建蜘蛛渲染逻辑，当识别 UA 为搜索引擎时，拿服务端已准备好的模板和数据进行渲染输出 html 数据，反之，则输出 SPA 应用代码；</p><p>我当时也考虑过此方法，但有很多弊端，如：</p><p>需要针对蜘蛛编写一套独立的渲染模板，因为大部分情况下 SPA 的代码是没法直接在服务端使用的</p><p>搜索引擎若检测到蜘蛛抓取数据和真实访问数据不一致，会做降权惩罚，也就意味着渲染模板还必须和SPA预期输出一模一样</p><p>所以，最好的方法是 SPA 能和服务端使用同一套模板，且使用同一个服务端逻辑分支，再简单说：<strong>最好 Vue、Ng2&mldr; 能直接在服务端跑起来</strong>。</p><p>于是，陆续诞生了基于 React 的<a class=link href=https://github.com/zeit/next.js/ target=_blank rel=noopener>Next.js</a>
+、基于 Vue 的<a class=link href=https://cn.nuxtjs.org/ target=_blank rel=noopener>Nuxt.js</a>
+、Ng2 诞生之日便支持。</p><h1 class=group id=vue的ssr方案nuxt>VUE的SSR方案(nuxt)<a href=#vue%e7%9a%84ssr%e6%96%b9%e6%a1%88nuxt><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p>Nuxt.js是使用 Webpack 和 Node.js 进行封装的基于Vue的SSR框架，使用它，你可以不需要自己搭建一套 SSR 程序，而是通过其约定好的文件结构和API就可以实现一个首屏渲染的 Web 应用。之所以叫 Nuxt.js 也是因为受到了 Next.js 的启发。作者是法国的兄弟俩，EvenYou 在微博多次提到，也在欧洲见过哥俩。</p><p>在此之前，国内有一些对 Vue SSR 的整合尝试，但都没有成功，主要在于 Webpack 和 Node 的结合上没有实践出最佳方案， 当我看到 Nuxt.js 以约束文件夹和配置文件<code>nuxt.config.js</code>的方式来管理多个程序组件之间的关系时，就觉得，很酷！</p><p>Nuxt.js 是一个 Node 程序，就像上面说的，我们是要把 Vue 跑在服务端，所以必须使用 Node 环境。我们对 Nuxt.js 应用的访问，实际上是在访问这个 Node.js 程序的路由，程序输出首屏渲染内容 + 用以重新渲染的 SPA 的脚本代码，而路由是由 Nuxt.js 约定好的 pages 文件夹生成的。</p><p>所以，整体上，Nuxt.js 通过各个文件夹和配置文件的约束来管理我们的程序，而又不失扩展性，其有自己的<a class=link href=https://nuxtjs.org/guide/plugins/ target=_blank rel=noopener>插件机制</a>
+。</p><h1 class=group id=nuxt项目的创建>Nuxt项目的创建<a href=#nuxt%e9%a1%b9%e7%9b%ae%e7%9a%84%e5%88%9b%e5%bb%ba><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><ol><li>npx</li></ol><pre><code>```sh
+npx create-nuxt-app &lt;project-name&gt;
+```
+</code></pre><ol start=2><li><p>yarn</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>yarn create nuxt-app &lt;project-name&gt;
+</span></span></code></pre></td></tr></table></div></div></li><li><p>npm</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>npm init nuxt-app &lt;project-name&gt;
+</span></span></code></pre></td></tr></table></div></div></li></ol><h1 class=group id=启动>启动<a href=#%e5%90%af%e5%8a%a8><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><ol><li><p>yarn</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>cd</span> &lt;project-name&gt;
+</span></span><span style=display:flex><span>yarn dev
+</span></span></code></pre></td></tr></table></div></div></li><li><p>npm</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>cd</span> &lt;project-name&gt;
+</span></span><span style=display:flex><span>npm run dev
+</span></span></code></pre></td></tr></table></div></div></li></ol><h1 class=group id=nuxt项目结构介绍>nuxt项目结构介绍<a href=#nuxt%e9%a1%b9%e7%9b%ae%e7%bb%93%e6%9e%84%e4%bb%8b%e7%bb%8d><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p>按照目前的版本，Nuxt.js 的程序的文件结构大概分为以下部分：</p><p><strong>pages</strong>：各页面组件，用于生成对应路由，支持嵌套，支持动态路由</p><p><strong>components</strong>：各组件，用于你自己管理公共组件或非公共组件</p><p><strong>layouts</strong>：宿主布局页面模板组件，用于你可以把不同的页面指定使用不同的布局</p><p><strong>assets</strong>：用于 Webpack 编译的各类资源，通常是一些小的资源，如代替雪碧图之类的图片等东西</p><p><strong>middleware</strong>：中间件，首屏渲染和路由跳转前均执行对应中间件，可以返回promise或直接next（像是一个网关，很实用！）</p><p><strong>plugins</strong>：插件，SPA中用的各类第三方组件和一些node模块都可以在这引入，甚至可以引入自己编写的第三方库</p><p><strong>store</strong>：内置了vuex，可以直接返回数据模块或返回一个自建vuex根对象，具体要翻文档</p><p><strong>其他</strong>：你可以自定义文件夹和别名映射，文档都有提及，这里有<a class=link href=https://github.com/surmon-china/surmon.me/blob/master/nuxt.config.js#L18 target=_blank rel=noopener>配置代码</a></p><h1 class=group id=nuxtjs-配置文件介绍>nuxt.js 配置文件介绍<a href=#nuxtjs-%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6%e4%bb%8b%e7%bb%8d><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">46
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>default</span> {
+</span></span><span style=display:flex><span>  <span style=color:#6272a4>// Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  ssr<span style=color:#ff79c6>:</span> <span style=color:#ff79c6>true</span>,
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#6272a4>// Global page headers (https://go.nuxtjs.dev/config-head)
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  head<span style=color:#ff79c6>:</span> {
+</span></span><span style=display:flex><span>    title<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;hello-nuxt&#39;</span>,
+</span></span><span style=display:flex><span>    meta<span style=color:#ff79c6>:</span> [
+</span></span><span style=display:flex><span>      { charset<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;utf-8&#39;</span> },
+</span></span><span style=display:flex><span>      { name<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;viewport&#39;</span>, content<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;width=device-width, initial-scale=1&#39;</span> },
+</span></span><span style=display:flex><span>      { hid<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;description&#39;</span>, name<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;description&#39;</span>, content<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;&#39;</span> },
+</span></span><span style=display:flex><span>    ],
+</span></span><span style=display:flex><span>    link<span style=color:#ff79c6>:</span> [{ rel<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;icon&#39;</span>, type<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;image/x-icon&#39;</span>, href<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;/favicon.ico&#39;</span> }],
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#6272a4>// Global CSS (https://go.nuxtjs.dev/config-css)
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  css<span style=color:#ff79c6>:</span> [<span style=color:#f1fa8c>&#39;element-ui/lib/theme-chalk/index.css&#39;</span>],
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#6272a4>// Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  plugins<span style=color:#ff79c6>:</span> [<span style=color:#f1fa8c>&#39;@/plugins/element-ui&#39;</span>],
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#6272a4>// Auto import components (https://go.nuxtjs.dev/config-components)
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  components<span style=color:#ff79c6>:</span> <span style=color:#ff79c6>true</span>,
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#6272a4>// Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  buildModules<span style=color:#ff79c6>:</span> [
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>// https://go.nuxtjs.dev/typescript
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>    <span style=color:#f1fa8c>&#39;@nuxt/typescript-build&#39;</span>,
+</span></span><span style=display:flex><span>  ],
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#6272a4>// Modules (https://go.nuxtjs.dev/config-modules)
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  modules<span style=color:#ff79c6>:</span> [
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>// https://go.nuxtjs.dev/axios
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>    <span style=color:#f1fa8c>&#39;@nuxtjs/axios&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>// https://go.nuxtjs.dev/pwa
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>    <span style=color:#f1fa8c>&#39;@nuxtjs/pwa&#39;</span>,
+</span></span><span style=display:flex><span>  ],
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#6272a4>// Axios module configuration (https://go.nuxtjs.dev/config-axios)
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  axios<span style=color:#ff79c6>:</span> {},
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#6272a4>// Build Configuration (https://go.nuxtjs.dev/config-build)
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  build<span style=color:#ff79c6>:</span> {
+</span></span><span style=display:flex><span>    transpile<span style=color:#ff79c6>:</span> [<span style=color:#f1fa8c>/^element-ui/</span>],
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p><a class=link href=https://zh.nuxtjs.org/docs/2.x/directory-structure/nuxt-config/ target=_blank rel=noopener><code>nuxt.config.js</code></a>
+对程序的扩展管理可大概分为以下类：</p><p><strong>build</strong>：主要对应 Webpack 中的各配置项，可以对默认的 Webpack 配置进行扩展，如<a class=link href=https://github.com/surmon-china/surmon.me/blob/master/nuxt.config.js#L17 target=_blank rel=noopener>这里代码</a></p><p><strong>cache</strong>：主要对应内置的组件缓存模块<code>lru-cache</code>的配置对象，有默认值，可选关闭</p><p><strong>css</strong>：对应我们在SPA随处引用样式文件的<code>require</code>语句</p><p><strong>dev</strong>：用于自定义配置环境变量，对应之前<code>webpack.config.js</code>相关文件中的变量语句</p><p><strong>env</strong>：同上息息相关</p><p><strong>generate</strong>：对<code>generate</code>命令执行时的行为做一些定制</p><p><strong>head</strong>：对应<code>vue-meta</code>插件的全局配置，<code>vue-meta</code>用于VUE/SSR程序的文档元信息的管理</p><p><strong>loading</strong>：用于定制化Nuxt.js内置的进度条组件</p><p><strong>performance</strong>：用于配置Node.js服务器性能上的配置</p><p><strong>plugins</strong>：用于管理和应用对应<code>plugins</code>文件夹中的插件</p><p><strong>rootdir</strong>：用于设置 Nuxt.js 应用的根目录（这俩api有很大合并的意义）</p><p><strong>srcdir</strong>：用于设置 Nuxt.js 应用的源码目录（这俩api有很大合并的意义）</p><p><strong>router</strong>：用于对<code>vue-router</code>的扩展和定制，其中还包括了中间件的配置，但并不完美（后面说）</p><p><strong>transition</strong>：用于定制Nuxt.js内置的页面切换过渡效果的默认属性值</p><p><strong>watchers</strong>：用于定制Nuxt.js内置的文件监听模块<code>chokidar</code>和 Webpack 的相关配置项</p><h1 class=group id=路由>路由<a href=#%e8%b7%af%e7%94%b1><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p>nuxt的没有固定配置路由的文件，它是根据约定自动生成的路由，所有的页面都在pages目录下。</p><ol><li><p>首页 （url:port）</p><p>对应 pages/index.vue</p></li><li><p>订单列表( url:port/order)</p><p>对应 pages/order/index.vue</p></li></ol><p>使用时</p><p><code>&lt;nuxt-link to="/order">订单&lt;/nuxt-link></code></p><h1 class=group id=动态路由httpswwwnuxtjscnguiderouting><a class=link href=https://www.nuxtjs.cn/guide/routing target=_blank rel=noopener>动态路由</a>
+<a href=#%e5%8a%a8%e6%80%81%e8%b7%af%e7%94%b1httpswwwnuxtjscnguiderouting><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p>在 Nuxt.js 里面定义带参数的动态路由，需要创建对应的<strong>以下划线作为前缀</strong>的 Vue 文件 或 目录。</p><p>在 Nuxt.js 里面定义带参数的动态路由，需要创建对应的<strong>以下划线作为前缀</strong>的 Vue 文件 或 目录。</p><p>以下目录结构：</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>pages/
+</span></span><span style=display:flex><span>--| _slug/
+</span></span><span style=display:flex><span>-----| comments.vue
+</span></span><span style=display:flex><span>-----| index.vue
+</span></span><span style=display:flex><span>--| users/
+</span></span><span style=display:flex><span>-----| _id.vue
+</span></span><span style=display:flex><span>--| index.vue
+</span></span></code></pre></td></tr></table></div></div><p>Nuxt.js 生成对应的路由配置表为：</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span>router<span style=color:#ff79c6>:</span> {
+</span></span><span style=display:flex><span>  routes<span style=color:#ff79c6>:</span> [
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      name<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;index&#39;</span>,
+</span></span><span style=display:flex><span>      path<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;/&#39;</span>,
+</span></span><span style=display:flex><span>      component<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;pages/index.vue&#39;</span>
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      name<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;users-id&#39;</span>,
+</span></span><span style=display:flex><span>      path<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;/users/:id?&#39;</span>,
+</span></span><span style=display:flex><span>      component<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;pages/users/_id.vue&#39;</span>
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      name<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;slug&#39;</span>,
+</span></span><span style=display:flex><span>      path<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;/:slug&#39;</span>,
+</span></span><span style=display:flex><span>      component<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;pages/_slug/index.vue&#39;</span>
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      name<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;slug-comments&#39;</span>,
+</span></span><span style=display:flex><span>      path<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;/:slug/comments&#39;</span>,
+</span></span><span style=display:flex><span>      component<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;pages/_slug/comments.vue&#39;</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>你会发现名称为 <code>users-id</code> 的路由路径带有 <code>:id?</code> 参数，表示该路由是可选的。如果你想将它设置为必选的路由，需要在 <code>users/_id</code> 目录内创建一个 <code>index.vue</code> 文件。</p><p>举例：</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-vue data-lang=vue><span style=display:flex><span><span style=color:#6272a4>// layouts/default.vue 配置菜单
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>&lt;<span style=color:#ff79c6>template</span>&gt;
+</span></span><span style=display:flex><span>  &lt;<span style=color:#ff79c6>div</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#ff79c6>nuxt-link</span> <span style=color:#50fa7b>to</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;/&#34;</span>&gt;home<span style=color:#ff79c6>&lt;</span>/nuxt-link&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#ff79c6>nuxt-link</span> <span style=color:#50fa7b>to</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;/order&#34;</span>&gt;order<span style=color:#ff79c6>&lt;</span>/nuxt-link&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#ff79c6>Nuxt</span> /&gt;
+</span></span><span style=display:flex><span>  &lt;/<span style=color:#ff79c6>div</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>template</span>&gt;
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-vue data-lang=vue><span style=display:flex><span><span style=color:#6272a4>// pages/order/index.vue  对应/order
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>template</span>&gt;
+</span></span><span style=display:flex><span>  &lt;<span style=color:#ff79c6>div</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#ff79c6>ul</span>&gt;
+</span></span><span style=display:flex><span>      &lt;<span style=color:#ff79c6>li</span> <span style=color:#ff79c6>v-for</span><span style=color:#f1fa8c>=&#34;phone in phones&#34; </span><span style=color:#ff79c6>:key</span><span style=color:#f1fa8c>=&#34;phone&#34;</span>&gt;
+</span></span><span style=display:flex><span>        &lt;<span style=color:#ff79c6>nuxt-link</span> <span style=color:#ff79c6>:</span><span style=color:#50fa7b>to</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;&#39;/detail/&#39; + phone&#34;</span>&gt;{{ phone }}<span style=color:#ff79c6>&lt;</span>/nuxt-link&gt;
+</span></span><span style=display:flex><span>      &lt;/<span style=color:#ff79c6>li</span>&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#ff79c6>ul</span>&gt;
+</span></span><span style=display:flex><span>  &lt;/<span style=color:#ff79c6>div</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>template</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>script</span> <span style=color:#50fa7b>lang</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;ts&#34;</span>&gt;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>default</span> {
+</span></span><span style=display:flex><span>  data() {
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span> {
+</span></span><span style=display:flex><span>      phones<span style=color:#ff79c6>:</span> [<span style=color:#f1fa8c>&#39;锤子&#39;</span>, <span style=color:#f1fa8c>&#39;iphone&#39;</span>, <span style=color:#f1fa8c>&#39;google&#39;</span>],
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>script</span>&gt;
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-vue data-lang=vue><span style=display:flex><span><span style=color:#6272a4>// pages/detail/_id.vue   对应 /detail/:id   动态路由
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>template</span>&gt;
+</span></span><span style=display:flex><span>  &lt;<span style=color:#ff79c6>div</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#ff79c6>h2</span>&gt;详情&lt;/<span style=color:#ff79c6>h2</span>&gt;
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>&lt;!--</span> 因为文件名是<span style=color:#ff79c6>/</span>detail<span style=color:#ff79c6>/</span>_id.vue，所以这里的参数是id <span style=color:#ff79c6>--&gt;</span>
+</span></span><span style=display:flex><span>    {{ $route.params.id }}
+</span></span><span style=display:flex><span>  &lt;/<span style=color:#ff79c6>div</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>template</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>script</span>&gt;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>default</span> {}
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>script</span>&gt;
+</span></span></code></pre></td></tr></table></div></div><h1 class=group id=嵌套路由>嵌套路由<a href=#%e5%b5%8c%e5%a5%97%e8%b7%af%e7%94%b1><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p>创建内嵌子路由，你需要添加一个 Vue 文件，同时添加一个<strong>与该文件同名</strong>的目录用来存放子视图组件。别忘了在父组件(<code>.vue</code>文件) 内增加 <code>&lt;nuxt-child/></code> 用于显示子视图内容。</p><p>父路由</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-vue data-lang=vue><span style=display:flex><span><span style=color:#6272a4>// pages/users.vue 这是父路由，还需要创建一个同名的users文件夹。子路由/users和/users/profile2，别忘了&lt;nuxt-child/&gt;
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>&lt;<span style=color:#ff79c6>template</span>&gt;
+</span></span><span style=display:flex><span>  &lt;<span style=color:#ff79c6>div</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#ff79c6>h2</span>&gt;parent users&lt;/<span style=color:#ff79c6>h2</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#ff79c6>nuxt-link</span> <span style=color:#50fa7b>to</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;/users&#34;</span>&gt;user<span style=color:#ff79c6>&lt;</span>/nuxt-link&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#ff79c6>nuxt-link</span> <span style=color:#50fa7b>to</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;/users/profile&#34;</span>&gt;user detail<span style=color:#ff79c6>&lt;</span>/nuxt-link&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#ff79c6>nuxt-child</span> /&gt;
+</span></span><span style=display:flex><span>  &lt;/<span style=color:#ff79c6>div</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>template</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>script</span>&gt;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>default</span> {}
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>script</span>&gt;
+</span></span></code></pre></td></tr></table></div></div><p>2个子路由</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-vue data-lang=vue><span style=display:flex><span><span style=color:#6272a4>// pages/users/index.vue
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>template</span>&gt;
+</span></span><span style=display:flex><span>  &lt;<span style=color:#ff79c6>div</span>&gt;用户列表&lt;/<span style=color:#ff79c6>div</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>template</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>script</span>&gt;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>default</span> {}
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>script</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>style</span>&gt;&lt;/<span style=color:#ff79c6>style</span>&gt;
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>// pages/users/profile.vue
+</span></span><span style=display:flex><span>&lt;template&gt;
+</span></span><span style=display:flex><span>  &lt;div&gt;用户详情&lt;/div&gt;
+</span></span><span style=display:flex><span>&lt;/template&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&lt;script&gt;
+</span></span><span style=display:flex><span>export default {}
+</span></span><span style=display:flex><span>&lt;/script&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&lt;style&gt;&lt;/style&gt;
+</span></span></code></pre></td></tr></table></div></div><h1 class=group id=404-页面>404 页面<a href=#404-%e9%a1%b5%e9%9d%a2><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p><code>_.vue</code>意思是无限次嵌套，因此在pages下创建如下文件</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-vue data-lang=vue><span style=display:flex><span><span style=color:#6272a4>// pages/_.vue
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>&lt;<span style=color:#ff79c6>template</span>&gt;
+</span></span><span style=display:flex><span>  &lt;<span style=color:#ff79c6>div</span>&gt;<span style=color:#bd93f9>404</span>&lt;/<span style=color:#ff79c6>div</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>template</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>script</span>&gt;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>default</span> {}
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>script</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>style</span>&gt;&lt;/<span style=color:#ff79c6>style</span>&gt;
+</span></span></code></pre></td></tr></table></div></div><h1 class=group id=中间件>中间件<a href=#%e4%b8%ad%e9%97%b4%e4%bb%b6><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p>使用中间件做权限认证</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#6272a4>// middleware/auth.js
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>default</span> <span style=color:#8be9fd;font-style:italic>function</span> (context) {
+</span></span><span style=display:flex><span>  context.userAgent <span style=color:#ff79c6>=</span> process.server
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>?</span> context.req.headers[<span style=color:#f1fa8c>&#39;user-agent&#39;</span>]
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>:</span> navigator.userAgent
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#6272a4>// nutx.config.js 配置
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>default</span> {  
+</span></span><span style=display:flex><span>  router<span style=color:#ff79c6>:</span> {
+</span></span><span style=display:flex><span>      middleware<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;auth&#39;</span>,   <span style=color:#6272a4>// 对应middleware/auth.js
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>    },
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h1 class=group id=使用插件>使用插件<a href=#%e4%bd%bf%e7%94%a8%e6%8f%92%e4%bb%b6><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>yarn add vue-notifications
+</span></span><span style=display:flex><span>yarn add mini-toastr
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#ff79c6>import</span> Vue from <span style=color:#f1fa8c>&#39;vue&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> VueNotification from <span style=color:#f1fa8c>&#39;vue-notifications&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> miniToastr from <span style=color:#f1fa8c>&#39;mini-toastr&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>const</span> toastTypes <span style=color:#ff79c6>=</span> {
+</span></span><span style=display:flex><span>  success<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;success&#39;</span>,
+</span></span><span style=display:flex><span>  error<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;error&#39;</span>,
+</span></span><span style=display:flex><span>  info<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;info&#39;</span>,
+</span></span><span style=display:flex><span>  warn<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;warn&#39;</span>,
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>miniToastr.init({ types<span style=color:#ff79c6>:</span> toastTypes })
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>function</span> toast({ title, message, type, timeout, cb }) {
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>return</span> miniToastr[type](message, title, timeout, cb)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>const</span> options <span style=color:#ff79c6>=</span> {
+</span></span><span style=display:flex><span>  success<span style=color:#ff79c6>:</span> toast,
+</span></span><span style=display:flex><span>  error<span style=color:#ff79c6>:</span> toast,
+</span></span><span style=display:flex><span>  info<span style=color:#ff79c6>:</span> toast,
+</span></span><span style=display:flex><span>  warn<span style=color:#ff79c6>:</span> toast,
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>Vue.use(VueNotifications, options)
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#6272a4>// nutx.config.js 配置
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>default</span> {
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>// Build Configuration (https://go.nuxtjs.dev/config-build)
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  	<span style=color:#6272a4>// 如果插件位于node_modules并导出模块，需要将其添加到transpile构建选项：
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>    build<span style=color:#ff79c6>:</span> {
+</span></span><span style=display:flex><span>      transpile<span style=color:#ff79c6>:</span> [<span style=color:#f1fa8c>/^element-ui/</span>, <span style=color:#f1fa8c>&#39;vue-notifications&#39;</span>],
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>	  <span style=color:#6272a4>// Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  	plugins<span style=color:#ff79c6>:</span> [
+</span></span><span style=display:flex><span>    { src<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;@/plugins/element-ui&#39;</span>, ssr<span style=color:#ff79c6>:</span> <span style=color:#ff79c6>false</span> },
+</span></span><span style=display:flex><span>    { src<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;@/plugins/vue-notifications&#39;</span>, ssr<span style=color:#ff79c6>:</span> <span style=color:#ff79c6>false</span> },   <span style=color:#6272a4>// 对应/plugins/vue-notifications.js
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  ],
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h1 class=group id=ts扩展>ts扩展<a href=#ts%e6%89%a9%e5%b1%95><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span>yarn add --dev @nuxt/typescript-build @nuxt/types
+</span></span><span style=display:flex><span><span style=color:#6272a4># 或</span>
+</span></span><span style=display:flex><span>npm install --save-dev @nuxt/typescript-build @nuxt/types
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts><span style=display:flex><span><span style=color:#6272a4>// /vue-shim.d.ts
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span><span style=color:#ff79c6>declare</span> module <span style=color:#f1fa8c>&#34;*.vue&#34;</span> {
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>import</span> Vue <span style=color:#ff79c6>from</span> <span style=color:#f1fa8c>&#39;vue&#39;</span>
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>export</span> <span style=color:#ff79c6>default</span> Vue
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#6272a4>// nuxt.config.js
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>default</span> {
+</span></span><span style=display:flex><span>    buildModules<span style=color:#ff79c6>:</span> [
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>// https://go.nuxtjs.dev/typescript
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>    <span style=color:#f1fa8c>&#39;@nuxt/typescript-build&#39;</span>,
+</span></span><span style=display:flex><span>  ],
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">37
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span><span style=color:#6272a4>// tsconfig.json
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>{
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>&#34;compilerOptions&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;target&#34;</span>: <span style=color:#f1fa8c>&#34;ES2018&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;module&#34;</span>: <span style=color:#f1fa8c>&#34;ESNext&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;moduleResolution&#34;</span>: <span style=color:#f1fa8c>&#34;Node&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;lib&#34;</span>: [
+</span></span><span style=display:flex><span>      <span style=color:#f1fa8c>&#34;ESNext&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#f1fa8c>&#34;ESNext.AsyncIterable&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#f1fa8c>&#34;DOM&#34;</span>
+</span></span><span style=display:flex><span>    ],
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;esModuleInterop&#34;</span>: <span style=color:#ff79c6>true</span>,
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;allowJs&#34;</span>: <span style=color:#ff79c6>true</span>,
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;sourceMap&#34;</span>: <span style=color:#ff79c6>true</span>,
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;strict&#34;</span>: <span style=color:#ff79c6>true</span>,
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>&#34;noEmit&#34;</span>: <span style=color:#ff79c6>true</span>,
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;experimentalDecorators&#34;</span>: <span style=color:#ff79c6>true</span>,
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;baseUrl&#34;</span>: <span style=color:#f1fa8c>&#34;.&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;paths&#34;</span>: {
+</span></span><span style=display:flex><span>      <span style=color:#ff79c6>&#34;~/*&#34;</span>: [
+</span></span><span style=display:flex><span>        <span style=color:#f1fa8c>&#34;./*&#34;</span>
+</span></span><span style=display:flex><span>      ],
+</span></span><span style=display:flex><span>      <span style=color:#ff79c6>&#34;@/*&#34;</span>: [
+</span></span><span style=display:flex><span>        <span style=color:#f1fa8c>&#34;./*&#34;</span>
+</span></span><span style=display:flex><span>      ]
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;types&#34;</span>: [
+</span></span><span style=display:flex><span>      <span style=color:#f1fa8c>&#34;@types/node&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#f1fa8c>&#34;@nuxt/types&#34;</span>
+</span></span><span style=display:flex><span>    ]
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:#ff79c6>&#34;exclude&#34;</span>: [
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;node_modules&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;.nuxt&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;dist&#34;</span>
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h1 class=group id=修改端口号>修改端口号<a href=#%e4%bf%ae%e6%94%b9%e7%ab%af%e5%8f%a3%e5%8f%b7><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#6272a4>// nuxt.config.js
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>default</span> {
+</span></span><span style=display:flex><span>  server<span style=color:#ff79c6>:</span> {
+</span></span><span style=display:flex><span>    port<span style=color:#ff79c6>:</span> <span style=color:#bd93f9>3030</span>, <span style=color:#6272a4>// default: 3000
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>    host<span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;0.0.0.0&#39;</span>, <span style=color:#6272a4>// default: localhost
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h1 class=group id=异步加载数据的hooknuxt自动调用>异步加载数据的hook(nuxt自动调用)<a href=#%e5%bc%82%e6%ad%a5%e5%8a%a0%e8%bd%bd%e6%95%b0%e6%8d%ae%e7%9a%84hooknuxt%e8%87%aa%e5%8a%a8%e8%b0%83%e7%94%a8><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h1><p><code>yarn add @nuxt/http</code></p><p>需要添加nuxt的http模块</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#6272a4>// nuxt.config.js
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>default</span> {
+</span></span><span style=display:flex><span>	modules<span style=color:#ff79c6>:</span> [
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>// https://go.nuxtjs.dev/axios
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>    <span style=color:#f1fa8c>&#39;@nuxtjs/axios&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>// https://go.nuxtjs.dev/pwa
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>    <span style=color:#f1fa8c>&#39;@nuxtjs/pwa&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#39;@nuxt/http&#39;</span>,
+</span></span><span style=display:flex><span>  ],
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-vue data-lang=vue><span style=display:flex><span>&lt;<span style=color:#ff79c6>template</span>&gt;
+</span></span><span style=display:flex><span>  &lt;<span style=color:#ff79c6>div</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#ff79c6>h1</span>&gt;Data fetched using asyncData&lt;/<span style=color:#ff79c6>h1</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#ff79c6>ul</span>&gt;
+</span></span><span style=display:flex><span>      &lt;<span style=color:#ff79c6>li</span> <span style=color:#ff79c6>v-for</span><span style=color:#f1fa8c>=&#34;mountain in mountains&#34; :key=&#34;mountain.title&#34;</span>&gt;
+</span></span><span style=display:flex><span>        {{ <span style=color:#50fa7b>mountain.title</span> }}
+</span></span><span style=display:flex><span>      &lt;/<span style=color:#ff79c6>li</span>&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#ff79c6>ul</span>&gt;
+</span></span><span style=display:flex><span>  &lt;/<span style=color:#ff79c6>div</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>template</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>script</span>&gt;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>export</span> <span style=color:#ff79c6>default</span> {
+</span></span><span style=display:flex><span>  async asyncData({ $http }) {
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>const</span> mountains <span style=color:#ff79c6>=</span> await $http.$get(<span style=color:#f1fa8c>&#39;https://api.nuxtjs.dev/mountains&#39;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span> { mountains }
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>script</span>&gt;
+</span></span></code></pre></td></tr></table></div></div><p><figure><picture class=noscript-hidden><img data-src=https://image.xiaomo.info//blog/image-20201124160222403.png src=/images/outload.svg data-alt=image-20201124160222403 data-zoomable data-lazyload data-lazyload-blur></picture><noscript data-lazyload-noscript><a class=after:hidden href=https://image.xiaomo.info//blog/image-20201124160222403.png target=_blank rel="noopener noreferrer"><picture><img src=https://image.xiaomo.info//blog/image-20201124160222403.png alt=image-20201124160222403></picture></a></noscript><figcaption>image-20201124160222403</figcaption></figure></p></section><div class="px-6 pb-5 pt-4 text-center text-xl text-gray-500 md:px-10 md:pb-10 md:pt-14 flex items-center justify-center"><a class="mr-4 inline-flex h-5 w-5 items-center" title="分享到 Twitter" href="https://twitter.com/share?&text=vue%e5%85%a8%e5%ae%b6%e6%a1%b6%e8%bf%98%e7%ae%97%e6%98%af%e6%af%94%e8%be%83%e5%85%a8%e9%9d%a2%e7%9a%84%ef%bc%8c%e4%bb%8e%e6%9e%84%e5%bb%ba%e5%b7%a5%e5%85%b7vue-cli%e3%80%81vite%ef%bc%8c%e5%88%b0vue-router%e3%80%81vuex%e3%80%81element-ui%ef%bc%8cvue-dev-t&url=https://blog.xiaomo.info/2020/vuessrnuxt/" target=_blank rel="noopener noreferrer"><i class="eva eva-twitter hover:text-theme"></i></a><i class="eva eva-copy mr-4 cursor-pointer hover:text-theme" title=复制链接 data-clipboard-text=https://blog.xiaomo.info/2020/vuessrnuxt/></i><div class="group h-5 w-5 relative hidden cursor-pointer sm:inline-block"><i title=二维码 class="eva show-qrcode eva-smartphone hover:text-theme"></i><div class="qrcode-wrapper p-2 pointer-events-none absolute left-2/4 bottom-10 h-32 w-32 -translate-x-1/2 overflow-hidden rounded border border-gray-300 bg-white opacity-0 transition duration-300 ease-[ease] group-hover:opacity-100"><img class="h-full w-full" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://blog.xiaomo.info/2020/vuessrnuxt/" alt=二维码></div></div></div><div class="border-b dark:border-darkBorder"></div><div class="flex justify-between px-2 py-4 text-xl md:px-6 md:text-2xl"><div><a href=/2020/webapplesignin/ title="web端接入apple Sign in流程" class="invisible flex cursor-pointer items-center text-gray-500 transition duration-300 ease-[ease] hover:text-theme dark:text-darkTextPlaceholder dark:hover:text-darkText" style=visibility:visible><span class="flex items-center text-5xl opacity-70 dark:bg-opacity-100"><i class="eva eva-chevron-left-outline"></i></span>
+<span>上一篇</span></a></div><div class="hidden items-center text-xs xl:flex">除特殊声明外，本博客一律使用以下协议进行授权 「
+<a href=https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh target=_blank rel="noopener noreferrer" class=text-theme>署名 - 非商业性使用 - 禁止演绎 4.0</a>
+」</div><div class="flex items-center text-sm xl:hidden"><a href=https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh target=_blank rel="noopener noreferrer" class=text-theme><img src=/Cc-by-nc-nd.svg alt="署名 - 非商业性使用 - 禁止演绎 4.0" title="署名 - 非商业性使用 - 禁止演绎 4.0" class=w-24></a></div><a href=/2020/pm2useapi/ title=node项目监控工具之pm2 class="invisible flex cursor-pointer items-center text-gray-500 transition duration-300 ease-[ease] hover:text-theme dark:text-darkTextPlaceholder dark:hover:text-darkText" style=visibility:visible><span>下一篇</span>
+<span class="flex items-center text-5xl opacity-70 dark:bg-opacity-100"><i class="eva eva-chevron-right-outline"></i></span></a></div><div class="border-t py-6 px-6 md:px-8 dark:border-darkBorder"><script src=https://giscus.app/client.js data-repo=houko/houko.github.io data-repo-id="MDEwOlJlcG9zaXRvcnk3MjYwMDMxMg==" data-category=General data-category-id=DIC_kwDOBFPK-M4CSvHc data-mapping=title data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=light data-lang=zh-CN data-loading=false crossorigin=anonymous data-swup-reload-script async></script><script data-swup-reload-script>(function(){addEventListener("message",t=>{if(event.origin!=="https://giscus.app")return;e()}),window.addEventListener("onThemeChange",e);function e(){setGiscusTheme(document.documentElement.dataset.scheme==="light"?"light":"dark")}})();function setGiscusTheme(e){let t=document.querySelector("iframe.giscus-frame");t&&t.contentWindow.postMessage({giscus:{setConfig:{theme:e}}},"https://giscus.app")}</script></div></div></div></div></div></main><footer><div class="com-footer flex flex-col items-center border-t py-4 px-4 text-sm leading-none text-gray-600 dark:border-darkBorder dark:text-darkTextPlaceholder md:flex-row md:justify-between"><div class="mb-2 flex items-center justify-between text-center md:mb-0"><span>© 2016 - 2023</span>
+<span class="mx-1.5 opacity-50">| </span>由 <a data-no-swup class="mx-1 font-bold hover:text-theme" href=https://gohugo.io/ target=_blank rel="noopener noreferrer">Hugo</a> <span class="text-xs opacity-70">❤</span> <a data-no-swup class="mx-1 font-bold hover:text-theme" href=https://github.com/Ice-Hazymoon/hugo-theme-luna target=_blank rel="noopener noreferrer">Luna</a> 驱动</div><div class="flex items-center"></div><div id=run-time class="mt-2 flex-grow text-right md:mt-0"><span>运行时间： </span><b id=run-time-d>0</b>
+<span class=text-xs>天</span>
+<b id=run-time-h>0</b>
+<span class=text-xs>小时</span>
+<b id=run-time-m>0</b>
+<span class=text-xs>分钟</span>
+<b id=run-time-s>0</b>
+<span class=text-xs>秒</span></div></div><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-80824007-1","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"))</script><script async src=https://www.google-analytics.com/analytics.js></script>
+<script type=text/javascript>window.__theme={cdn:"",pjax:!0,isServer:!1,$version:"27318bae09d55a97ea7da355b574a3210186ba07",lang:"zh-cn",imageZoom:!0,lazyload:!0,bionicReading:{enabled:!0,skipLinks:!1,autoBionic:!1,excludeWords:[],excludeClasses:["github"],excludeNodeNames:[]},katex:!0,search:!0,backtop:!0,pangu:!0,autoDarkMode:!1,googleAnalytics:!0,hugoEncrypt:{wrongPasswordText:"密码错误",userStorage:window.sessionStorage},console:{enabled:!0,leftColor:"#dd6065",rightColor:"#feb462",leftText:"Hugo Theme Luna",rightText:"Powered by Hugo ❤ Luna"},assets:{error_svg:"/images/error.svg",search_svg:"/images/search.svg"},i18n:{copy:{success:"复制成功",failed:"复制失败，请手动复制",copyCode:"复制代码"},search:{untitled:"无标题",loadFailure:"初始化搜索引擎失败",input:"请输入内容..."},darkMode:{dark:"切换到夜间模式",light:"切换到日间模式"}},creatTime:"2016/06/30"}</script><script type=text/javascript src=/ts/main.5562dd676e11d79991ff088b5335690420b8a54043d1dd6ced64a624ca63167d.js defer integrity="sha256-VWLdZ24R15mR/wiLUzVpBCC4pUBD0d1s7WSmJMpjFn0="></script><script>"serviceWorker"in navigator&&window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js")})</script>
+<script></script><script data-swup-reload-script></script></footer></div></div><a href=#nav title=返回顶部 id=back-top class="fixed right-6 bottom-9 z-10 translate-y-3 scale-90 cursor-pointer rounded-full bg-white opacity-0 transition duration-300 ease-[ease] dark:bg-darkBgAccent sm:scale-100"><div class=relative><div class="absolute left-0 top-0 flex h-full w-full items-center justify-center text-xl"><i class="eva eva-arrow-upward-outline"></i></div><svg id="svg" width="54" height="54" viewBox="0 0 54 54" preserveAspectRatio="xMinYMin meet"><circle transform="rotate(-90, 27 , 27)" style="stroke-dasharray:157,157;stroke-dashoffset:157" cx="27" cy="27" r="25" fill="none" stroke-width="4" stroke-linecap="round" stroke="var(--theme)"/></svg></div></a><div id=i18nlist></div><noscript><style>.dark-mode-switch,#run-time,#bionicReading,.noscript-hidden,[data-clipboard-text],[data-lazyload]{display:none}#back-top{opacity:1}.noscript-show{display:initial}</style></noscript></body></html>

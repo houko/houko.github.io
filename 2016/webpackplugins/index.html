@@ -1,0 +1,560 @@
+<!doctype html><html lang=zh-cn class=lang-zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=keywords content="webpack,node,javascript,工具,Hugo,Hugo Theme,Luna,"><meta name=description content="上一篇博客讲解了webpack环境的基本，这一篇讲解一些更深入的内容和开发技巧。基本环境搭建就不展开讲了
+"><meta itemprop=description content="上一篇博客讲解了webpack环境的基本，这一篇讲解一些更深入的内容和开发技巧。基本环境搭建就不展开讲了
+"><meta http-equiv=x-ua-compatible content="ie=edge"><meta itemprop=name content="webpack进阶之插件篇 - 小莫的博客-fighting(技术分享、生活随笔)"><link href=https://blog.xiaomo.info/index.xml title="webpack进阶之插件篇 - 小莫的博客-fighting(技术分享、生活随笔)" type=application/rss+xml rel=alternate><title>webpack进阶之插件篇 - 小莫的博客-fighting(技术分享、生活随笔)</title><link rel=stylesheet href="/main.86108ed4a3b93e077dcb401e0c40f8748d2fd7bc4de45cdcf25879e6a284dcb6.css" integrity="sha256-hhCO1KO5Pgd9y0AeDED4dI0v17xN5Fzc8lh55qKE3LY="><meta property="og:site_name" content="webpack进阶之插件篇 - 小莫的博客-fighting(技术分享、生活随笔)"><meta property="og:type" content="article"><meta property="og:title" content="webpack进阶之插件篇"><meta property="og:description" content="上一篇博客讲解了webpack环境的基本，这一篇讲解一些更深入的内容和开发技巧。基本环境搭建就不展开讲了
+"><meta property="og:url" content="https://blog.xiaomo.info/2016/webpackplugins/"><meta property="og:image" content="https://blog.xiaomo.info/featured.png"><meta property="og:image:width" content="1366"><meta property="og:image:height" content="768"><meta property="article:publisher" content="https://blog.xiaomo.info/2016/webpackplugins/"><meta property="article:published_time" content="2016-05-17T00:00:00+09:00"><meta property="article:modified_time" content="2023-01-06T13:06:22+09:00"><meta name=theme-color content="#00B0FF"><meta name=mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-title content="webpack进阶之插件篇 - 小莫的博客-fighting(技术分享、生活随笔)"><meta name=apple-mobile-web-app-status-bar-style content="white"><meta name=twitter:card content="summary_large_image"><meta name=twitter:site content="@xiaomoinfo"><meta name=twitter:creator content="@xiaomoinfo"><meta name=twitter:title content="webpack进阶之插件篇 - 小莫的博客-fighting(技术分享、生活随笔)"><meta name=twitter:description content="上一篇博客讲解了webpack环境的基本，这一篇讲解一些更深入的内容和开发技巧。基本环境搭建就不展开讲了
+"><meta name=twitter:url content="https://blog.xiaomo.info/2016/webpackplugins/"><meta name=twitter:image content="https://blog.xiaomo.info/featured.png"><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=manifest href=/manifest.json><link href=/icon.png rel="shortcut icon"><link href=/icon.png rel=bookmark><link rel=apple-touch-icon href=/icon.png><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"webpack进阶之插件篇","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.xiaomo.info\/2016\/webpackplugins\/"},"genre":"posts","keywords":"webpack, node, javascript, 工具","wordcount":1630,"url":"https:\/\/blog.xiaomo.info\/2016\/webpackplugins\/","datePublished":"2016-05-17T00:00:00\u002b09:00","dateModified":"2023-01-06T13:06:22\u002b09:00","license":"@Copyright 2023","author":{"@type":"Person","name":"xiaomo"},"description":""}</script><script async src=https://cdn.splitbee.io/sb.js></script></head><body class="dark:bg-darkBg dark:text-darkText"><div class="relative mx-auto shadow-lg md:max-w-4xl xl:max-w-4xl 2xl:max-w-4xl"><div class="main flex flex-col justify-between bg-white dark:bg-darkFg"><header class="fixed z-10 backdrop-blur-md bg-white/80 dark:bg-darkFg mx-auto w-full md:max-w-4xl xl:max-w-4xl 2xl:max-w-4xl"><nav id=nav class="navbar top-0 z-10 flex items-center border-b px-5 py-6 dark:border-darkBorder md:px-10"><div class="route-items flex w-full items-center justify-around"><a title=首页 data-active-link=/ href=/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-home flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">首页</span>
+</a><a title=关于我 data-active-link=/about/ href=/about/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-heart flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">关于我</span>
+</a><a title=朋友们 data-active-link=/links/ href=/links/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-people flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">朋友们</span>
+</a><a title=归档 data-active-link=/archives/ href=/archives/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-bar-chart flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">归档</span>
+</a><a title=推特 data-active-link=/twitter/ href=/twitter/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-twitter flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">推特</span>
+</a><a title=GitHub data-active-link=/github/ href=/github/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-github flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">GitHub</span>
+</a><a title=搜索 data-active-link=/search/ href=/search/ class="relative flex cursor-pointer flex-col items-center text-gray-700 transition duration-150 ease-[ease]"><i class="eva eva-search flex h-8 w-8 items-center justify-center text-3xl leading-none text-gray-500 transition duration-150 ease-[ease] dark:text-darkTextPlaceholder"></i>
+<span class="mt-1 block text-xs text-gray-400 dark:text-darkText sm:text-sm md:hidden">搜索</span></a></div></nav><div class="dark-mode-switch absolute right-0 top-0 z-10 cursor-pointer pr-2 pt-2 text-xl leading-none"><i class="eva eva-moon opacity-20 dark:opacity-70"></i></div></header><main class="relative flex flex-grow mt-28 md:mt-20" id=swup><style>:root{--font:Times New Roman,Times,Heti Song,serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol}</style><div class="type-posts layout- w-full"><div class="relative h-full"><div class="relative h-full"><div class="page-view-article flex h-full flex-col bg-white dark:bg-darkFg"><div class=relative><div><div class="-mb-2 w-full p-6 pb-0 text-3xl md:px-10">webpack进阶之插件篇</div></div></div><div class="article-info border-b p-6 pb-3 text-sm dark:border-darkBorder md:px-10"><div><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-clock-outline mr-1"></i>
+<span><time title="发布于 2016年5月17日 00:00:00" datetime=2016-05-17T00:00:00+09:00>2016年5月17日</time></span></div><span class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-edit-2-outline mr-1"></i>
+<span><time title="最后修改于：2023年1月6日 13:06:22" datetime=2023-01-06T13:06:22+09:00>2023年1月6日</time></span></span><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-flag-outline mr-1"></i>
+<span>4 分钟</span></div><div class="mb-3 mr-4 inline-flex items-center sm:rounded-full"><i class="eva eva-bar-chart-outline mr-1"></i>
+<span>1630 字</span></div></div><div class="mb-3 flex items-center"><i class="eva eva-pricetags-outline mr-1"></i>
+<span class=mr-3>标签</span><a href=/tags/webpack title=webpack class="group mr-2 flex items-center text-sm">
+<i class="mr-1 text-gray-400 group-hover:text-theme">#</i>
+<span class="text-gray-400 group-hover:text-theme">webpack</span>
+</a><a href=/tags/node title=node class="group mr-2 flex items-center text-sm"><i class="mr-1 text-gray-400 group-hover:text-theme">#</i>
+<span class="text-gray-400 group-hover:text-theme">node</span>
+</a><a href=/tags/javascript title=javascript class="group mr-2 flex items-center text-sm"><i class="mr-1 text-gray-400 group-hover:text-theme">#</i>
+<span class="text-gray-400 group-hover:text-theme">javascript</span>
+</a><a href=/tags/%E5%B7%A5%E5%85%B7 title=工具 class="group mr-2 flex items-center text-sm"><i class="mr-1 text-gray-400 group-hover:text-theme">#</i>
+<span class="text-gray-400 group-hover:text-theme">工具</span></a></div><div class="mb-3 flex items-center"><i class="eva eva-folder-outline mr-1"></i>
+<span class=mr-3>分类</span><a href=/categories/webpack title=webpack class="group flex items-center text-sm">
+<span class="text-gray-400 group-hover:text-theme">webpack</span>
+<span class="mx-0.5 group-last:hidden">,</span></a></div></div><aside class="toc border-b border-gray-300 px-5 py-5 dark:border-darkBorder md:px-10 2xl:fixed 2xl:top-10 2xl:m-0 2xl:-ml-72 2xl:w-72 2xl:border-none 2xl:p-0 2xl:py-4 2xl:pr-4"><header><h1 class="mb-3 text-2xl font-bold 2xl:mb-4">文章目录</h1></header><nav id=TableOfContents><ul><li><ul><li><a href=#一插件篇>一、插件篇</a></li><li><a href=#二一个完整的栗子>二、一个完整的栗子</a></li><li><a href=#三调试技巧>三、调试技巧</a></li></ul></li></ul></nav></aside><section class="article-content typo relative flex-grow px-6 py-5 md:px-10"><i title=更快的阅读 id=bionicReading class="absolute right-0 top-0 cursor-pointer p-3"><svg class="w-4 h-4 fill-current text-gray-400" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" p-id="10811"><path d="M480 192c-19.2.0-32-12.8-32-32V32c0-19.2 12.8-32 32-32s32 12.8 32 32v128c0 19.2-12.8 32-32 32zM160 1024c-6.4.0-19.2.0-25.6-6.4l-128-128c0-6.4-6.4-19.2-6.4-25.6s6.4-19.2 6.4-25.6l512-512c12.8-6.4 38.4-6.4 51.2.0l128 128c0 6.4 6.4 19.2 6.4 25.6s-6.4 19.2-6.4 25.6l-512 512c-6.4 6.4-19.2 6.4-25.6 6.4zM76.8 864l83.2 83.2L627.2 480 544 396.8 76.8 864zM992 576H864c-19.2.0-32-12.8-32-32s12.8-32 32-32h128c19.2.0 32 12.8 32 32s-12.8 32-32 32zM768 288c-6.4.0-19.2.0-25.6-6.4-12.8-12.8-12.8-32 0-44.8l96-96c12.8-12.8 32-12.8 44.8.0s12.8 32 0 44.8l-96 96c0 6.4-12.8 6.4-19.2 6.4zm-512 0c-6.4.0-19.2.0-25.6-6.4l-96-96c-6.4-12.8-6.4-38.4.0-51.2s32-12.8 44.8.0l96 96c12.8 12.8 12.8 32 0 44.8.0 12.8-12.8 12.8-19.2 12.8zM864 896c-6.4.0-19.2.0-25.6-6.4l-96-96c-12.8-12.8-12.8-32 0-44.8s32-12.8 44.8.0l96 96c12.8 12.8 12.8 32 0 44.8.0 6.4-12.8 6.4-19.2 6.4z" p-id="10812"/><path d="M544 640c-6.4.0-19.2.0-25.6-6.4l-128-128c-6.4-12.8-6.4-38.4.0-51.2s32-12.8 44.8.0l128 128c12.8 12.8 12.8 38.4 6.4 51.2-6.4 6.4-19.2 6.4-25.6 6.4z" p-id="10813"/></svg></i><p>上一篇博客讲解了webpack环境的基本，这一篇讲解一些更深入的内容和开发技巧。基本环境搭建就不展开讲了</p><h3 class=group id=一插件篇>一、插件篇<a href=#%e4%b8%80%e6%8f%92%e4%bb%b6%e7%af%87><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h3><h4 class=group id=1-自动补全css3前缀>1. 自动补全css3前缀<a href=#1-%e8%87%aa%e5%8a%a8%e8%a1%a5%e5%85%a8css3%e5%89%8d%e7%bc%80><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h4><p>autoprefixer</p><blockquote><p>官方是这样说的：<code>Parse CSS and add vendor prefixes to CSS rules using values from the Can I Use website</code>
+，也就是说它是一个自动检测兼容性给各个浏览器加个内核前缀的插件。</p></blockquote><p>举个栗子：最新的弹性盒模型flux
+实际代码：</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>:fullscreen a {
+</span></span><span style=display:flex><span>    display: flex
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>插件自动补充后</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>a {
+</span></span><span style=display:flex><span>    display: -webkit-box;
+</span></span><span style=display:flex><span>    display: -webkit-flex;
+</span></span><span style=display:flex><span>    display: -ms-flexbox;
+</span></span><span style=display:flex><span>    display: flex
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>效果显而易见，我们可以更专注于css布局和美化，而不需要花过多的精力都写相同的外码而加上不同的前缀，也减少了冗余代码。</p><p>使用方法:</p><p><code>cnpm install --save-dev autoprefixer postcss-loader</code></p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>var autoprefixer = require(&#39;autoprefixer&#39;);
+</span></span><span style=display:flex><span>module.exports={
+</span></span><span style=display:flex><span>  //其他配置这里就不写了
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  module:{
+</span></span><span style=display:flex><span>    loaders:[
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>      test:/\.css$/,
+</span></span><span style=display:flex><span>      //在原有基础上加上一个postcss的loader就可以了
+</span></span><span style=display:flex><span>      loaders:[&#39;style-loader&#39;,&#39;css-loader&#39;,&#39;postcss-loader&#39;]
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>      ]
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  postcss:[autoprefixer({browsers:[&#39;last 2 versions&#39;]})]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><h4 class=group id=2-自动生成html插件>2. 自动生成html插件<a href=#2-%e8%87%aa%e5%8a%a8%e7%94%9f%e6%88%90html%e6%8f%92%e4%bb%b6><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h4><p>html-webpack-plugin</p><p><code>cnpm install html-webpack-plugin --save-dev</code></p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>  //webpack.config.js
+</span></span><span style=display:flex><span>  var HtmlWebpackPlugin = require(&#39;html-webpack-plugin&#39;);
+</span></span><span style=display:flex><span>  module.exports={
+</span></span><span style=display:flex><span>    entry:&#39;./index.js&#39;,
+</span></span><span style=display:flex><span>    output:{
+</span></span><span style=display:flex><span>      path:__dirname+&#39;/dist&#39;,
+</span></span><span style=display:flex><span>      filename:&#39;bundle.js&#39;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    plugins:[
+</span></span><span style=display:flex><span>      new HtmlWebpackPlugin()
+</span></span><span style=display:flex><span>    ]
+</span></span><span style=display:flex><span>  }
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>作用:它会在dist目录下自动生成一个index.html</p></blockquote><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>&lt;!DOCTYPE html&gt;
+</span></span><span style=display:flex><span>&lt;html&gt;
+</span></span><span style=display:flex><span>  &lt;head&gt;
+</span></span><span style=display:flex><span>    &lt;meta charset=&#34;UTF-8&#34;&gt;
+</span></span><span style=display:flex><span>    &lt;title&gt;Webpack App&lt;/title&gt;
+</span></span><span style=display:flex><span>  &lt;/head&gt;
+</span></span><span style=display:flex><span>  &lt;body&gt;
+</span></span><span style=display:flex><span>    &lt;script src=&#34;bundle.js&#34;&gt;&lt;/script&gt;
+</span></span><span style=display:flex><span>  &lt;/body&gt;
+</span></span><span style=display:flex><span>&lt;/html&gt;
+</span></span></code></pre></td></tr></table></div></div><p>其他配置参数:</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  entry: &#39;index.js&#39;,
+</span></span><span style=display:flex><span>  output: {
+</span></span><span style=display:flex><span>    path: &#39;dist&#39;,
+</span></span><span style=display:flex><span>    filename: &#39;bundle.js&#39;
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  plugins: [
+</span></span><span style=display:flex><span>    new HtmlWebpackPlugin({
+</span></span><span style=display:flex><span>      title: &#39;My App&#39;,
+</span></span><span style=display:flex><span>      filename: &#39;admin.html&#39;,
+</span></span><span style=display:flex><span>      template:&#39;header.html&#39;,
+</span></span><span style=display:flex><span>      inject: &#39;body&#39;,
+</span></span><span style=display:flex><span>      favicon:&#39;./images/favico.ico&#39;,
+</span></span><span style=display:flex><span>      minify:true,
+</span></span><span style=display:flex><span>      hash:true,
+</span></span><span style=display:flex><span>      cache:false,
+</span></span><span style=display:flex><span>      showErrors:false,
+</span></span><span style=display:flex><span>      &#34;chunks&#34;: {
+</span></span><span style=display:flex><span>      &#34;head&#34;: {
+</span></span><span style=display:flex><span>        &#34;entry&#34;: &#34;assets/head_bundle.js&#34;,
+</span></span><span style=display:flex><span>        &#34;css&#34;: [ &#34;main.css&#34; ]
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>      xhtml:false
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>  ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>--- header.html ---
+</span></span><span style=display:flex><span>&lt;!DOCTYPE html&gt;
+</span></span><span style=display:flex><span>&lt;html&gt;
+</span></span><span style=display:flex><span>  &lt;head&gt;
+</span></span><span style=display:flex><span>    &lt;meta http-equiv=&#34;Content-type&#34; content=&#34;text/html; charset=utf-8&#34;/&gt;
+</span></span><span style=display:flex><span>    &lt;title&gt;&lt;%= htmlWebpackPlugin.options.title %&gt;&lt;/title&gt;
+</span></span><span style=display:flex><span>  &lt;/head&gt;
+</span></span><span style=display:flex><span>  &lt;body&gt;
+</span></span><span style=display:flex><span>  &lt;/body&gt;
+</span></span><span style=display:flex><span>&lt;/html&gt;
+</span></span></code></pre></td></tr></table></div></div><p>作用：</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>  title: 设置title的名字   
+</span></span><span style=display:flex><span>  filename: 设置这个html的文件名   
+</span></span><span style=display:flex><span>  template:要使用的模块的路径  
+</span></span><span style=display:flex><span>  inject: 把模板注入到哪个标签后 &#39;body&#39;,   
+</span></span><span style=display:flex><span>  favicon: 给html添加一个favicon  &#39;./images/favico.ico&#39;,   
+</span></span><span style=display:flex><span>  minify:是否压缩  true false   
+</span></span><span style=display:flex><span>  hash:是否hash化 true false ,     
+</span></span><span style=display:flex><span>  cache:是否缓存,   
+</span></span><span style=display:flex><span>  showErrors:是否显示错误,  
+</span></span><span style=display:flex><span>  chunks:目前没太明白  
+</span></span><span style=display:flex><span>  xhtml:是否自动毕业标签 默认false  
+</span></span></code></pre></td></tr></table></div></div><h4 class=group id=3-提取样式插件>3. 提取样式插件<a href=#3-%e6%8f%90%e5%8f%96%e6%a0%b7%e5%bc%8f%e6%8f%92%e4%bb%b6><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h4><p>extract-text-webpack-plugin</p><blockquote><p>官网是这么解释的<code>Extract text from bundle into a file.</code>,把额外的数据加到编译好的文件中</p></blockquote><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>var ExtractTextPlugin = require(&#34;extract-text-webpack-plugin&#34;);
+</span></span><span style=display:flex><span>module.exports = {
+</span></span><span style=display:flex><span>    module: {
+</span></span><span style=display:flex><span>        loaders: [
+</span></span><span style=display:flex><span>            { test: /\.css$/, loader: ExtractTextPlugin.extract(&#34;style-loader&#34;, &#34;css-loader&#34;) }
+</span></span><span style=display:flex><span>        ]
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    plugins: [
+</span></span><span style=display:flex><span>        new HtmlWebpackPlugin({
+</span></span><span style=display:flex><span>                template: &#39;./src/public/index.html&#39;,
+</span></span><span style=display:flex><span>                inject: &#39;body&#39;
+</span></span><span style=display:flex><span>            }),
+</span></span><span style=display:flex><span>        new ExtractTextPlugin(&#34;[name].[hash].css&#34;)
+</span></span><span style=display:flex><span>    ]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><p>说明：将css放到index.html的body上面</p><h4 class=group id=4-拷贝资源插件>4. 拷贝资源插件<a href=#4-%e6%8b%b7%e8%b4%9d%e8%b5%84%e6%ba%90%e6%8f%92%e4%bb%b6><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h4><p>copy-webpack-plugin</p><blockquote><p>官方这样解释 <code>Copy files and directories in webpack</code>,在webpack中拷贝文件和文件夹</p></blockquote><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>cnpm install --save-dev copy-webpack-plugin
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>new CopyWebpackPlugin([{
+</span></span><span style=display:flex><span>    from: __dirname + &#39;/src/public&#39;
+</span></span><span style=display:flex><span>}]),
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>作用：把public 里面的内容全部拷贝到编译目录</p></blockquote><table><thead><tr><th style=text-align:center>参数</th><th style=text-align:center>作用</th><th style=text-align:center>其他说明</th></tr></thead><tbody><tr><td style=text-align:center>from</td><td style=text-align:center>定义要拷贝的源目录</td><td style=text-align:center>from: __dirname + &lsquo;/src/public&rsquo;</td></tr><tr><td style=text-align:center>to</td><td style=text-align:center>定义要烤盘膛的目标目录</td><td style=text-align:center>from: __dirname + &lsquo;/dist&rsquo;</td></tr><tr><td style=text-align:center>toType</td><td style=text-align:center><code>file</code> 或者 <code>dir</code></td><td style=text-align:center>可选，默认是文件</td></tr><tr><td style=text-align:center>force</td><td style=text-align:center>强制覆盖先前的插件</td><td style=text-align:center>可选 默认false</td></tr><tr><td style=text-align:center>context</td><td style=text-align:center>不知道作用</td><td style=text-align:center>可选 默认 base context 可用 specific context</td></tr><tr><td style=text-align:center>flatten</td><td style=text-align:center>只拷贝文件不管文件夹</td><td style=text-align:center>默认是false</td></tr><tr><td style=text-align:center>ignore</td><td style=text-align:center>忽略拷贝指定的文件</td><td style=text-align:center>可以用模糊匹配</td></tr></tbody></table><h4 class=group id=5-全局挂载插件>5. 全局挂载插件<a href=#5-%e5%85%a8%e5%b1%80%e6%8c%82%e8%bd%bd%e6%8f%92%e4%bb%b6><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h4><p>webpack.ProvidePlugin [webpack内置插件 ]</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">9
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>new webpack.ProvidePlugin({
+</span></span><span style=display:flex><span>    $: &#34;jquery&#34;,
+</span></span><span style=display:flex><span>    jQuery: &#34;jquery&#34;,
+</span></span><span style=display:flex><span>    &#34;window.jQuery&#34;: &#34;jquery&#34;
+</span></span><span style=display:flex><span>}))
+</span></span><span style=display:flex><span>new webpack.NoErrorsPlugin(),
+</span></span><span style=display:flex><span>new webpack.optimize.DedupePlugin(),
+</span></span><span style=display:flex><span>new webpack.optimize.UglifyJsPlugin(),
+</span></span><span style=display:flex><span>new webpack.optimize.CommonsChunkPlugin(&#39;common.js&#39;)
+</span></span></code></pre></td></tr></table></div></div><p>作用: 和上面5个一一对应</p><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>  把一些需要的东西绑定到window上，暴露出来 成为全局变量
+</span></span><span style=display:flex><span>  不显示错误插件
+</span></span><span style=display:flex><span>  具体不是太清楚，先记录着
+</span></span><span style=display:flex><span>  丑化js 混淆代码而用
+</span></span><span style=display:flex><span>  提取公共代码的插件
+</span></span></code></pre></td></tr></table></div></div><h3 class=group id=二一个完整的栗子>二、一个完整的栗子<a href=#%e4%ba%8c%e4%b8%80%e4%b8%aa%e5%ae%8c%e6%95%b4%e7%9a%84%e6%a0%97%e5%ad%90><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h3><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">  9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 31
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 32
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 33
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 34
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 35
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 36
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 37
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 38
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 39
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 40
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 41
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 42
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 43
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 44
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 45
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 46
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 47
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 48
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 49
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 50
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 51
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 52
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 53
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 54
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 55
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 56
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 57
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 58
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 59
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 60
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 61
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 62
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 63
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 64
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 65
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 66
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 67
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 68
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 69
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 70
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 71
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 72
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 73
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 74
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 75
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 76
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 77
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 78
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 79
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 80
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 81
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 82
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 83
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 84
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 85
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 86
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 87
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 88
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 89
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 90
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 91
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 92
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 93
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 94
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 95
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 96
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 97
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 98
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 99
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">100
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">101
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">102
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">103
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">104
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">105
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">106
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">107
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">108
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">109
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">110
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">111
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">112
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">113
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">114
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">115
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">116
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">117
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">118
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">119
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">120
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-v data-lang=v><span style=display:flex><span><span style=color:#f1fa8c>&#39;use strict&#39;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6272a4>// Modules
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span><span style=color:#8be9fd;font-style:italic>var</span> <span style=color:#8be9fd;font-style:italic>webpack</span> <span style=color:#ff79c6>=</span> <span style=color:#50fa7b>require</span>(<span style=color:#f1fa8c>&#39;webpack&#39;</span>);
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>var</span> <span style=color:#8be9fd;font-style:italic>autoprefixer</span> <span style=color:#ff79c6>=</span> <span style=color:#50fa7b>require</span>(<span style=color:#f1fa8c>&#39;autoprefixer&#39;</span>);
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>var</span> <span style=color:#50fa7b>HtmlWebpackPlugin</span> <span style=color:#ff79c6>=</span> <span style=color:#50fa7b>require</span>(<span style=color:#f1fa8c>&#39;html-webpack-plugin&#39;</span>);
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>var</span> <span style=color:#50fa7b>ExtractTextPlugin</span> <span style=color:#ff79c6>=</span> <span style=color:#50fa7b>require</span>(<span style=color:#f1fa8c>&#39;extract-text-webpack-plugin&#39;</span>);
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>var</span> <span style=color:#50fa7b>CopyWebpackPlugin</span> <span style=color:#ff79c6>=</span> <span style=color:#50fa7b>require</span>(<span style=color:#f1fa8c>&#39;copy-webpack-plugin&#39;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6272a4>/**
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * Env
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> * Get npm lifecycle event to identify the environment
+</span></span></span><span style=display:flex><span><span style=color:#6272a4> */</span>
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>var</span> <span style=color:#50fa7b>ENV</span> <span style=color:#ff79c6>=</span> <span style=color:#8be9fd;font-style:italic>process</span>.<span style=color:#8be9fd;font-style:italic>env</span>.<span style=color:#8be9fd;font-style:italic>npm_lifecycle_event</span>;
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>var</span> <span style=color:#8be9fd;font-style:italic>isTest</span> <span style=color:#ff79c6>=</span> <span style=color:#50fa7b>ENV</span> <span style=color:#ff79c6>===</span> <span style=color:#f1fa8c>&#39;test&#39;</span> <span style=color:#ff79c6>||</span> <span style=color:#50fa7b>ENV</span> <span style=color:#ff79c6>===</span> <span style=color:#f1fa8c>&#39;test-watch&#39;</span>;
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>var</span> <span style=color:#8be9fd;font-style:italic>isProd</span> <span style=color:#ff79c6>=</span> <span style=color:#50fa7b>ENV</span> <span style=color:#ff79c6>===</span> <span style=color:#f1fa8c>&#39;build&#39;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>module</span>.<span style=color:#8be9fd;font-style:italic>exports</span> <span style=color:#ff79c6>=</span> <span style=color:#8be9fd;font-style:italic>function</span> <span style=color:#50fa7b>makeWebpackConfig</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>var</span> <span style=color:#8be9fd;font-style:italic>config</span> <span style=color:#ff79c6>=</span> {};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>config</span>.<span style=color:#8be9fd;font-style:italic>entry</span> <span style=color:#ff79c6>=</span> <span style=color:#8be9fd;font-style:italic>isTest</span> <span style=color:#8be9fd;font-style:italic>?</span> {} : {
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>app</span>: <span style=color:#f1fa8c>&#39;./src/app/app.js&#39;</span>
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>config</span>.<span style=color:#8be9fd;font-style:italic>output</span> <span style=color:#ff79c6>=</span> <span style=color:#8be9fd;font-style:italic>isTest</span> <span style=color:#8be9fd;font-style:italic>?</span> {} : {
+</span></span><span style=display:flex><span>        <span style=color:#6272a4>// Absolute output directory
+</span></span></span><span style=display:flex><span><span style=color:#6272a4></span>        <span style=color:#8be9fd;font-style:italic>path</span>: <span style=color:#8be9fd;font-style:italic>__dirname</span> <span style=color:#ff79c6>+</span> <span style=color:#f1fa8c>&#39;/dist&#39;</span>,
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>publicPath</span>: <span style=color:#8be9fd;font-style:italic>isProd</span> <span style=color:#8be9fd;font-style:italic>?</span> <span style=color:#f1fa8c>&#39;/&#39;</span> : <span style=color:#f1fa8c>&#39;http://localhost:8080/&#39;</span>,
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>filename</span>: <span style=color:#8be9fd;font-style:italic>isProd</span> <span style=color:#8be9fd;font-style:italic>?</span> <span style=color:#f1fa8c>&#39;[name].[hash].js&#39;</span> : <span style=color:#f1fa8c>&#39;[name].bundle.js&#39;</span>,
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>chunkFilename</span>: <span style=color:#8be9fd;font-style:italic>isProd</span> <span style=color:#8be9fd;font-style:italic>?</span> <span style=color:#f1fa8c>&#39;[name].[hash].js&#39;</span> : <span style=color:#f1fa8c>&#39;[name].bundle.js&#39;</span>
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> (<span style=color:#8be9fd;font-style:italic>isTest</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>config</span>.<span style=color:#8be9fd;font-style:italic>devtool</span> <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#39;inline-source-map&#39;</span>;
+</span></span><span style=display:flex><span>    } <span style=color:#ff79c6>else</span> <span style=color:#ff79c6>if</span> (<span style=color:#8be9fd;font-style:italic>isProd</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>config</span>.<span style=color:#8be9fd;font-style:italic>devtool</span> <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#39;source-map&#39;</span>;
+</span></span><span style=display:flex><span>    } <span style=color:#ff79c6>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>config</span>.<span style=color:#8be9fd;font-style:italic>devtool</span> <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#39;eval-source-map&#39;</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>config</span>.<span style=color:#ff79c6>module</span> <span style=color:#ff79c6>=</span> {
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>preLoaders</span>: [],
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>loaders</span>: [{
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>test</span>: <span style=color:#ff79c6>/</span>\.<span style=color:#8be9fd;font-style:italic>js</span>$<span style=color:#ff79c6>/</span>,
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>loader</span>: <span style=color:#f1fa8c>&#39;babel&#39;</span>,
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>exclude</span>: <span style=color:#ff79c6>/</span><span style=color:#8be9fd;font-style:italic>node_modules</span><span style=color:#ff79c6>/</span>
+</span></span><span style=display:flex><span>        }, {
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>test</span>: <span style=color:#ff79c6>/</span>\.<span style=color:#8be9fd;font-style:italic>css</span><span style=color:#ff79c6>/</span>,
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>loader</span>: <span style=color:#8be9fd;font-style:italic>isTest</span> <span style=color:#8be9fd;font-style:italic>?</span> <span style=color:#f1fa8c>&#39;null&#39;</span> : <span style=color:#50fa7b>ExtractTextPlugin</span>.<span style=color:#50fa7b>extract</span>(<span style=color:#f1fa8c>&#39;style&#39;</span>, <span style=color:#f1fa8c>&#39;css?sourceMap!postcss&#39;</span>)
+</span></span><span style=display:flex><span>        }, {
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>test</span>: <span style=color:#ff79c6>/</span>\.(<span style=color:#8be9fd;font-style:italic>png</span><span style=color:#ff79c6>|</span><span style=color:#8be9fd;font-style:italic>jpg</span><span style=color:#ff79c6>|</span><span style=color:#8be9fd;font-style:italic>jpeg</span><span style=color:#ff79c6>|</span><span style=color:#8be9fd;font-style:italic>gif</span><span style=color:#ff79c6>|</span><span style=color:#8be9fd;font-style:italic>svg</span><span style=color:#ff79c6>|</span><span style=color:#8be9fd;font-style:italic>woff</span><span style=color:#ff79c6>|</span><span style=color:#8be9fd;font-style:italic>woff2</span><span style=color:#ff79c6>|</span><span style=color:#8be9fd;font-style:italic>ttf</span><span style=color:#ff79c6>|</span><span style=color:#8be9fd;font-style:italic>eot</span>)$<span style=color:#ff79c6>/</span>,
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>loader</span>: <span style=color:#f1fa8c>&#39;file&#39;</span>
+</span></span><span style=display:flex><span>        }, {
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>test</span>: <span style=color:#ff79c6>/</span>\.<span style=color:#8be9fd;font-style:italic>json</span>$<span style=color:#ff79c6>/</span>,
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>loader</span>: <span style=color:#f1fa8c>&#39;json&#39;</span>
+</span></span><span style=display:flex><span>        }, {
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>test</span>: <span style=color:#ff79c6>/</span>\.<span style=color:#8be9fd;font-style:italic>scss</span><span style=color:#ff79c6>/</span>,
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>loader</span>: <span style=color:#f1fa8c>&#39;style!css!sass&#39;</span>
+</span></span><span style=display:flex><span>        }, {
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>test</span>: <span style=color:#ff79c6>/</span>\.<span style=color:#8be9fd;font-style:italic>html</span>$<span style=color:#ff79c6>/</span>,
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>loader</span>: <span style=color:#f1fa8c>&#39;raw&#39;</span>
+</span></span><span style=display:flex><span>        }]
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> (<span style=color:#8be9fd;font-style:italic>isTest</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>config</span>.<span style=color:#ff79c6>module</span>.<span style=color:#8be9fd;font-style:italic>preLoaders</span>.<span style=color:#50fa7b>push</span>({
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>test</span>: <span style=color:#ff79c6>/</span>\.<span style=color:#8be9fd;font-style:italic>js</span>$<span style=color:#ff79c6>/</span>,
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>exclude</span>: [
+</span></span><span style=display:flex><span>                <span style=color:#ff79c6>/</span><span style=color:#8be9fd;font-style:italic>node_modules</span><span style=color:#ff79c6>/</span>,
+</span></span><span style=display:flex><span>                <span style=color:#ff79c6>/</span>\.<span style=color:#8be9fd;font-style:italic>spec</span>\.<span style=color:#8be9fd;font-style:italic>js</span>$<span style=color:#ff79c6>/</span>
+</span></span><span style=display:flex><span>            ],
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>loader</span>: <span style=color:#f1fa8c>&#39;isparta-instrumenter&#39;</span>
+</span></span><span style=display:flex><span>        })
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>config</span>.<span style=color:#8be9fd;font-style:italic>postcss</span> <span style=color:#ff79c6>=</span> [
+</span></span><span style=display:flex><span>        <span style=color:#50fa7b>autoprefixer</span>({
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>browsers</span>: [<span style=color:#f1fa8c>&#39;last 2 version&#39;</span>]
+</span></span><span style=display:flex><span>        })
+</span></span><span style=display:flex><span>    ];
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>config</span>.<span style=color:#8be9fd;font-style:italic>plugins</span> <span style=color:#ff79c6>=</span> [];
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>!</span><span style=color:#8be9fd;font-style:italic>isTest</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>config</span>.<span style=color:#8be9fd;font-style:italic>plugins</span>.<span style=color:#50fa7b>push</span>(
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>new</span> <span style=color:#50fa7b>HtmlWebpackPlugin</span>({
+</span></span><span style=display:flex><span>                <span style=color:#8be9fd;font-style:italic>template</span>: <span style=color:#f1fa8c>&#39;./src/public/index.html&#39;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#8be9fd;font-style:italic>inject</span>: <span style=color:#f1fa8c>&#39;body&#39;</span>
+</span></span><span style=display:flex><span>            }),
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>new</span> <span style=color:#50fa7b>ExtractTextPlugin</span>(<span style=color:#f1fa8c>&#39;[name].[hash].css&#39;</span>, {<span style=color:#8be9fd;font-style:italic>disable</span>: <span style=color:#ff79c6>!</span><span style=color:#8be9fd;font-style:italic>isProd</span>})
+</span></span><span style=display:flex><span>        )
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> (<span style=color:#8be9fd;font-style:italic>isProd</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>config</span>.<span style=color:#8be9fd;font-style:italic>plugins</span>.<span style=color:#50fa7b>push</span>(
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>new</span> <span style=color:#8be9fd;font-style:italic>webpack</span>.<span style=color:#50fa7b>NoErrorsPlugin</span>(),
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>new</span> <span style=color:#8be9fd;font-style:italic>webpack</span>.<span style=color:#8be9fd;font-style:italic>optimize</span>.<span style=color:#50fa7b>DedupePlugin</span>(),
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>new</span> <span style=color:#8be9fd;font-style:italic>webpack</span>.<span style=color:#8be9fd;font-style:italic>optimize</span>.<span style=color:#50fa7b>UglifyJsPlugin</span>(),
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>new</span> <span style=color:#50fa7b>CopyWebpackPlugin</span>([{
+</span></span><span style=display:flex><span>                <span style=color:#8be9fd;font-style:italic>from</span>: <span style=color:#8be9fd;font-style:italic>__dirname</span> <span style=color:#ff79c6>+</span> <span style=color:#f1fa8c>&#39;/src/public&#39;</span>
+</span></span><span style=display:flex><span>            }]),
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>new</span> <span style=color:#8be9fd;font-style:italic>webpack</span>.<span style=color:#50fa7b>ProvidePlugin</span>({
+</span></span><span style=display:flex><span>                $: <span style=color:#f1fa8c>&#34;jquery&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#8be9fd;font-style:italic>jQuery</span>: <span style=color:#f1fa8c>&#34;jquery&#34;</span>,
+</span></span><span style=display:flex><span>                <span style=color:#f1fa8c>&#34;window.jQuery&#34;</span>: <span style=color:#f1fa8c>&#34;jquery&#34;</span>
+</span></span><span style=display:flex><span>            }))
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>config</span>.<span style=color:#8be9fd;font-style:italic>devServer</span> <span style=color:#ff79c6>=</span> {
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>contentBase</span>: <span style=color:#f1fa8c>&#39;./src/public&#39;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>stats</span>: <span style=color:#f1fa8c>&#39;minimal&#39;</span>
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span> <span style=color:#8be9fd;font-style:italic>config</span>;
+</span></span><span style=display:flex><span>}();
+</span></span></code></pre></td></tr></table></div></div><h3 class=group id=三调试技巧>三、调试技巧<a href=#%e4%b8%89%e8%b0%83%e8%af%95%e6%8a%80%e5%b7%a7><i class="eva eva-link ml-3 align-middle text-theme opacity-0 transition ease-in-out group-hover:opacity-100"></i></a></h3><div class=highlight><div style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>if (isTest) {
+</span></span><span style=display:flex><span>    config.devtool = &#39;inline-source-map&#39;;
+</span></span><span style=display:flex><span>} else if (isProd) {
+</span></span><span style=display:flex><span>    config.devtool = &#39;source-map&#39;;
+</span></span><span style=display:flex><span>} else {
+</span></span><span style=display:flex><span>    config.devtool = &#39;eval-source-map&#39;;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>作用: 使用source-map可以在debug的时候看到源代码，方便 查错</p></blockquote></section><div class="px-6 pb-5 pt-4 text-center text-xl text-gray-500 md:px-10 md:pb-10 md:pt-14 flex items-center justify-center"><a class="mr-4 inline-flex h-5 w-5 items-center" title="分享到 Twitter" href="https://twitter.com/share?&text=%e4%b8%8a%e4%b8%80%e7%af%87%e5%8d%9a%e5%ae%a2%e8%ae%b2%e8%a7%a3%e4%ba%86webpack%e7%8e%af%e5%a2%83%e7%9a%84%e5%9f%ba%e6%9c%ac%ef%bc%8c%e8%bf%99%e4%b8%80%e7%af%87%e8%ae%b2%e8%a7%a3%e4%b8%80%e4%ba%9b%e6%9b%b4%e6%b7%b1%e5%85%a5%e7%9a%84%e5%86%85%e5%ae%b9%e5%92%8c%e5%bc%80%e5%8f%91%e6%8a%80%e5%b7%a7%e3%80%82%e5%9f%ba%e6%9c%ac%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba%e5%b0%b1%e4%b8%8d%e5%b1%95%e5%bc%80%e8%ae%b2%e4%ba%86&url=https://blog.xiaomo.info/2016/webpackplugins/" target=_blank rel="noopener noreferrer"><i class="eva eva-twitter hover:text-theme"></i></a><i class="eva eva-copy mr-4 cursor-pointer hover:text-theme" title=复制链接 data-clipboard-text=https://blog.xiaomo.info/2016/webpackplugins/></i><div class="group h-5 w-5 relative hidden cursor-pointer sm:inline-block"><i title=二维码 class="eva show-qrcode eva-smartphone hover:text-theme"></i><div class="qrcode-wrapper p-2 pointer-events-none absolute left-2/4 bottom-10 h-32 w-32 -translate-x-1/2 overflow-hidden rounded border border-gray-300 bg-white opacity-0 transition duration-300 ease-[ease] group-hover:opacity-100"><img class="h-full w-full" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://blog.xiaomo.info/2016/webpackplugins/" alt=二维码></div></div></div><div class="border-b dark:border-darkBorder"></div><div class="flex justify-between px-2 py-4 text-xl md:px-6 md:text-2xl"><div><a href=/2016/webpackparams/ title=webpack相关命令参数 class="invisible flex cursor-pointer items-center text-gray-500 transition duration-300 ease-[ease] hover:text-theme dark:text-darkTextPlaceholder dark:hover:text-darkText" style=visibility:visible><span class="flex items-center text-5xl opacity-70 dark:bg-opacity-100"><i class="eva eva-chevron-left-outline"></i></span>
+<span>上一篇</span></a></div><div class="hidden items-center text-xs xl:flex">除特殊声明外，本博客一律使用以下协议进行授权 「
+<a href=https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh target=_blank rel="noopener noreferrer" class=text-theme>署名 - 非商业性使用 - 禁止演绎 4.0</a>
+」</div><div class="flex items-center text-sm xl:hidden"><a href=https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh target=_blank rel="noopener noreferrer" class=text-theme><img src=/Cc-by-nc-nd.svg alt="署名 - 非商业性使用 - 禁止演绎 4.0" title="署名 - 非商业性使用 - 禁止演绎 4.0" class=w-24></a></div><a href=/2016/webpackllink/ title=webpack进阶之loader篇 class="invisible flex cursor-pointer items-center text-gray-500 transition duration-300 ease-[ease] hover:text-theme dark:text-darkTextPlaceholder dark:hover:text-darkText" style=visibility:visible><span>下一篇</span>
+<span class="flex items-center text-5xl opacity-70 dark:bg-opacity-100"><i class="eva eva-chevron-right-outline"></i></span></a></div><div class="border-t py-6 px-6 md:px-8 dark:border-darkBorder"><script src=https://giscus.app/client.js data-repo=houko/houko.github.io data-repo-id="MDEwOlJlcG9zaXRvcnk3MjYwMDMxMg==" data-category=General data-category-id=DIC_kwDOBFPK-M4CSvHc data-mapping=title data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=light data-lang=zh-CN data-loading=false crossorigin=anonymous data-swup-reload-script async></script><script data-swup-reload-script>(function(){addEventListener("message",t=>{if(event.origin!=="https://giscus.app")return;e()}),window.addEventListener("onThemeChange",e);function e(){setGiscusTheme(document.documentElement.dataset.scheme==="light"?"light":"dark")}})();function setGiscusTheme(e){let t=document.querySelector("iframe.giscus-frame");t&&t.contentWindow.postMessage({giscus:{setConfig:{theme:e}}},"https://giscus.app")}</script></div></div></div></div></div></main><footer><div class="com-footer flex flex-col items-center border-t py-4 px-4 text-sm leading-none text-gray-600 dark:border-darkBorder dark:text-darkTextPlaceholder md:flex-row md:justify-between"><div class="mb-2 flex items-center justify-between text-center md:mb-0"><span>© 2016 - 2023</span>
+<span class="mx-1.5 opacity-50">| </span>由 <a data-no-swup class="mx-1 font-bold hover:text-theme" href=https://gohugo.io/ target=_blank rel="noopener noreferrer">Hugo</a> <span class="text-xs opacity-70">❤</span> <a data-no-swup class="mx-1 font-bold hover:text-theme" href=https://github.com/Ice-Hazymoon/hugo-theme-luna target=_blank rel="noopener noreferrer">Luna</a> 驱动</div><div class="flex items-center"></div><div id=run-time class="mt-2 flex-grow text-right md:mt-0"><span>运行时间： </span><b id=run-time-d>0</b>
+<span class=text-xs>天</span>
+<b id=run-time-h>0</b>
+<span class=text-xs>小时</span>
+<b id=run-time-m>0</b>
+<span class=text-xs>分钟</span>
+<b id=run-time-s>0</b>
+<span class=text-xs>秒</span></div></div><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-80824007-1","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"))</script><script async src=https://www.google-analytics.com/analytics.js></script>
+<script type=text/javascript>window.__theme={cdn:"",pjax:!0,isServer:!1,$version:"27318bae09d55a97ea7da355b574a3210186ba07",lang:"zh-cn",imageZoom:!0,lazyload:!0,bionicReading:{enabled:!0,skipLinks:!1,autoBionic:!1,excludeWords:[],excludeClasses:["github"],excludeNodeNames:[]},katex:!0,search:!0,backtop:!0,pangu:!0,autoDarkMode:!1,googleAnalytics:!0,hugoEncrypt:{wrongPasswordText:"密码错误",userStorage:window.sessionStorage},console:{enabled:!0,leftColor:"#dd6065",rightColor:"#feb462",leftText:"Hugo Theme Luna",rightText:"Powered by Hugo ❤ Luna"},assets:{error_svg:"/images/error.svg",search_svg:"/images/search.svg"},i18n:{copy:{success:"复制成功",failed:"复制失败，请手动复制",copyCode:"复制代码"},search:{untitled:"无标题",loadFailure:"初始化搜索引擎失败",input:"请输入内容..."},darkMode:{dark:"切换到夜间模式",light:"切换到日间模式"}},creatTime:"2016/06/30"}</script><script type=text/javascript src=/ts/main.5562dd676e11d79991ff088b5335690420b8a54043d1dd6ced64a624ca63167d.js defer integrity="sha256-VWLdZ24R15mR/wiLUzVpBCC4pUBD0d1s7WSmJMpjFn0="></script><script>"serviceWorker"in navigator&&window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js")})</script>
+<script></script><script data-swup-reload-script></script></footer></div></div><a href=#nav title=返回顶部 id=back-top class="fixed right-6 bottom-9 z-10 translate-y-3 scale-90 cursor-pointer rounded-full bg-white opacity-0 transition duration-300 ease-[ease] dark:bg-darkBgAccent sm:scale-100"><div class=relative><div class="absolute left-0 top-0 flex h-full w-full items-center justify-center text-xl"><i class="eva eva-arrow-upward-outline"></i></div><svg id="svg" width="54" height="54" viewBox="0 0 54 54" preserveAspectRatio="xMinYMin meet"><circle transform="rotate(-90, 27 , 27)" style="stroke-dasharray:157,157;stroke-dashoffset:157" cx="27" cy="27" r="25" fill="none" stroke-width="4" stroke-linecap="round" stroke="var(--theme)"/></svg></div></a><div id=i18nlist></div><noscript><style>.dark-mode-switch,#run-time,#bionicReading,.noscript-hidden,[data-clipboard-text],[data-lazyload]{display:none}#back-top{opacity:1}.noscript-show{display:initial}</style></noscript></body></html>
